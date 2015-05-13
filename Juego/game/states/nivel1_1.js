@@ -260,11 +260,11 @@
         }        
         this.score = tempScore;
         this.scoreText = tempScoreText;
-        this.itemSelec = false;      
-        item.kill();
+        this.itemSelec = false;
         this.textoItem.destroy();
         this.error_score = tempError_score;
         if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
+        item.kill();
       }
     },
 
