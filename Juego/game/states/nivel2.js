@@ -185,7 +185,7 @@
       var error = true;
       switch(this.tipoValida){
         case 0://Solicitud variable de tipo string
-          if(/^\"(\w)*\"$/.test(this.cajaTexto.texto.text)){
+          if(/^(\"(\w)*\")|(\'(\w)*\')$/.test(this.cajaTexto.texto.text)){
             //En caso de respuesta correcta
             console.log(true);
             error = false;
