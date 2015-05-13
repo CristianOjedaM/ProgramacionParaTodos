@@ -11,7 +11,7 @@
     maxtime: 10,
     prev_score: {},
     prev_score_base: {},
-    error_score: {},
+    error_score: {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0},
     itemsCompletos: 0,
     vel:100,//Velocidad de inicio para movimiento de items
     itemSelec: false,
@@ -90,6 +90,7 @@
 
         //Se verifica que los items no hayan superado los limites del escenario
         if((item.body.y+item.body.height) < 0){
+          this.error_score.errorGeneral ++;
           item.kill();
         }
       });   
@@ -196,17 +197,20 @@
       if(item.movimiento == true){
         var tempScore = this.score;
         var tempScoreText = this.scoreText;
+        var tempError_score = this.error_score;
         var error_sound_temp = this.error_sound;
-        var error = true;
+        var error = false;
+        var fueraTubo = false;
         this.tubos.forEach(function(tubo) {
           if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
             if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
               error = false;
+              fueraTubo = false;
               switch(item.tipo){
                 case 0:
                   tempScore.tipoCadena++;
                   tempScoreText[0].text = tempScore.tipoCadena;
-                  break;
+                break;
                 case 1:
                   tempScore.tipoNumero++;
                   tempScoreText[1].text = tempScore.tipoNumero;
@@ -220,18 +224,49 @@
                   tempScoreText[3].text = tempScore.tipoArray;
                   break;
               }
-              return;
+              break;
+            }else{
+              error=true;                                       
             }
           }
+          //el item se solto fuera de los tubos
+          else{
+            fueraTubo = true;
+          }
         });
-        if(error){
+        if(error)
+          {
+          if(fueraTubo){
+            tempError_score.errorGeneral++;
+            this.ErrorScore(4);                            
+          }else{
+            switch(item.tipo){
+                case 0:
+                  tempError_score.errorCadena++;  
+                  this.ErrorScore(item.tipo);                
+                break;
+                case 1:
+                  tempError_score.errorNumero++;
+                  this.ErrorScore(item.tipo);                                  
+                break;
+                case 2:
+                  tempError_score.errorBool++;
+                  this.ErrorScore(item.tipo);                                 
+                break;
+                case 3:
+                  tempError_score.errorArray++;
+                  this.ErrorScore(item.tipo);                                  
+                break;              
+            }    
+          }     
           error_sound_temp.play();
-        }
+        }        
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;      
         item.kill();
         this.textoItem.destroy();
+        this.error_score = tempError_score;
       }
     },
 
@@ -250,6 +285,44 @@
         this.pnlPausa.hide();
         this.pausa = false;
       }
+    },
+
+    ErrorScore: function(tipo){
+        var inicio = tipo + ( 3 * tipo);
+        var final = inicio + 3;
+        var frame = Math.random() * (final - inicio) + inicio;        
+        switch(tipo){
+                case 0:
+                  if((this.error_score.errorCadena%3) == 0 ){
+                    this.game.paused = true;
+                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+                  }                
+                break;
+                case 1:
+                  if((this.error_score.errorNumero%3) == 0 ){
+                    this.game.paused = true;
+                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+                  }                                  
+                break;
+                case 2:
+                  if((this.error_score.errorBool%3) == 0 ){
+                    this.game.paused = true;
+                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+                  }                                
+                break;
+                case 3:
+                  if((this.error_score.errorArray%3) == 0 ){
+                    this.game.paused = true;
+                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+                  }                                  
+                break; 
+                case 4:
+                  if((this.error_score.errorGeneral%5) == 0 ){
+                    this.game.paused = true;
+                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+                  }
+                break;             
+        }
     }
   };
   
