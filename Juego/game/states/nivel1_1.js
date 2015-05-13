@@ -257,6 +257,7 @@
           }     
           error_sound_temp.play();
           this.error_score = tempError_score;
+          console.log(this.error_score):
           if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         }        
         this.score = tempScore;
