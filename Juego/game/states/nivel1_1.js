@@ -201,7 +201,7 @@
         var error_sound_temp = this.error_sound;
         var error = false;
         var fueraTubo = false;
-        this.tubos.forEach(function(tubo) {
+        this.tubos.every(function(tubo) {
           if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
             if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
               error = false;
@@ -224,7 +224,7 @@
                   tempScoreText[3].text = tempScore.tipoArray;
                   break;
               }
-              break;
+              return;
             }else{
               error=true;                                       
             }
@@ -234,8 +234,7 @@
             fueraTubo = true;
           }
         });
-        if(error)
-          {
+        if(error){
           if(fueraTubo){
             tempError_score.errorGeneral++;
             this.ErrorScore(4);                            
