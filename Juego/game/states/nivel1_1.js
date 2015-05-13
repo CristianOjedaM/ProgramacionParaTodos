@@ -199,14 +199,15 @@
         var tempScoreText = this.scoreText;
         var tempError_score = this.error_score;
         var error_sound_temp = this.error_sound;
-        var error = false;
-        var fueraTubo = false;
+        var error = true;
+        var fueraTubo = true;
         var finalizarForech = false;   
         this.tubos.forEach(function(tubo) {
           if(!finalizarForech){
             if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
               fueraTubo = false;
               if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
+                error = false;
                 switch(item.tipo){
                   case 0:
                     tempScore.tipoCadena++;
@@ -226,13 +227,7 @@
                     break;
                 }
                 finalizarForech = true;
-              }else{
-                error=true;                                       
               }
-            }
-            //el item se solto fuera de los tubos
-            else{
-              fueraTubo = true;
             }
           }
         });
@@ -257,7 +252,7 @@
           }     
           error_sound_temp.play();
           this.error_score = tempError_score;
-          console.log(this.error_score):
+          console.log(this.error_score);
           if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         }        
         this.score = tempScore;
