@@ -73,6 +73,8 @@
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
+
+      this.game.onPause.add(this.onPause,this);
     },
 
     update: function() {
@@ -288,40 +290,42 @@
           case 0:
             if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              this.pausaMsj = true;
               this.game.paused = true;
-              this.game.onPause.add(onPause,this);
             }                
           break;
           case 1:
             if(this.error_score.errorNumero != 0 && (this.error_score.errorNumero%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              this.pausaMsj = true;
               this.game.paused = true;
-              this.game.onPause.add(onPause,this);
             }                                  
           break;
           case 2:
             if(this.error_score.errorBool != 0 && (this.error_score.errorBool%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              this.pausaMsj = true;
               this.game.paused = true;
-              this.game.onPause.add(onPause,this);
             }                                
           break;
           case 3:
             if(this.error_score.errorArray != 0 && (this.error_score.errorArray%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              this.pausaMsj = true;
               this.game.paused = true;
-              this.game.onPause.add(onPause,this);
             }                                  
           break; 
           case 4:
             if(this.error_score.errorGeneral != 0 && (this.error_score.errorGeneral%5) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              this.pausaMsj = true;
               this.game.paused = true;
-              this.game.onPause.add(onPause,this);
+              
             }
           break;             
         }
-    }
+    },
+
     onPause:function(){
       this.game.add.button((this.game.world.centerX - 75), (this.game.world.centerY + 140)  , 'btnContinuar', function(){console.log("-.-");this.game.paused = false;}, this);            
     } 
