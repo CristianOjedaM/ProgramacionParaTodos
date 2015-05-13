@@ -293,24 +293,28 @@
             if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                
           break;
           case 1:
             if(this.error_score.errorNumero != 0 && (this.error_score.errorNumero%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                                  
           break;
           case 2:
             if(this.error_score.errorBool != 0 && (this.error_score.errorBool%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                                
           break;
           case 3:
             if(this.error_score.errorArray != 0 && (this.error_score.errorArray%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                                  
           break; 
           case 4:
