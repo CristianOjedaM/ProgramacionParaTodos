@@ -262,7 +262,7 @@
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;
-        this.textoItem.destroy
+        this.textoItem.destroy();
         item.kill();
       }
     },
