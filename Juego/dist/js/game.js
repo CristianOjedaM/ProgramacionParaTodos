@@ -734,7 +734,6 @@ module.exports = Menu;
             if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
               fueraTubo = false;
               if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
-                error = false;
                 switch(item.tipo){
                   case 0:
                     tempScore.tipoCadena++;
