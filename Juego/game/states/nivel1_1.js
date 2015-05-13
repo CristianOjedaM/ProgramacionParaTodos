@@ -73,7 +73,7 @@
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa); 
-      this.game.input.onDown.add(this.enPausa,self);      
+      this.game.input.onDown.add(this.enPausa,this);      
 
     },
 
@@ -319,12 +319,11 @@
           break;             
         }        
     },
-    enPausa:function(event)
-    {      
 
+    enPausa:function(event){
       if(this.game.paused){
         this.MensajeAyuda.destroy();
-        this.game.paused = false;    
+        this.game.paused = false;
       }      
     }
 
