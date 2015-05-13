@@ -606,7 +606,7 @@ module.exports = Menu;
       //Se obtienen las posiciones del cursor en el juego
       var mouseX = this.game.input.x;
       var mouseY = this.game.input.y;
-
+      var tempError_score = this.error_score;
       this.items.forEach(function(item) {
         //Se verifican los items para realizar su movimiento en caso de click
         if(item.movimiento == true){
@@ -617,11 +617,11 @@ module.exports = Menu;
 
         //Se verifica que los items no hayan superado los limites del escenario
         if((item.body.y+item.body.height) < 0){
-          this.error_score.errorGeneral ++;
+          tempError_score.errorGeneral ++;
           item.kill();
         }
       });   
-
+      this.error_score = tempError_score;
       //Se realiza el movimiento del texto en conjunto con el item
       if(this.itemSelec == true){
         this.textoItem.x =  mouseX;
