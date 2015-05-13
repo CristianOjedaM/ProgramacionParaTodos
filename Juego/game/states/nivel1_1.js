@@ -94,7 +94,7 @@
           item.kill();
         }
       });   
-      this.error_score = tempError_score;
+      //this.error_score = tempError_score;
       //Se realiza el movimiento del texto en conjunto con el item
       if(this.itemSelec == true){
         this.textoItem.x =  mouseX;
@@ -201,7 +201,7 @@
         var error_sound_temp = this.error_sound;
         var error = false;
         var fueraTubo = false;
-        var finalizarForech = false;        
+        var finalizarForech = false;   
         this.tubos.forEach(function(tubo) {
           if(!finalizarForech){
             if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
@@ -240,24 +240,19 @@
         if(error){
           if(fueraTubo){
             tempError_score.errorGeneral++;
-            this.ErrorScore(4);                            
           }else{
             switch(item.tipo){
                 case 0:
-                  tempError_score.errorCadena++;  
-                  this.ErrorScore(item.tipo);                
+                  tempError_score.errorCadena++;
                 break;
                 case 1:
                   tempError_score.errorNumero++;
-                  this.ErrorScore(item.tipo);                                  
                 break;
                 case 2:
                   tempError_score.errorBool++;
-                  this.ErrorScore(item.tipo);                                 
                 break;
                 case 3:
                   tempError_score.errorArray++;
-                  this.ErrorScore(item.tipo);                                  
                 break;              
             }    
           }     
@@ -269,6 +264,7 @@
         item.kill();
         this.textoItem.destroy();
         this.error_score = tempError_score;
+        if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
       }
     },
 
@@ -291,39 +287,39 @@
 
     ErrorScore: function(tipo){
         var inicio = tipo + ( 3 * tipo);
-        var final = inicio + 3;
-        var frame = Math.random() * (final - inicio) + inicio;        
+        var final_ = inicio + 3;
+        var frame = (Math.random()*final_) + inicio;        
         switch(tipo){
-                case 0:
-                  if((this.error_score.errorCadena%3) == 0 ){
-                    this.game.paused = true;
-                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-                  }                
-                break;
-                case 1:
-                  if((this.error_score.errorNumero%3) == 0 ){
-                    this.game.paused = true;
-                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-                  }                                  
-                break;
-                case 2:
-                  if((this.error_score.errorBool%3) == 0 ){
-                    this.game.paused = true;
-                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-                  }                                
-                break;
-                case 3:
-                  if((this.error_score.errorArray%3) == 0 ){
-                    this.game.paused = true;
-                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-                  }                                  
-                break; 
-                case 4:
-                  if((this.error_score.errorGeneral%5) == 0 ){
-                    this.game.paused = true;
-                    this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-                  }
-                break;             
+          case 0:
+            if((this.error_score.errorCadena%3) == 0 ){
+              this.game.paused = true;
+              this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+            }                
+          break;
+          case 1:
+            if((this.error_score.errorNumero%3) == 0 ){
+              this.game.paused = true;
+              this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+            }                                  
+          break;
+          case 2:
+            if((this.error_score.errorBool%3) == 0 ){
+              this.game.paused = true;
+              this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+            }                                
+          break;
+          case 3:
+            if((this.error_score.errorArray%3) == 0 ){
+              this.game.paused = true;
+              this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+            }                                  
+          break; 
+          case 4:
+            if((this.error_score.errorGeneral%5) == 0 ){
+              this.game.paused = true;
+              this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+            }
+          break;             
         }
     }
   };
