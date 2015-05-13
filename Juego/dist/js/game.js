@@ -728,37 +728,40 @@ module.exports = Menu;
         var error_sound_temp = this.error_sound;
         var error = false;
         var fueraTubo = false;
-        this.tubos.every(function(tubo) {
-          if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
-            if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
-              error = false;
-              fueraTubo = false;
-              switch(item.tipo){
-                case 0:
-                  tempScore.tipoCadena++;
-                  tempScoreText[0].text = tempScore.tipoCadena;
-                break;
-                case 1:
-                  tempScore.tipoNumero++;
-                  tempScoreText[1].text = tempScore.tipoNumero;
+        var finalizarForech = false;        
+        this.tubos.forEach(function(tubo) {
+          if(!finalizarForech){
+            if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
+              if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
+                error = false;
+                fueraTubo = false;
+                switch(item.tipo){
+                  case 0:
+                    tempScore.tipoCadena++;
+                    tempScoreText[0].text = tempScore.tipoCadena;
                   break;
-                case 2:
-                  tempScore.tipoBool++;
-                  tempScoreText[2].text = tempScore.tipoBool;
-                  break;
-                case 3:
-                  tempScore.tipoArray++;
-                  tempScoreText[3].text = tempScore.tipoArray;
-                  break;
+                  case 1:
+                    tempScore.tipoNumero++;
+                    tempScoreText[1].text = tempScore.tipoNumero;
+                    break;
+                  case 2:
+                    tempScore.tipoBool++;
+                    tempScoreText[2].text = tempScore.tipoBool;
+                    break;
+                  case 3:
+                    tempScore.tipoArray++;
+                    tempScoreText[3].text = tempScore.tipoArray;
+                    break;
+                }
+                finalizarForech = true;
+              }else{
+                error=true;                                       
               }
-              return;
-            }else{
-              error=true;                                       
             }
-          }
-          //el item se solto fuera de los tubos
-          else{
-            fueraTubo = true;
+            //el item se solto fuera de los tubos
+            else{
+              fueraTubo = true;
+            }
           }
         });
         if(error){
