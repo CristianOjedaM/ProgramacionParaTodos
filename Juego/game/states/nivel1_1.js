@@ -287,7 +287,7 @@
     ErrorScore: function(tipo){
         var inicio = tipo + ( 3 * tipo);
         var final_ = inicio + 3;
-        var frame = (Math.random()*final_) + inicio;        
+        var frame = Math.floor((Math.random()*final_) + inicio);        
         switch(tipo){
           case 0:
             if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
