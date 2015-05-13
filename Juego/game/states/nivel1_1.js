@@ -256,13 +256,13 @@
             }    
           }     
           error_sound_temp.play();
+          this.error_score = tempError_score;
+          if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         }        
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;
-        this.textoItem.destroy();
-        this.error_score = tempError_score;
-        if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
+        this.textoItem.destroy
         item.kill();
       }
     },
