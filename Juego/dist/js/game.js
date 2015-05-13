@@ -600,8 +600,8 @@ module.exports = Menu;
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
-
-      this.game.onPause.add(this.onPause,this);
+      
+      this.game.input.onDown.add(this.enPausa,this.game, self);
     },
 
     update: function() {
@@ -817,57 +817,48 @@ module.exports = Menu;
           case 0:
             if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.pausaMsj = true;
               this.game.paused = true;
             }                
           break;
           case 1:
             if(this.error_score.errorNumero != 0 && (this.error_score.errorNumero%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.pausaMsj = true;
               this.game.paused = true;
             }                                  
           break;
           case 2:
             if(this.error_score.errorBool != 0 && (this.error_score.errorBool%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.pausaMsj = true;
               this.game.paused = true;
             }                                
           break;
           case 3:
             if(this.error_score.errorArray != 0 && (this.error_score.errorArray%3) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.pausaMsj = true;
               this.game.paused = true;
             }                                  
           break; 
           case 4:
             if(this.error_score.errorGeneral != 0 && (this.error_score.errorGeneral%5) == 0 ){
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.pausaMsj = true;
-              this.game.paused = true;
-              
+              this.game.paused = true;              
             }
           break;             
         }
     },
+    enPausa:function(game,event)
+    {
+      if(game.paused){
+        game.paused = false;    
+      }      
+    }
 
-    onPause:function(){
-      if(this.pausaMsj){
-        this.game.add.button((this.game.world.centerX - 75), (this.game.world.centerY + 140)  , 'btnContinuar', function(){console.log("-.-");this.game.paused = false;}, this);            
-        enPausa(this.game);
-      }
-    } 
-  };
-  
+  };  
+ 
+
   module.exports = Nivel1_1;
 
-  function enPausa(game){
-    if(game.paused){
-      setTimeout(enPausa,50,game);    
-    }
-  }
+  
 },{"../prefabs/pause":2}],9:[function(require,module,exports){
 
   'use strict';
