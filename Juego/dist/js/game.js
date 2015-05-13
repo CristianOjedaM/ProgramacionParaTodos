@@ -623,7 +623,7 @@ module.exports = Menu;
           item.kill();
         }
       });   
-      //this.error_score = tempError_score;
+      this.error_score = tempError_score;
       //Se realiza el movimiento del texto en conjunto con el item
       if(this.itemSelec == true){
         this.textoItem.x =  mouseX;
