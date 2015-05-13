@@ -726,14 +726,15 @@ module.exports = Menu;
         var tempScoreText = this.scoreText;
         var tempError_score = this.error_score;
         var error_sound_temp = this.error_sound;
-        var error = false;
-        var fueraTubo = false;
+        var error = true;
+        var fueraTubo = true;
         var finalizarForech = false;   
         this.tubos.forEach(function(tubo) {
           if(!finalizarForech){
             if(item.body.x>tubo.body.x && item.body.y>tubo.body.y && item.body.y<(tubo.body.y + tubo.body.height)){
               fueraTubo = false;
               if(item.tipo == tubo.tipo){//Se verifica que sean el mismo tipo de dato
+                error = false;
                 switch(item.tipo){
                   case 0:
                     tempScore.tipoCadena++;
@@ -753,13 +754,7 @@ module.exports = Menu;
                     break;
                 }
                 finalizarForech = true;
-              }else{
-                error=true;                                       
               }
-            }
-            //el item se solto fuera de los tubos
-            else{
-              fueraTubo = true;
             }
           }
         });
@@ -783,13 +778,14 @@ module.exports = Menu;
             }    
           }     
           error_sound_temp.play();
+          this.error_score = tempError_score;
+          console.log(this.error_score);
+          if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         }        
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;
         this.textoItem.destroy();
-        this.error_score = tempError_score;
-        if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         item.kill();
       }
     },
@@ -814,30 +810,34 @@ module.exports = Menu;
     ErrorScore: function(tipo){
         var inicio = tipo + ( 3 * tipo);
         var final_ = inicio + 3;
-        var frame = (Math.random()*final_) + inicio;        
+        var frame = Math.floor((Math.random()*final_) + inicio);        
         switch(tipo){
           case 0:
             if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                
           break;
           case 1:
             if(this.error_score.errorNumero != 0 && (this.error_score.errorNumero%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                                  
           break;
           case 2:
             if(this.error_score.errorBool != 0 && (this.error_score.errorBool%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                                
           break;
           case 3:
             if(this.error_score.errorArray != 0 && (this.error_score.errorArray%3) == 0 ){
               this.game.paused = true;
               this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
+              console.log(inicio + " - " + final_ + " - " + frame);
             }                                  
           break; 
           case 4:
