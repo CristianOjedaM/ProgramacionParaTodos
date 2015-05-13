@@ -327,8 +327,17 @@
     },
 
     onPause:function(){
-      this.game.add.button((this.game.world.centerX - 75), (this.game.world.centerY + 140)  , 'btnContinuar', function(){console.log("-.-");this.game.paused = false;}, this);            
+      if(this.pausaMsj){
+        this.game.add.button((this.game.world.centerX - 75), (this.game.world.centerY + 140)  , 'btnContinuar', function(){console.log("-.-");this.game.paused = false;}, this);            
+        enPausa(this.game);
+      }
     } 
   };
   
   module.exports = Nivel1_1;
+
+  function enPausa(game){
+    if(game.paused){
+      setTimeout(enPausa,50,game);    
+    }
+  }
