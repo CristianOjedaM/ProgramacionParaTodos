@@ -72,7 +72,9 @@
 
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
-      this.game.add.existing(this.pnlPausa);         
+      this.game.add.existing(this.pnlPausa); 
+      this.game.input.onDown.add(this.enPausa,self);      
+
     },
 
     update: function() {
@@ -288,46 +290,41 @@
           case 0:
             if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.game.paused = true;
-              this.game.input.onDown.add(this.enPausa,this.game, this.MensajeAyuda);
+              this.game.paused = true;              
             }                
           break;
           case 1:
             if(this.error_score.errorNumero != 0 && (this.error_score.errorNumero%3) == 0 ){
               this.MensajeAyuda =this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.game.paused = true;
-              this.game.input.onDown.add(this.enPausa,this.game, this.MensajeAyuda);
+              this.game.paused = true;              
             }                                  
           break;
           case 2:
             if(this.error_score.errorBool != 0 && (this.error_score.errorBool%3) == 0 ){
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
-              this.game.paused = true;
-              this.game.input.onDown.add(this.enPausa,this.game, this.MensajeAyuda);
+              this.game.paused = true;              
             }                                
           break;
           case 3:
             if(this.error_score.errorArray != 0 && (this.error_score.errorArray%3) == 0 ){
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;
-              this.game.input.onDown.add(this.enPausa,this.game, this.MensajeAyuda);
             }                                  
           break; 
           case 4:
             if(this.error_score.errorGeneral != 0 && (this.error_score.errorGeneral%5) == 0 ){
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;        
-              this.game.input.onDown.add(this.enPausa,this.game, this.MensajeAyuda);      
             }
           break;             
         }        
     },
-    enPausa:function(game,Mensaje)
+    enPausa:function(event)
     {      
 
-      if(game.game.paused){
-        Mensaje.destroy();
-        game.game.paused = false;    
+      if(this.game.paused){
+        this.MensajeAyuda.destroy();
+        this.game.paused = false;    
       }      
     }
 
