@@ -11,6 +11,7 @@ window.onload = function () {
   game.state.add('nivel1', require('./states/nivel1'));
   game.state.add('nivel1_1', require('./states/nivel1_1'));
   game.state.add('nivel2', require('./states/nivel2'));
+  game.state.add('nivel3', require('./states/nivel3'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
   

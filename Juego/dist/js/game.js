@@ -12,13 +12,14 @@ window.onload = function () {
   game.state.add('nivel1', require('./states/nivel1'));
   game.state.add('nivel1_1', require('./states/nivel1_1'));
   game.state.add('nivel2', require('./states/nivel2'));
+  game.state.add('nivel3', require('./states/nivel3'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
   
 
   game.state.start('boot');
 };
-},{"./states/boot":4,"./states/gameover":5,"./states/menu":6,"./states/nivel1":7,"./states/nivel1_1":8,"./states/nivel2":9,"./states/play":10,"./states/preload":11}],2:[function(require,module,exports){
+},{"./states/boot":4,"./states/gameover":5,"./states/menu":6,"./states/nivel1":7,"./states/nivel1_1":8,"./states/nivel2":9,"./states/nivel3":10,"./states/play":11,"./states/preload":12}],2:[function(require,module,exports){
 
   'use strict';
 
@@ -873,7 +874,7 @@ module.exports = Menu;
     //Definición de propiedades
     scoreText: new Array(),
     score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
-    maxtime: 10,
+    maxtime: 120,
     prev_score: {},
     prev_score_base: {},
     itemsCompletos: 0,
@@ -899,7 +900,7 @@ module.exports = Menu;
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
-      //this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
       this.loop_creaItem = this.tiempo.loop(4000, this.crearItem, this);//Creacion de items
       this.tiempo.start();
 
@@ -933,6 +934,10 @@ module.exports = Menu;
       //Grupo de log de resultados 
       this.logResultados = this.game.add.group();
       this.logResultados.ultY = 10;
+
+      //Se setea el texto para el cronometro
+      this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer.fixedToCamera = true; 
     },
 
     update: function(){
@@ -966,6 +971,45 @@ module.exports = Menu;
         }
       }); 
     },
+
+    updateTimer: function() {
+      //Se comprueba que el tiempo de juego haya terminado
+      if(this.maxtime == 0){
+        this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+        this.siguiente.inputEnabled = true;
+        this.siguiente.events.onInputDown.add(this.clickListener, this);
+        this.siguiente.fixedToCamera = true; 
+
+        //Detener metodo de update
+        this.tiempo.stop();
+        //Eliminar items restantes en el campo
+        this.items.destroy();
+        this.btnPausa.kill();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.maxtime/60 > 0){
+        minutos = Math.floor(this.maxtime/60);
+        segundos = this.maxtime%60;
+      }else{
+        minutos = 0;
+        segundos = this.maxtime; 
+      }
+      
+      this.maxtime--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.timer.setText(minutos + ':' +segundos);
+    },
+
 
     crearItem: function(){
       var puntoPartida = Math.floor(Math.random() * 2);//Numero aleatorio entre 0 y 1
@@ -1093,8 +1137,8 @@ module.exports = Menu;
       this.logResultados.ultY += 10;
       if(error){
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
-      }else{
         this.error_sound.play();
+      }else{        
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
       }
       this.cajaTexto.destruir();
@@ -1143,6 +1187,45 @@ module.exports = Menu;
 },{"../prefabs/textBox":3}],10:[function(require,module,exports){
 
   'use strict';
+
+  function Nivel3() {}
+  Nivel3.prototype = {
+
+    //Definición de propiedades
+    scoreText: new Array(),
+    score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
+    maxtime: 120,
+    prev_score: {},
+    prev_score_base: {},
+    itemsCompletos: 0,
+    vel:100,//Velocidad de inicio para movimiento de items
+    itemSelec: false,
+
+    mover:false,
+    lanzamiento:false,
+    enPregunta:false,
+
+    //Definicion temporal de preguntas para mostrar por tipo de dato
+    stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
+    numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
+    booleanItems: new Array({pregunta:'Es niño?',variable:'nino'}),
+    arrayItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
+
+    create: function() {
+    },
+
+    update: function(){
+    },
+
+    clickListener: function(){
+      
+    }
+  };
+
+  module.exports = Nivel3;
+},{}],11:[function(require,module,exports){
+
+  'use strict';
   function Play() {}
   Play.prototype = {
     create: function() {
@@ -1177,7 +1260,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 
 'use strict';
 function Preload() {
