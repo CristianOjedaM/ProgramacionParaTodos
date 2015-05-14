@@ -42,6 +42,7 @@ Preload.prototype = {
 
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
+    this.load.image('slot','assets/images/Nivel 3/slot.png');
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
