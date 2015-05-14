@@ -318,7 +318,7 @@
             }
           break;             
         }
-    }
+    },
     enPausa:function(event)
     {
       if(this.game.paused){
