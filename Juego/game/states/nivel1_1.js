@@ -74,7 +74,7 @@
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       
-      this.game.input.onDown.add(this.enPausa, self);
+      this.game.input.onDown.add(this.enPausa,this.game, self);
     },
 
     update: function() {
@@ -319,10 +319,10 @@
           break;             
         }
     },
-    enPausa:function(event)
+    enPausa:function(game,event)
     {
-      if(this.game.paused){
-        this.game.paused = false;    
+      if(game.paused){
+        game.paused = false;    
       }      
     }
 
