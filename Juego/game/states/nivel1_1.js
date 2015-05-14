@@ -321,8 +321,9 @@
     },
     enPausa:function(game,event)
     {
-      if(game.paused){
-        game.paused = false;    
+      console.log('Entro');
+      if(game.game.paused){
+        game.game.paused = false;    
       }      
     }
 
