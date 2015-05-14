@@ -74,7 +74,7 @@
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       
-      this.game.input.onDown.add(this.enPausa,this.game, self);
+      this.game.input.onDown.add(this.enPausa,this.game, this.MensajeAyuda);
     },
 
     update: function() {
@@ -319,10 +319,10 @@
           break;             
         }
     },
-    enPausa:function(game,event)
+    enPausa:function(game,Mensaje)
     {      
       if(game.game.paused){
-        this.MensajeAyuda.destroy();
+        Mensaje.destroy();
         game.game.paused = false;    
       }      
     }
