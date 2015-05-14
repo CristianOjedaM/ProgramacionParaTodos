@@ -40,6 +40,9 @@ Preload.prototype = {
     this.load.image('lanzador', 'assets/images/Nivel 2/lanzador.png');
     this.load.image('ancla', 'assets/images/Nivel 2/ancla.png');
 
+    /*Imagenes nivel 3*/
+    this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
+
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
 
