@@ -320,6 +320,7 @@
     },
     enPausa:function(game,Mensaje,event)
     {      
+      
       if(game.game.paused){
         Mensaje.destroy();
         game.game.paused = false;    
