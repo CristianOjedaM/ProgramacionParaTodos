@@ -318,14 +318,16 @@
             }
           break;             
         }
-    }   
-  };
-  
-  function enPausa(event){
-    if(this.game.paused){
-       this.game.paused = false;    
     }
-  }  
+    enPausa:function(event)
+    {
+      if(this.game.paused){
+        this.game.paused = false;    
+      }      
+    }
+
+  };  
+ 
 
   module.exports = Nivel1_1;
 
