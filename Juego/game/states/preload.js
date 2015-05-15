@@ -37,7 +37,7 @@ Preload.prototype = {
     this.load.image('tile_nivel2', 'assets/images/Nivel 2/tile.jpg');
     this.load.image('resortera', 'assets/images/Nivel 2/resortera.png');
     this.load.image('resorte', 'assets/images/Nivel 2/resorte.png');
-    this.load.image('lanzador', 'assets/images/Nivel 2/lanzador.png');
+    this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
     this.load.image('ancla', 'assets/images/Nivel 2/ancla.png');
 
     /*Imagenes nivel 3*/

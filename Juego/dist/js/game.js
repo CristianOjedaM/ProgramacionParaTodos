@@ -918,9 +918,9 @@ module.exports = Menu;
       this.nuevoLanzador();
 
       //Se realiza creacion de la resortera (base)
-      this.game.add.sprite(130, this.game.world.height - 160, 'resortera');
-      this.resortera = this.game.add.sprite(205, this.game.world.height - 137, 'ancla');
-      this.game.physics.p2.enable(this.resortera,true);
+      this.game.add.sprite(188, this.game.world.height - 160, 'resortera');
+      this.resortera = this.game.add.sprite(204, this.game.world.height - 147, '');
+      this.game.physics.p2.enable(this.resortera,false);
       this.resortera.body.static = true;
       this.resortera.body.setCircle(5);
 
@@ -944,6 +944,8 @@ module.exports = Menu;
       /*Validaciones sobre resortera*/
       if(!this.lanzamiento){
         this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+      }else{
+        this.lanzador.angle += 1;
       }
       if(this.mover){
         this.lanzador.body.x = this.game.input.x;
@@ -1039,11 +1041,15 @@ module.exports = Menu;
     },
 
     nuevoLanzador: function(){
+      var tipo = Math.floor(Math.random()*3);
+      tipo = tipo * 3;
       this.lanzador = this.game.add.sprite(120, this.game.world.height - 100, 'lanzador');
-      this.game.physics.p2.enable(this.lanzador,true);
+      this.lanzador.animations.add('idle', [tipo,tipo+1,tipo+2], 10, true,60, true);
+      this.lanzador.animations.play('idle');
+      this.game.physics.p2.enable(this.lanzador,false);
       this.lanzador.body.collideWorldBounds = false;
       this.lanzador.inputEnabled = true;
-      this.lanzador.body.setCircle(20);
+      this.lanzador.body.setCircle(18);
       //this.lanzador.body.data.shapes[0].sensor = true;
       //Se establecen las colisiones contra los objetos de item
       this.lanzador.body.setCollisionGroup(this.lanzadorGrupoColision);
@@ -1192,8 +1198,7 @@ module.exports = Menu;
   Nivel3.prototype = {
 
     //Definición de propiedades
-    scoreText: new Array(),
-    score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
+    score: 0,
     maxtime: 120,
     prev_score: {},
     prev_score_base: {},
@@ -1201,15 +1206,13 @@ module.exports = Menu;
     vel:100,//Velocidad de inicio para movimiento de items
     itemSelec: false,
 
-    mover:false,
-    lanzamiento:false,
-    enPregunta:false,
+    //Variables de control
+    colocados: 0,
+    solicitado: true,
 
     //Definicion temporal de preguntas para mostrar por tipo de dato
-    stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
-    numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
-    booleanItems: new Array({pregunta:'Es niño?',variable:'nino'}),
-    arrayItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
+    datosItems: new Array({texto:'nombre("Maria")',variable:'nombre',dato:"Maria"},{texto:'"Maria"',dato:'"Maria"'}),
+    operadorItems: new Array('>','<','>=','<=','==','!='),
 
     create: function() {
       //Habilitacion de fisicas
@@ -1236,6 +1239,7 @@ module.exports = Menu;
       for(var i =0; i<3;i++){
         var slot = this.slots.create(600,ySlot,'slot');
         slot.tipo = i;//El tipo define: 0->Dato 1 - 1->Operador - 2->Dato 2
+        slot.usado = false;
         ySlot += 110;
       }
 
@@ -1255,6 +1259,9 @@ module.exports = Menu;
         xItems = 70;
         yItems += 85;
       }
+
+      //Creacion de texto de puntaje
+      this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
     },
 
     update: function(){
@@ -1267,8 +1274,16 @@ module.exports = Menu;
         if(item.movimiento == true){
           item.body.x = mouseX - item.body.width/2;
           item.body.y = mouseY - item.body.height/2;
+          if(item.texto){
+            item.texto.x = mouseX - item.body.width/2;
+            item.texto.y = mouseY - item.body.height/2;
+          }
         }
       });
+    },
+
+    solicitud:function(){
+      var sol = Math.floor(Math.random()*2);
     },
 
     crearItem: function(xItem,yItem){
@@ -1282,6 +1297,24 @@ module.exports = Menu;
         tipo = 0;
       }
       var item = this.items.create(xItem,yItem,'item3',tipo);
+      item.tipo = tipo;
+      switch(item.tipo){
+        case 0:
+
+          break;
+        case 1:
+          var info = this.datosItems[Math.floor(Math.random() * this.datosItems.length)];
+          if(info.variable){
+            item.variable = info.variable;
+          }
+          item.dato = info.dato;
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info.texto, { font: '12px calibri', fill: '#000', align:'center'});
+          break;
+        case 2:
+          item.dato = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)];
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y, this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)], { font: '12px calibri', fill: '#000', align:'center'});
+          break;
+      }
       item.usado = false;
       item.inputEnabled = true;
       item.events.onInputDown.add(this.clickItem, this);
@@ -1295,6 +1328,20 @@ module.exports = Menu;
         item.usado = true;
         item.bringToTop();
         this.items.updateZ();
+
+        var item_nuevo = this.crearItem(item.x, -15);
+        item_nuevo.i = -1;
+        item_nuevo.j = item.j;
+
+        this.items.forEach(function(item_) {
+          if(item_.i < item.i && item_.j == item.j && !item_.usado){
+            item_.game.add.tween(item_).to({y:item_.y+85}, 350, Phaser.Easing.Linear.None, true);
+            if(item_.texto){
+              item_.game.add.tween(item_.texto).to({y:item_.texto.y+85}, 350, Phaser.Easing.Linear.None, true);
+            }
+            item_.i++;
+          }
+        });        
       }
     },
 
@@ -1302,22 +1349,81 @@ module.exports = Menu;
       if(item.movimiento){
         item.movimiento = false;
         var itemsTemp = this.items;
+        var colocadosTemp = this.colocados;
+        var puesto = false;
         this.slots.forEach(function(slot) {
-          if(item.overlap(slot)){
-            console.log("toco"+item.movimiento);
-            item.x = slot.body.x + (slot.body.width - item.body.width)/2;
-            item.y = slot.body.y + (slot.body.height - item.body.height)/2;
-            switch(slot.tipo){
-              case 0:
-                
-                break;
-              case 1:
-                break;
-              case 2:
-                break;
+          if(!puesto){
+            if(item.overlap(slot) && !slot.usado){
+              if(item.variable){
+                item.texto.text = item.variable;
+              }else{
+                if(item.dato){
+                  item.texto.text = item.dato;
+                }
+              }
+              item.x = slot.body.x + (slot.body.width - item.body.width)/2;
+              item.y = slot.body.y + (slot.body.height - item.body.height)/2;
+              slot.usado = true;
+              slot.item = item;
+              colocadosTemp++;
+              puesto = true;
             }
           }
         });
+        if(!puesto){
+          item.destroy();
+        }
+        this.colocados = colocadosTemp;
+        if(this.colocados == 3){//Se realiza la validacion y asignacion de datos para comprobacion de respuestas correctas o incorrectas
+          var correcto = true;
+          var contComodin = 0;
+          var dato1, dato2, operador;
+          this.slots.forEach(function(slot) {
+            switch(slot.tipo){
+              case 0://Slot dato 1
+                if(slot.item.tipo == 0){//Tipo de comodin
+                  contComodin++;
+                }else if(slot.item.tipo == 1){//En caso de tipo dato se asigna
+                  dato1 = slot.item.dato;
+                }else{//En caso de tipo operador en primer slot e genera error
+                  correcto = false;
+                }
+                break;
+              case 1://Slot operador logica
+                if(slot.item.tipo == 2){//Tipo de operador logico
+                  operador = slot.item.dato;
+                }else if(slot.item.tipo == 0){//Tipo de comodin
+                  contComodin++;
+                }else{
+                  correcto = false;
+                }
+                break;
+              case 2://Slot dato 2
+                if(slot.item.tipo == 0){//Tipo de comodin
+                  contComodin++;
+                }else if(slot.item.tipo == 1){//En caso de tipo dato se asigna
+                  dato2 = slot.item.dato;
+                }else{//En caso de tipo operador en primer slot e genera error
+                  correcto = false;
+                }
+                break;
+            }  
+            if(slot.item.texto){slot.item.texto.destroy();}
+            slot.item.destroy();
+            slot.usado = false;          
+          });
+          this.colocados = 0;
+          if(correcto){//En caso de contar con items apropiados para cada slot se valida que sea sentencia apropiada y con sentido
+            if(contComodin == 3){//En caso de ser puntaje de comodin
+              this.score += 50;
+            }else{//Se valida la respuesta
+
+            }
+            this.scoreText.text = 'Puntaje: ' + this.score;
+            contComodin = 0;
+          }
+
+        }
       }
     }
   };
@@ -1405,7 +1511,7 @@ Preload.prototype = {
     this.load.image('tile_nivel2', 'assets/images/Nivel 2/tile.jpg');
     this.load.image('resortera', 'assets/images/Nivel 2/resortera.png');
     this.load.image('resorte', 'assets/images/Nivel 2/resorte.png');
-    this.load.image('lanzador', 'assets/images/Nivel 2/lanzador.png');
+    this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
     this.load.image('ancla', 'assets/images/Nivel 2/ancla.png');
 
     /*Imagenes nivel 3*/

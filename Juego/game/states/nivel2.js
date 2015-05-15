@@ -54,9 +54,9 @@
       this.nuevoLanzador();
 
       //Se realiza creacion de la resortera (base)
-      this.game.add.sprite(130, this.game.world.height - 160, 'resortera');
-      this.resortera = this.game.add.sprite(205, this.game.world.height - 137, 'ancla');
-      this.game.physics.p2.enable(this.resortera,true);
+      this.game.add.sprite(188, this.game.world.height - 160, 'resortera');
+      this.resortera = this.game.add.sprite(204, this.game.world.height - 147, '');
+      this.game.physics.p2.enable(this.resortera,false);
       this.resortera.body.static = true;
       this.resortera.body.setCircle(5);
 
@@ -80,6 +80,8 @@
       /*Validaciones sobre resortera*/
       if(!this.lanzamiento){
         this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+      }else{
+        this.lanzador.angle += 1;
       }
       if(this.mover){
         this.lanzador.body.x = this.game.input.x;
@@ -175,11 +177,15 @@
     },
 
     nuevoLanzador: function(){
+      var tipo = Math.floor(Math.random()*3);
+      tipo = tipo * 3;
       this.lanzador = this.game.add.sprite(120, this.game.world.height - 100, 'lanzador');
-      this.game.physics.p2.enable(this.lanzador,true);
+      this.lanzador.animations.add('idle', [tipo,tipo+1,tipo+2], 10, true,60, true);
+      this.lanzador.animations.play('idle');
+      this.game.physics.p2.enable(this.lanzador,false);
       this.lanzador.body.collideWorldBounds = false;
       this.lanzador.inputEnabled = true;
-      this.lanzador.body.setCircle(20);
+      this.lanzador.body.setCircle(18);
       //this.lanzador.body.data.shapes[0].sensor = true;
       //Se establecen las colisiones contra los objetos de item
       this.lanzador.body.setCollisionGroup(this.lanzadorGrupoColision);
