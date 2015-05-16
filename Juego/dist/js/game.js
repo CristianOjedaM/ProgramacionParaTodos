@@ -541,7 +541,7 @@ module.exports = Menu;
     prev_score_base: {},
     error_score: {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0},
     itemsCompletos: 0,
-    vel:100,//Velocidad de inicio para movimiento de items
+    vel:50,//Velocidad de inicio para movimiento de items
     itemSelec: false,
     pausa: false,    
 
@@ -649,6 +649,7 @@ module.exports = Menu;
       var xItem = Math.floor(Math.random() * (this.game.width/3)) + 32;
       var yItem = (this.game.height);
       var continuar = false;
+      this.vel += 10; 
       switch(tipo){
         case 0://En caso de ser tipo 0 se genera un item de cadena (Si existen aun)
           if(this.prev_score.tipoCadena > 0){
