@@ -37,7 +37,7 @@
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
       //this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      this.loop_creaItem = this.tiempo.loop(1000, this.crearItem, this);//Creacion de items
+      this.loop_creaItem = this.tiempo.loop(2500, this.crearItem, this);//Creacion de items
       this.tiempo.start();
 
       //Se definen los audios del nivel
@@ -121,7 +121,7 @@
       var xItem = Math.floor(Math.random() * (this.game.width/3)) + 32;
       var yItem = (this.game.height);
       var continuar = false;
-      this.vel += 10; 
+      this.vel += 7; 
       switch(tipo){
         case 0://En caso de ser tipo 0 se genera un item de cadena (Si existen aun)
           if(this.prev_score.tipoCadena > 0){
