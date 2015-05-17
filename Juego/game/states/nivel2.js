@@ -264,7 +264,7 @@
           }
           break;
         case 3://Solicitud variable de tipo array
-          if(/^([{1})([0-9a-zA-Z])(]{1})$/.test(this.cajaTexto.texto.text)){
+          if(/^\[("[\w]*"|[0-9]*)(,("[\w]*"|[0-9]*))*\]$/.test(this.cajaTexto.texto.text)){
             //En caso de respuesta correcta
             console.log(true);
             error = false;
