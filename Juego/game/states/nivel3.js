@@ -16,6 +16,7 @@
     //Variables de control
     colocados: 0,
     solicitado: true,
+    resp_time:20,
 
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Maria")',variable:'nombre',dato:"Maria"},{texto:'"Maria"',dato:'"Maria"'}),
@@ -30,7 +31,7 @@
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
-      //this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
+      this.tiempo.loop(1000, this.updateTimer, this);//Contadores de juego
       this.tiempo.start();
 
       //Se definen los audios del nivel
@@ -42,7 +43,7 @@
       //Se realiza la creacion del grupo de slots o contenedores
       this.slots = this.game.add.group();
       this.slots.enableBody = true;
-      var ySlot = 80;
+      var ySlot = 110;
       for(var i =0; i<3;i++){
         var slot = this.slots.create(600,ySlot,'slot');
         slot.tipo = i;//El tipo define: 0->Dato 1 - 1->Operador - 2->Dato 2
@@ -69,6 +70,7 @@
 
       //Creacion de texto de puntaje
       this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.solicitud();
     },
 
     update: function(){
@@ -91,6 +93,74 @@
 
     solicitud:function(){
       var sol = Math.floor(Math.random()*2);
+      if(sol == 0){//Solicitud de veradero{}
+        this.solicitado = true;
+      }else{//Solicitud de falso
+        this.solicitado = false;
+      }
+      if(this.solicitudTxt){
+        this.solicitudTxt.setText(this.solicitado);
+      }else{
+        this.solicitudTxt = this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
+      }
+      if(this.solicitudTime){
+        this.resp_time = 20;
+      }else{
+        this.solicitudTime = this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+      }
+      this.slots.forEach(function(slot) {
+        if(slot.item){
+          if(slot.item.texto){slot.item.texto.destroy();}
+          slot.item.destroy();
+          slot.usado = false;
+        }
+      });
+      this.colocados = 0;
+    },
+
+    updateTimer: function(){
+      //Se comprueba que el tiempo de juego haya terminado
+      /*if(this.maxtime == 0){
+        this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+        this.siguiente.inputEnabled = true;
+        this.siguiente.events.onInputDown.add(this.clickListener, this);
+        this.siguiente.fixedToCamera = true; 
+
+        //Detener metodo de update
+        this.tiempo.stop();
+        //Eliminar items restantes en el campo
+        this.items.forEach(function(item) {
+            item.kill();
+        });
+        this.btnPausa.kill();
+      }*/
+      /*Se comprueba el tiempo por respuesta*/
+      if(this.resp_time == 0){
+        this.solicitud();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.resp_time/60 > 0){
+        minutos = Math.floor(this.resp_time/60);
+        segundos = this.resp_time%60;
+      }else{
+        minutos = 0;
+        segundos = this.resp_time; 
+      }
+      
+      //Se realiza la actualizacion de los contadores de tiempo de juego
+      this.resp_time--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.solicitudTime.setText(minutos + ':' +segundos);
     },
 
     crearItem: function(xItem,yItem){
@@ -118,7 +188,8 @@
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, info.texto, { font: '12px calibri', fill: '#000', align:'center'});
           break;
         case 2:
-          item.dato = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)];
+          var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
+          item.dato = info;
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)], { font: '12px calibri', fill: '#000', align:'center'});
           break;
       }
@@ -178,6 +249,7 @@
           }
         });
         if(!puesto){
+          item.texto.destroy();
           item.destroy();
         }
         this.colocados = colocadosTemp;
@@ -224,12 +296,35 @@
             if(contComodin == 3){//En caso de ser puntaje de comodin
               this.score += 50;
             }else{//Se valida la respuesta
-
+              var sumaPuntos = true;
+              switch(operador){
+                case ">":
+                  break;
+                case "<":
+                  break;
+                case ">=":
+                  break;
+                case "<=":
+                  break;
+                case "==":
+                  if(dato1 != dato2){
+                    sumaPuntos = false;
+                  }
+                  break;
+                case "!=":
+                  if(dato1 == dato2){
+                    sumaPuntos = false;
+                  }
+                  break;
+              }
+              if(sumaPuntos){
+                this.score += 20;
+              }
             }
             this.scoreText.text = 'Puntaje: ' + this.score;
             contComodin = 0;
           }
-
+          this.solicitud();
         }
       }
     }
