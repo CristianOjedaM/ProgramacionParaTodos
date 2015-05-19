@@ -61,6 +61,7 @@
         this.nuevoLanzador();
         if(!this.resorte){
           this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+          this.resorte2 = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
           this.estado = 1;
         }
       }, this);
@@ -95,6 +96,7 @@
       if(this.estado == 1){
         if(!this.lanzamiento){
           this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+          this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
         }else{
           this.lanzador.angle += 1;
         }
@@ -201,7 +203,6 @@
       this.lanzador.body.collideWorldBounds = false;
       this.lanzador.inputEnabled = true;
       this.lanzador.body.setCircle(18);
-      //this.lanzador.body.data.shapes[0].sensor = true;
       //Se establecen las colisiones contra los objetos de item
       this.lanzador.body.setCollisionGroup(this.lanzadorGrupoColision);
       this.lanzador.body.collides(this.itemsGrupoColision,this.hitItem,this);
@@ -290,7 +291,7 @@
           break;
       }
       //Se registra el log de resultados
-      this.ultResultado = this.logResultados.add(this.game.add.text( 5, this.logResultados.ultY , 'var '+this.textoPregunta.variable+' = '+this.cajaTexto.texto.text, { font: '12px calibri', fill: '#000', align:'center'}));
+      this.ultResultado = this.logResultados.add(this.game.add.text( 5, this.logResultados.ultY , 'var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), { font: '12px calibri', fill: '#000', align:'center'}));
       this.logResultados.ultY += 10;
       if(error){
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
@@ -320,12 +321,16 @@
     preRender: function(){
       if(!this.lanzamiento){
         this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+        this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
       }
     },
 
     render: function() {
       if(!this.lanzamiento){
-        this.game.debug.geom(this.resorte);  
+        this.game.debug.geom(this.resorte); 
+        this.game.debug.geom(this.resorte, '#000000'); 
+        this.game.debug.geom(this.resorte2); 
+        this.game.debug.geom(this.resorte2, '#000000'); 
       }
     },
 

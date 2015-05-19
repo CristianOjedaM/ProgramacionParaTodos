@@ -4,6 +4,7 @@ var TextBox = function(game, x, y, width, heigth, defaultTxt) {
   Phaser.Sprite.call(this, game, x, y, '', 0);
 
   /*Definicion de propiedades*/
+  this.defaultTxt = defaultTxt;
   this.seleccionado = true;
   this.shift = false;
   this.length = 20;
@@ -53,6 +54,15 @@ TextBox.prototype.keyPress = function(data) {
             this.texto.text = this.textData;
           }else{
             this.textData += "2";
+            this.texto.text = this.textData;
+          }
+          break;
+        case 188://Tecla para comas (,)
+          if(this.shift){
+            this.textData += ";";
+            this.texto.text = this.textData;
+          }else{
+            this.textData += ",";
             this.texto.text = this.textData;
           }
           break;
