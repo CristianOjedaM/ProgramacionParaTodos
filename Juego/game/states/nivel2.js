@@ -20,6 +20,7 @@
     mover:false,
     lanzamiento:false,
     enPregunta:false,
+    estado:0,
 
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
@@ -50,17 +51,30 @@
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
       this.itemsGrupoColision = this.game.physics.p2.createCollisionGroup();
 
-      //Se realiza creacion de la resortera (lanzador)
-      this.nuevoLanzador();
+      //Creacion de sprite jugador
+      this.jugador = this.game.add.sprite(80,this.game.world.height - 115,'personaje2');
+      this.jugador.animations.add('idle', [10,11,12,13,14], 10, true,60, true);
+      this.animLanzar = this.jugador.animations.add('lanzar', [0,1,2,3,4,5,6,7,8,9], 10, false);
+      this.animLanzar.onComplete.add(function() {
+        this.jugador.animations.play('idle');
+        //Se realiza creacion de la resortera (lanzador)
+        this.nuevoLanzador();
+        if(!this.resorte){
+          this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+          this.estado = 1;
+        }
+      }, this);
+      this.jugador.animations.play('lanzar');
 
       //Se realiza creacion de la resortera (base)
-      this.game.add.sprite(188, this.game.world.height - 160, 'resortera');
-      this.resortera = this.game.add.sprite(204, this.game.world.height - 147, '');
+      this.game.add.sprite(188, this.game.world.height - 180, 'resortera');
+      this.resortera = this.game.add.sprite(204, this.game.world.height - 167, '');
       this.game.physics.p2.enable(this.resortera,false);
       this.resortera.body.static = true;
       this.resortera.body.setCircle(5);
 
-      this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+      //Creacion del piso de juego
+      this.game.add.tileSprite(0, this.game.world.height - 40, 800, 40, 'piso');
 
       //Grupo de items
       this.items = this.game.add.group();
@@ -78,36 +92,38 @@
 
     update: function(){
       /*Validaciones sobre resortera*/
-      if(!this.lanzamiento){
-        this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
-      }else{
-        this.lanzador.angle += 1;
-      }
-      if(this.mover){
-        this.lanzador.body.x = this.game.input.x;
-        this.lanzador.body.y = this.game.input.y;
-      }
-
-      /*Validaciones sobre municiones de lanzamiento*/
-      if(this.lanzador.body.x < 0 || this.lanzador.body.x > 800 || this.lanzador.body.y < 0 || this.lanzador.body.y > 600){
-        this.lanzador.destroy();
-        this.nuevoLanzador();
-      }
-
-      /*Validaciones sobre items*/
-      this.items.forEach(function(item) {
-        //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){
-          item.body.velocity.y = 0;//Se retira el movimiento vertical
-          item.body.x = mouseX
-          item.body.y = mouseY;
+      if(this.estado == 1){
+        if(!this.lanzamiento){
+          this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+        }else{
+          this.lanzador.angle += 1;
         }
-
-        //Se verifica que los items no hayan superado los limites del escenario
-        if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
-          item.kill();
+        if(this.mover){
+          this.lanzador.body.x = this.game.input.x;
+          this.lanzador.body.y = this.game.input.y;
         }
-      }); 
+  
+        /*Validaciones sobre municiones de lanzamiento*/
+        if(this.lanzador.body.x < 0 || this.lanzador.body.x > 800 || this.lanzador.body.y < 0 || this.lanzador.body.y > 600){
+          this.lanzador.destroy();
+          this.jugador.animations.play('lanzar');
+        }
+  
+        /*Validaciones sobre items*/
+        this.items.forEach(function(item) {
+          //Se verifican los items para realizar su movimiento en caso de click
+          if(item.movimiento == true){
+            item.body.velocity.y = 0;//Se retira el movimiento vertical
+            item.body.x = mouseX
+            item.body.y = mouseY;
+          }
+  
+          //Se verifica que los items no hayan superado los limites del escenario
+          if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
+            item.kill();
+          }
+        }); 
+      }
     },
 
     updateTimer: function() {
@@ -147,7 +163,6 @@
    
       this.timer.setText(minutos + ':' +segundos);
     },
-
 
     crearItem: function(){
       var puntoPartida = Math.floor(Math.random() * 2);//Numero aleatorio entre 0 y 1
@@ -285,7 +300,7 @@
       }
       this.cajaTexto.destruir();
       this.grupoPregunta.destroy();
-      this.nuevoLanzador();
+      this.jugador.animations.play('lanzar');
     },
 
     clickLanzador: function(){

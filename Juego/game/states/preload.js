@@ -36,9 +36,8 @@ Preload.prototype = {
     /*Imagenes nivel 2*/
     this.load.image('tile_nivel2', 'assets/images/Nivel 2/tile.jpg');
     this.load.image('resortera', 'assets/images/Nivel 2/resortera.png');
-    this.load.image('resorte', 'assets/images/Nivel 2/resorte.png');
     this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
-    this.load.image('ancla', 'assets/images/Nivel 2/ancla.png');
+    this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
 
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
@@ -46,6 +45,7 @@ Preload.prototype = {
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
+    this.load.audio('jump_sound', 'assets/audio/generales/salto.wav');
 
   },
   create: function() {

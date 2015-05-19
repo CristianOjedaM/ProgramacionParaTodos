@@ -291,6 +291,8 @@ module.exports = Menu;
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
 
+      //Se definen los audios del nivel
+      this.jump_sound = this.game.add.audio('jump_sound');
 
       //Grupo de plataformas
       this.plataformas = this.game.add.group();
@@ -412,7 +414,8 @@ module.exports = Menu;
       //Habilitar salto si el jugador toca alguna plataforma
       if (this.cursors.up.isDown && this.jugador.body.touching.down){
         this.jugador.esSalto = true;
-        this.jugador.body.velocity.y = -450;        
+        this.jugador.body.velocity.y = -450;
+        this.jump_sound.play();
       }
 
       //Acciones de movimiento para las plataformas de juego
@@ -885,6 +888,7 @@ module.exports = Menu;
     mover:false,
     lanzamiento:false,
     enPregunta:false,
+    estado:0,
 
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
@@ -915,17 +919,30 @@ module.exports = Menu;
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
       this.itemsGrupoColision = this.game.physics.p2.createCollisionGroup();
 
-      //Se realiza creacion de la resortera (lanzador)
-      this.nuevoLanzador();
+      //Creacion de sprite jugador
+      this.jugador = this.game.add.sprite(80,this.game.world.height - 115,'personaje2');
+      this.jugador.animations.add('idle', [10,11,12,13,14], 10, true,60, true);
+      this.animLanzar = this.jugador.animations.add('lanzar', [0,1,2,3,4,5,6,7,8,9], 10, false);
+      this.animLanzar.onComplete.add(function() {
+        this.jugador.animations.play('idle');
+        //Se realiza creacion de la resortera (lanzador)
+        this.nuevoLanzador();
+        if(!this.resorte){
+          this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+          this.estado = 1;
+        }
+      }, this);
+      this.jugador.animations.play('lanzar');
 
       //Se realiza creacion de la resortera (base)
-      this.game.add.sprite(188, this.game.world.height - 160, 'resortera');
-      this.resortera = this.game.add.sprite(204, this.game.world.height - 147, '');
+      this.game.add.sprite(188, this.game.world.height - 180, 'resortera');
+      this.resortera = this.game.add.sprite(204, this.game.world.height - 167, '');
       this.game.physics.p2.enable(this.resortera,false);
       this.resortera.body.static = true;
       this.resortera.body.setCircle(5);
 
-      this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+      //Creacion del piso de juego
+      this.game.add.tileSprite(0, this.game.world.height - 40, 800, 40, 'piso');
 
       //Grupo de items
       this.items = this.game.add.group();
@@ -943,36 +960,38 @@ module.exports = Menu;
 
     update: function(){
       /*Validaciones sobre resortera*/
-      if(!this.lanzamiento){
-        this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
-      }else{
-        this.lanzador.angle += 1;
-      }
-      if(this.mover){
-        this.lanzador.body.x = this.game.input.x;
-        this.lanzador.body.y = this.game.input.y;
-      }
-
-      /*Validaciones sobre municiones de lanzamiento*/
-      if(this.lanzador.body.x < 0 || this.lanzador.body.x > 800 || this.lanzador.body.y < 0 || this.lanzador.body.y > 600){
-        this.lanzador.destroy();
-        this.nuevoLanzador();
-      }
-
-      /*Validaciones sobre items*/
-      this.items.forEach(function(item) {
-        //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){
-          item.body.velocity.y = 0;//Se retira el movimiento vertical
-          item.body.x = mouseX
-          item.body.y = mouseY;
+      if(this.estado == 1){
+        if(!this.lanzamiento){
+          this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+        }else{
+          this.lanzador.angle += 1;
         }
-
-        //Se verifica que los items no hayan superado los limites del escenario
-        if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
-          item.kill();
+        if(this.mover){
+          this.lanzador.body.x = this.game.input.x;
+          this.lanzador.body.y = this.game.input.y;
         }
-      }); 
+  
+        /*Validaciones sobre municiones de lanzamiento*/
+        if(this.lanzador.body.x < 0 || this.lanzador.body.x > 800 || this.lanzador.body.y < 0 || this.lanzador.body.y > 600){
+          this.lanzador.destroy();
+          this.jugador.animations.play('lanzar');
+        }
+  
+        /*Validaciones sobre items*/
+        this.items.forEach(function(item) {
+          //Se verifican los items para realizar su movimiento en caso de click
+          if(item.movimiento == true){
+            item.body.velocity.y = 0;//Se retira el movimiento vertical
+            item.body.x = mouseX
+            item.body.y = mouseY;
+          }
+  
+          //Se verifica que los items no hayan superado los limites del escenario
+          if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
+            item.kill();
+          }
+        }); 
+      }
     },
 
     updateTimer: function() {
@@ -1012,7 +1031,6 @@ module.exports = Menu;
    
       this.timer.setText(minutos + ':' +segundos);
     },
-
 
     crearItem: function(){
       var puntoPartida = Math.floor(Math.random() * 2);//Numero aleatorio entre 0 y 1
@@ -1129,7 +1147,7 @@ module.exports = Menu;
           }
           break;
         case 3://Solicitud variable de tipo array
-          if(/^([{1})([0-9a-zA-Z])(]{1})$/.test(this.cajaTexto.texto.text)){
+          if(/^\[("[\w]*"|[0-9]*)(,("[\w]*"|[0-9]*))*\]$/.test(this.cajaTexto.texto.text)){
             //En caso de respuesta correcta
             console.log(true);
             error = false;
@@ -1150,7 +1168,7 @@ module.exports = Menu;
       }
       this.cajaTexto.destruir();
       this.grupoPregunta.destroy();
-      this.nuevoLanzador();
+      this.jugador.animations.play('lanzar');
     },
 
     clickLanzador: function(){
@@ -1213,7 +1231,7 @@ module.exports = Menu;
     resp_time:20,
 
     //Definicion temporal de preguntas para mostrar por tipo de dato
-    datosItems: new Array({texto:'nombre("Maria")',variable:'nombre',dato:"Maria"},{texto:'"Maria"',dato:'"Maria"'}),
+    datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
 
     create: function() {
@@ -1384,7 +1402,7 @@ module.exports = Menu;
         case 2:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y, this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)], { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
           break;
       }
       item.usado = false;
@@ -1443,7 +1461,7 @@ module.exports = Menu;
           }
         });
         if(!puesto){
-          item.texto.destroy();
+          if(item.texto){item.texto.destroy();}
           item.destroy();
         }
         this.colocados = colocadosTemp;
@@ -1490,29 +1508,103 @@ module.exports = Menu;
             if(contComodin == 3){//En caso de ser puntaje de comodin
               this.score += 50;
             }else{//Se valida la respuesta
-              var sumaPuntos = true;
+              var verdadero = true;
               switch(operador){
                 case ">":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1<=dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1<=dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case "<":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1>=dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1>=dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case ">=":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1<dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1<dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case "<=":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1>dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1>dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case "==":
                   if(dato1 != dato2){
-                    sumaPuntos = false;
+                    verdadero = false;
                   }
                   break;
                 case "!=":
                   if(dato1 == dato2){
-                    sumaPuntos = false;
+                    verdadero = false;
                   }
                   break;
               }
-              if(sumaPuntos){
-                this.score += 20;
+              if(this.solicitado){
+                if(verdadero){
+                  this.score += 20;
+                }
+              }else{
+                if(!verdadero){
+                  this.score += 20;
+                }
               }
             }
             this.scoreText.text = 'Puntaje: ' + this.score;
@@ -1606,9 +1698,8 @@ Preload.prototype = {
     /*Imagenes nivel 2*/
     this.load.image('tile_nivel2', 'assets/images/Nivel 2/tile.jpg');
     this.load.image('resortera', 'assets/images/Nivel 2/resortera.png');
-    this.load.image('resorte', 'assets/images/Nivel 2/resorte.png');
     this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
-    this.load.image('ancla', 'assets/images/Nivel 2/ancla.png');
+    this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
 
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
@@ -1616,6 +1707,7 @@ Preload.prototype = {
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
+    this.load.audio('jump_sound', 'assets/audio/generales/salto.wav');
 
   },
   create: function() {

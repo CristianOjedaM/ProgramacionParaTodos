@@ -26,6 +26,8 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
 
+      //Se definen los audios del nivel
+      this.jump_sound = this.game.add.audio('jump_sound');
 
       //Grupo de plataformas
       this.plataformas = this.game.add.group();
@@ -147,7 +149,8 @@
       //Habilitar salto si el jugador toca alguna plataforma
       if (this.cursors.up.isDown && this.jugador.body.touching.down){
         this.jugador.esSalto = true;
-        this.jugador.body.velocity.y = -450;        
+        this.jugador.body.velocity.y = -450;
+        this.jump_sound.play();
       }
 
       //Acciones de movimiento para las plataformas de juego

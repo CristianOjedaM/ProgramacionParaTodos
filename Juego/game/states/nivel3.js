@@ -19,7 +19,7 @@
     resp_time:20,
 
     //Definicion temporal de preguntas para mostrar por tipo de dato
-    datosItems: new Array({texto:'nombre("Maria")',variable:'nombre',dato:"Maria"},{texto:'"Maria"',dato:'"Maria"'}),
+    datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
 
     create: function() {
@@ -190,7 +190,7 @@
         case 2:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y, this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)], { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
           break;
       }
       item.usado = false;
@@ -249,7 +249,7 @@
           }
         });
         if(!puesto){
-          item.texto.destroy();
+          if(item.texto){item.texto.destroy();}
           item.destroy();
         }
         this.colocados = colocadosTemp;
@@ -296,29 +296,103 @@
             if(contComodin == 3){//En caso de ser puntaje de comodin
               this.score += 50;
             }else{//Se valida la respuesta
-              var sumaPuntos = true;
+              var verdadero = true;
               switch(operador){
                 case ">":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1<=dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1<=dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case "<":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1>=dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1>=dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case ">=":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1<dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1<dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case "<=":
+                  if(isNaN(dato1)){//Se valida si el primer valor es de caracter numerico
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      if(dato1>dato2){
+                        verdadero = false;
+                      }
+                    }else{
+                      verdadero = false;
+                    }
+                  }else{
+                    if(isNaN(dato2)){//Se valida si el segundo valor es de caracter numerico
+                      verdadero = false;
+                    }else{
+                      if(dato1>dato2){
+                        verdadero = false;
+                      }
+                    }
+                  }
                   break;
                 case "==":
                   if(dato1 != dato2){
-                    sumaPuntos = false;
+                    verdadero = false;
                   }
                   break;
                 case "!=":
                   if(dato1 == dato2){
-                    sumaPuntos = false;
+                    verdadero = false;
                   }
                   break;
               }
-              if(sumaPuntos){
-                this.score += 20;
+              if(this.solicitado){
+                if(verdadero){
+                  this.score += 20;
+                }
+              }else{
+                if(!verdadero){
+                  this.score += 20;
+                }
               }
             }
             this.scoreText.text = 'Puntaje: ' + this.score;
