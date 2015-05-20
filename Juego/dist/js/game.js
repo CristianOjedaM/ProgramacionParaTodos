@@ -59,7 +59,7 @@ window.onload = function () {
   Pause.prototype.show = function(){
     var game_ = this.game;
     var tween = this.game.add.tween(this).to({y:0}, 500, Phaser.Easing.Bounce.Out, true);
-    tween.onComplete.add(function(){this.game.paused = true; enPausa(game_);}, this);
+    tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
@@ -377,13 +377,13 @@ module.exports = Menu;
       this.game.camera.follow(this.jugador);
 
       //Se agrega el boton de pausa
-      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa', this.pausaJuego, this);
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
       this.btnPausa.fixedToCamera = true;
 
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
-      this.game.input.onDown.add(this.pausaJuego,this,self);
+      this.game.input.onDown.add(this.pausaJuego,this);
     },
 
     update: function() {
@@ -524,16 +524,22 @@ module.exports = Menu;
       this.game.state.start('nivel1_1',true,false,this.score);
     },
 
-    pausaJuego: function(game,event){
-      if(this.pausa == false){
-        //Se muestra panel de pausa
-        this.pnlPausa.show();
-        this.pausa = true;      
-      }else{
-        //Se esconde el panel de pausa
-        this.game.paused = false;
-        this.pnlPausa.hide();
-        this.pausa = false;
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.pausa == false){
+          //Se muestra panel de pausa
+          this.pnlPausa.show();
+          this.pausa = true;      
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.pausa = false;
+        }
       }
     }
   };
@@ -1630,7 +1636,12 @@ module.exports = Menu;
           this.solicitud();
         }
       }
-    }
+    },
+
+    revolverItems: function(){
+      this.items.forEach(function(slot) {
+      });
+    },
   };
 
   module.exports = Nivel3;

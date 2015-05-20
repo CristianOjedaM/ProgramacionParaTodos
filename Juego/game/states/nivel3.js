@@ -401,7 +401,12 @@
           this.solicitud();
         }
       }
-    }
+    },
+
+    revolverItems: function(){
+      this.items.forEach(function(slot) {
+      });
+    },
   };
 
   module.exports = Nivel3;
