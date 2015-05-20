@@ -194,6 +194,8 @@
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
           break;
       }
+      item.new_i = 99;//Numero de control de no asignados
+      item.new_j = 99;//Numero de control de no asignados
       item.usado = false;
       item.inputEnabled = true;
       item.events.onInputDown.add(this.clickItem, this);
@@ -409,22 +411,42 @@
       for(var i=0;i<5;i++){
         usados[i] = [false,false,false,false,false];
       }
+      //Asignacion inicial parcial de nuevas posiciones
       this.items.forEach(function(item) {
         var i = Math.floor(Math.random()*5);
         var j = Math.floor(Math.random()*5);
-        if(!usados[i][j]){          
+        if(!usados[i][j]){ 
+          item.i = item.new_i;
+          item.j = item.new_j;         
           item.new_i = i;
           item.new_j = j;
           usados[i][j] = true;
         }
       });
+      //Asignacion completa de nuevas posiciones
+      for(var i=0; i<usados.length; i++) {
+        for(var j=0; j<usados.length; j++) {//Se usa misma longitud ya que es una matriz cuadrada
+          this.items.forEach(function(item) {
+            if(usados[i][j] == false){
+              if(item.new_i == 99 && item.new_j == 99){
+                item.i = item.new_i;
+                item.j = item.new_j;
+                item.new_i = i;
+                item.new_j = j;
+                usados[i][j] = true;
+              }
+            }
+          });
+        } 
+      }
+      //Efecto y reposicion de cada item
       this.items.forEach(function(item) {
         item.game.add.tween(item).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
         if(item.texto){
           item.game.add.tween(item.texto).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
         }
-        item.i = item.new_i;
-        item.j = item.new_j;
+        item.new_i = 99;//Numero para validacion de asignados
+        item.new_j = 99;//Numero para validacion de asignados
       });
     },
   };
