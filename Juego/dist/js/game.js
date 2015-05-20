@@ -1697,7 +1697,7 @@ Preload.prototype = {
 
     /*Botones*/
     this.load.image('btnContinuar', 'assets/images/Botones/btnContinuar.png');
-    this.load.spritesheet('btnPausa', 'assets/images/Botones/btnPausa.png',71,71);
+    this.load.spritesheet('btnPausa', 'assets/images/Botones/btnPausa.png',45,45);
     this.load.image('fondoPausa', 'assets/images/Botones/fondoPausa.png');
 
     /*Imagenes nivel 1*/
