@@ -73,7 +73,6 @@
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa); 
-      this.game.input.onDown.add(this.enPausa,this);
       this.game.input.onDown.add(this.pausaJuego,this);      
 
     },
@@ -286,6 +285,11 @@
           this.game.paused = false;
           this.pnlPausa.hide();
         }
+      }else{
+        if(this.game.paused){
+          this.MensajeAyuda.destroy();
+          this.game.paused = false;
+        }
       }
     },
 
@@ -325,14 +329,8 @@
             }
           break;             
         }        
-    },
-
-    enPausa:function(event){
-      if(this.game.paused){
-        this.MensajeAyuda.destroy();
-        this.game.paused = false;
-      }      
     }
+   
 
   };  
  
