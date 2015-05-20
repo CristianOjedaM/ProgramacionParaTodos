@@ -73,7 +73,7 @@
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa); 
-      this.game.input.onDown.add(this.enPausa,this,self);      
+      this.game.input.onDown.add(this.enPausa);      
 
     },
 
@@ -271,7 +271,7 @@
 
     },
 
-    pausaJuego: function(game,event){
+    pausaJuego: function(){
       if(this.pausa == false){
         //Se muestra panel de pausa
         this.pnlPausa.show();
