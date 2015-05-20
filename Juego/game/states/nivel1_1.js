@@ -229,6 +229,7 @@
                     tempScoreText[3].text = tempScore.tipoArray;
                     break;
                 }
+                tubo.game.add.bitmapText(tubo.x, tubo.y, 'kenpixelblocks', '+1', 24);
                 finalizarForech = true;
               }
             }

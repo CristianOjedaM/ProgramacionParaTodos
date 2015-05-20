@@ -770,6 +770,7 @@ module.exports = Menu;
                     tempScoreText[3].text = tempScore.tipoArray;
                     break;
                 }
+                tubo.game.add.bitmapText(tubo.x, tubo.y, 'kenpixelblocks', '+1', 24);
                 finalizarForech = true;
               }
             }
@@ -1197,10 +1198,10 @@ module.exports = Menu;
     },
 
     preRender: function(){
-      if(!this.lanzamiento){
+      //if(!this.lanzamiento){
         this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
         this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
-      }
+      //}
     },
 
     render: function() {
@@ -1724,6 +1725,8 @@ Preload.prototype = {
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
     this.load.audio('jump_sound', 'assets/audio/generales/salto.wav');
 
+    /*Bitmap text*/
+    this.load.bitmapFont('kenpixelblocks', 'assets/fonts/kenpixelblocks/kenpixelblocks.png', 'assets/fonts/kenpixelblocks/kenpixelblocks.fnt');
   },
   create: function() {
     this.asset.cropEnabled = false;

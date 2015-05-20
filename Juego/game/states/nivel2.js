@@ -319,10 +319,10 @@
     },
 
     preRender: function(){
-      if(!this.lanzamiento){
+      //if(!this.lanzamiento){
         this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
         this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
-      }
+      //}
     },
 
     render: function() {

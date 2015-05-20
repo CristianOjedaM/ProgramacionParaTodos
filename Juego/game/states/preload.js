@@ -47,6 +47,8 @@ Preload.prototype = {
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
     this.load.audio('jump_sound', 'assets/audio/generales/salto.wav');
 
+    /*Bitmap text*/
+    this.load.bitmapFont('kenpixelblocks', 'assets/fonts/kenpixelblocks/kenpixelblocks.png', 'assets/fonts/kenpixelblocks/kenpixelblocks.fnt');
   },
   create: function() {
     this.asset.cropEnabled = false;
