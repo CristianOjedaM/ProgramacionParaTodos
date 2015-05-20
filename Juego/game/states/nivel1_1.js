@@ -67,13 +67,13 @@
       this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 141, '0', { font: '24px calibri', fill: '#000', align:'center'});
     
       //Se agrega el boton de pausa
-      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa', this.pausaJuego, this);
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
       this.btnPausa.fixedToCamera = true;
 
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa); 
-      this.game.input.onDown.add(this.enPausa,this);      
+      this.game.input.onDown.add(this.enPausa,this,self);      
 
     },
 
@@ -271,7 +271,7 @@
 
     },
 
-    pausaJuego: function(){
+    pausaJuego: function(game,event){
       if(this.pausa == false){
         //Se muestra panel de pausa
         this.pnlPausa.show();
