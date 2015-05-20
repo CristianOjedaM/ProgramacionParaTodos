@@ -257,16 +257,16 @@
       if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
         if(this.game.paused == false){
           //Se muestra panel de pausa
-          if(flagpause==false){
+          if(this.flagpause==false){
             this.pnlPausa.show();   
-            flagpause = true;
+            this.flagpause = true;
           }
             
         }else{
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
-          flagpause = false;
+          this.flagpause = false;
         }
       }
     }
