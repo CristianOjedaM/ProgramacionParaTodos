@@ -24,7 +24,7 @@
     this.btnPlay.frame = 1;
     this.add(this.btnPlay);
 
-    //this.game.input.onDown.add(this.game.state.getCurrentState().pausaJuego(),this);
+    
 
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
