@@ -19,12 +19,12 @@
     this.add(this.pauseText);
 
     //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width - 81), 10, 'btnPausa', function(){
-      this.game.state.getCurrentState().pausaJuego();}//Se invoca metodo pausaJuego de cada nivel
-    , this);
+    this.btnPlay = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 1;
     this.add(this.btnPlay);
+
+    this.game.input.onDown.add(this.game.state.getCurrentState().pausaJuego(),this);
 
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
