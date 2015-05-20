@@ -92,6 +92,7 @@
 
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
       this.btnPausa.fixedToCamera = true;
 
        //Se incluye el panel de pausa al nivel
@@ -354,13 +355,16 @@
       if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
         if(this.game.paused == false){
           //Se muestra panel de pausa
-          if(this.pnlPausa.visible==false){
+          if(this.flagpause==false){
             this.pnlPausa.show();   
-          }  
+            this.flagpause = true;
+          }
+            
         }else{
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
+          this.flagpause = false;
         }
       }
     }

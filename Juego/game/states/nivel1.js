@@ -103,6 +103,7 @@
 
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
       this.btnPausa.fixedToCamera = true;
 
       //Se incluye el panel de pausa al nivel
