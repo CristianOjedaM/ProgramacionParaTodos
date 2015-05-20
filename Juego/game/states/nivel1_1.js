@@ -73,7 +73,8 @@
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa); 
-      this.game.input.onDown.add(this.enPausa);      
+      this.game.input.onDown.add(this.enPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);      
 
     },
 
@@ -271,16 +272,20 @@
 
     },
 
-    pausaJuego: function(){
-      if(this.pausa == false){
-        //Se muestra panel de pausa
-        this.pnlPausa.show();
-        this.pausa = true;      
-      }else{
-        //Se esconde el panel de pausa
-        this.game.paused = false;
-        this.pnlPausa.hide();
-        this.pausa = false;
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          this.pnlPausa.show();   
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+        }
       }
     },
 
