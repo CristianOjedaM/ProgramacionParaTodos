@@ -37,7 +37,7 @@
   Pause.prototype.show = function(){
     var game_ = this.game;
     var tween = this.game.add.tween(this).to({y:0}, 500, Phaser.Easing.Bounce.Out, true);
-    tween.onComplete.add(function(){this.game.paused = true; enPausa(game_);}, this);
+    tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
