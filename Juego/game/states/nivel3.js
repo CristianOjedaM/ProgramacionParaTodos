@@ -137,6 +137,7 @@
       /*Se comprueba el tiempo por respuesta*/
       if(this.resp_time == 0){
         this.solicitud();
+        this.revolverItems();
       }
 
       var minutos = 0;
@@ -404,7 +405,26 @@
     },
 
     revolverItems: function(){
-      this.items.forEach(function(slot) {
+      var usados = new Array(5);
+      for(var i=0;i<5;i++){
+        usados[i] = [false,false,false,false,false];
+      }
+      this.items.forEach(function(item) {
+        var i = Math.floor(Math.random()*5);
+        var j = Math.floor(Math.random()*5);
+        if(!usados[i][j]){          
+          item.new_i = i;
+          item.new_j = j;
+          usados[i][j] = true;
+        }
+      });
+      this.items.forEach(function(item) {
+        item.game.add.tween(item).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
+        if(item.texto){
+          item.game.add.tween(item.texto).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
+        }
+        item.i = item.new_i;
+        item.j = item.new_j;
       });
     },
   };

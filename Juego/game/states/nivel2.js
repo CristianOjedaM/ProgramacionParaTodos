@@ -1,6 +1,6 @@
 
   'use strict';
- var Pausa = require('../prefabs/pause');
+  var Pausa = require('../prefabs/pause');
   var textBox = require('../prefabs/textBox');
   var mouseSpring;
 
@@ -53,7 +53,7 @@
 
       //Creacion de sprite jugador
       this.jugador = this.game.add.sprite(80,this.game.world.height - 115,'personaje2');
-      this.jugador.animations.add('idle', [10,11,12,13,14], 10, true,60, true);
+      this.jugador.animations.add('idle', [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], 10, true,60, true);
       this.animLanzar = this.jugador.animations.add('lanzar', [0,1,2,3,4,5,6,7,8,9], 10, false);
       this.animLanzar.onComplete.add(function() {
         this.jugador.animations.play('idle');
