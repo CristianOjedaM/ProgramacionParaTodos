@@ -41,7 +41,6 @@
   };
   Pause.prototype.hide = function(){
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
-  };
- 
+  }; 
 
   module.exports = Pause;
