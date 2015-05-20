@@ -1,6 +1,6 @@
 
   'use strict';
-
+ var Pausa = require('../prefabs/pause');
   var textBox = require('../prefabs/textBox');
   var mouseSpring;
 
