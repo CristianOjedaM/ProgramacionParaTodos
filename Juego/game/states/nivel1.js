@@ -9,7 +9,6 @@
     scoreText: new Array(),
     score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
     maxtime: 60,
-    pausa: false,
 
     create: function() {
       //Habilitacion de fisicas
@@ -255,15 +254,13 @@
       var y1 = 10;
       var y2 = 55;
       if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
-        if(this.pausa == false){
+        if(this.game.paused == false){
           //Se muestra panel de pausa
-          this.pnlPausa.show();
-          this.pausa = true;      
+          this.pnlPausa.show();   
         }else{
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
-          this.pausa = false;
         }
       }
     }

@@ -42,11 +42,6 @@
   Pause.prototype.hide = function(){
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
   };
-
-  function enPausa(game){
-    if(game.paused){
-      setTimeout(enPausa,50,game);    
-    }
-  }  
+ 
 
   module.exports = Pause;
