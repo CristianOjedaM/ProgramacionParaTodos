@@ -19,13 +19,13 @@
     this.add(this.pauseText);
 
     //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width/2)- 81, 0, 'btnPausa');
+    this.btnPlay = this.game.add.button((this.game.width/2), 75, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
 
     //Boton de reinicial
-    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 0, 'btnPausa');
+    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 75, 'btnPausa');
     this.btnReiniciar.fixedToCamera = true;
     this.btnReiniciar.frame = 0;
     this.add(this.btnReiniciar);
@@ -33,7 +33,7 @@
     
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
-    this.y = -150;
+    this.y = -160;
     this.game.input.onDown.add(this.reset,this);
   };
 
@@ -46,7 +46,7 @@
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
-    this.game.add.tween(this).to({y:-150}, 200, Phaser.Easing.Linear.NONE, true);
+    this.game.add.tween(this).to({y:-60}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
 
   Pause.prototype.reset = function(game){
