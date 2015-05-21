@@ -54,7 +54,7 @@
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
-    this.game.add.tween(this).to({y:-60}, 200, Phaser.Easing.Linear.NONE, true);
+    this.game.add.tween(this).to({y:-160}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
 
   Pause.prototype.reset = function(game){
