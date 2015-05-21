@@ -51,8 +51,11 @@
 
   Pause.prototype.reset = function(game){
      //this.game.state.getCurrentState().game.state.restart(true);
-     
-     if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
+      var x1 = (this.game.width - 130);
+      var x2 = (this.game.width - 85);
+      var y1 = 10;
+      var y2 = 55;
+     if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
          //Se esconde el panel de pausa
           if(this.game.paused){
             this.game.paused = false;
