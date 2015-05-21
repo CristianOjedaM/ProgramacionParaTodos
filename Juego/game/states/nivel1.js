@@ -12,6 +12,9 @@
     flagpause: false,
 
     create: function() {
+      //Se inicializa las variables
+      this.maxtime = 60;
+      this.flagpause = false;
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
