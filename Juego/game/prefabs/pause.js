@@ -13,7 +13,7 @@
     //this.game.onPause.add(enPausa, this);
 
     // Add text
-    this.pauseText = this.game.add.text(200, 20, 'Juego pausado', { font: '24px calibri', fill: '#000', align:'center'});
+    this.pauseText = this.game.add.text(230, 20, 'Juego pausado', { font: '24px calibri', fill: '#000', align:'center'});
     this.pauseText.fixedToCamera = true;
     //this.pauseText = this.game.add.bitmapText(100, 20, 'kenpixelblocks', 'Game paused', 24);
     this.add(this.pauseText);
