@@ -1,6 +1,6 @@
 
   'use strict';
-
+ var Pausa = require('../prefabs/pause');
   function Nivel3() {}
   Nivel3.prototype = {
 
@@ -21,7 +21,21 @@
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
+    init:function(){
+       //Definición de propiedades
+      this.score: 0;
+      this.maxtime: 120;
+      this.prev_score: {};
+      this.prev_score_base: {};
+      this.itemsCompletos: 0;
+      this.vel:100;//Velocidad de inicio para movimiento de items
+      this.itemSelec: false;
 
+      //Variables de control
+      this.colocados: 0;
+      this.solicitado: true;
+      this.resp_time:20;
+    },
     create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -71,6 +85,16 @@
       //Creacion de texto de puntaje
       this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
       this.solicitud();
+
+      //Se agrega el boton de pausa
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
+      this.btnPausa.fixedToCamera = true;
+
+       //Se incluye el panel de pausa al nivel
+      this.pnlPausa = new Pausa(this.game);
+      this.game.add.existing(this.pnlPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);
     },
 
     update: function(){
@@ -454,6 +478,27 @@
         console.log(item.i + " - " + item.j);
       });
     },
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;
+        }
+      }
+    }
   };
 
   module.exports = Nivel3;

@@ -27,6 +27,22 @@
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
     booleanItems: new Array({pregunta:'Es niño?',variable:'nino'}),
     arrayItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
+    init: function(){
+      //Definición de propiedades
+      this.scoreText= new Array();
+      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.maxtime= 120;
+      this.prev_score= {};
+      this.prev_score_base= {};
+      this.itemsCompletos= 0;
+      this.vel=100;//Velocidad de inicio para movimiento de items
+      this.itemSelec= false;
+
+      this.mover=false;
+      this.lanzamiento=false;
+      this.enPregunta=false;
+      this.estado=0;
+    };
 
     create: function() {
       //Habilitacion de fisicas
