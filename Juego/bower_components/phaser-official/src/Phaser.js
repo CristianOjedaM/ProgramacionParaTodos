@@ -1,7 +1,7 @@
 /* global Phaser:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,8 +10,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '<%= version %>',
-	DEV_VERSION: '2.0.2',
+	VERSION: '2.3.0',
 	GAMES: [],
 
     AUTO: 0,
@@ -44,8 +43,38 @@ var Phaser = Phaser || {
     ELLIPSE: 16,
     SPRITEBATCH: 17,
     RETROFONT: 18,
+    POINTER: 19,
+    ROPE: 20,
+    CIRCLE: 21,
+    RECTANGLE: 22,
+    LINE: 23,
+    MATRIX: 24,
+    POINT: 25,
+    ROUNDEDRECTANGLE: 26,
 
-    // The various blend modes supported by pixi / phaser
+    /**
+     * Various blend modes supported by pixi. IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
+     * 
+     * @property {Object} blendModes
+     * @property {Number} blendModes.NORMAL
+     * @property {Number} blendModes.ADD
+     * @property {Number} blendModes.MULTIPLY
+     * @property {Number} blendModes.SCREEN
+     * @property {Number} blendModes.OVERLAY
+     * @property {Number} blendModes.DARKEN
+     * @property {Number} blendModes.LIGHTEN
+     * @property {Number} blendModes.COLOR_DODGE
+     * @property {Number} blendModes.COLOR_BURN
+     * @property {Number} blendModes.HARD_LIGHT
+     * @property {Number} blendModes.SOFT_LIGHT
+     * @property {Number} blendModes.DIFFERENCE
+     * @property {Number} blendModes.EXCLUSION
+     * @property {Number} blendModes.HUE
+     * @property {Number} blendModes.SATURATION
+     * @property {Number} blendModes.COLOR
+     * @property {Number} blendModes.LUMINOSITY
+     * @static
+     */
     blendModes: {
         NORMAL:0,
         ADD:1,
@@ -66,16 +95,22 @@ var Phaser = Phaser || {
         LUMINOSITY:16
     },
 
-    // The scale modes
+    /**
+     * The scale modes that are supported by pixi.
+     *
+     * The DEFAULT scale mode affects the default scaling mode of future operations.
+     * It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
+     *
+     * @property {Object} scaleModes
+     * @property {Number} scaleModes.DEFAULT=LINEAR
+     * @property {Number} scaleModes.LINEAR Smooth scaling
+     * @property {Number} scaleModes.NEAREST Pixelating scaling
+     * @static
+     */
     scaleModes: {
         DEFAULT:0,
         LINEAR:0,
         NEAREST:1
     }
 
-};
-
-PIXI.InteractionManager = function () {
-    // We don't need this in Pixi, so we've removed it to save space
-    // however the Stage object expects a reference to it, so here is a dummy entry.
 };

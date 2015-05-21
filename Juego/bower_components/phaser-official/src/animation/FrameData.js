@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -60,7 +60,7 @@ Phaser.FrameData.prototype = {
     */
     getFrame: function (index) {
 
-        if (index > this._frames.length)
+        if (index >= this._frames.length)
         {
             index = 0;
         }
@@ -102,6 +102,34 @@ Phaser.FrameData.prototype = {
         }
 
         return true;
+
+    },
+
+    /**
+     * Makes a copy of this FrameData including copies (not references) to all of the Frames it contains.
+     *
+     * @method Phaser.FrameData#clone
+     * @return {Phaser.FrameData} A clone of this object, including clones of the Frame objects it contains.
+     */
+    clone: function () {
+
+        var output = new Phaser.FrameData();
+
+        //  No input array, so we loop through all frames
+        for (var i = 0; i < this._frames.length; i++)
+        {
+            output._frames.push(this._frames[i].clone());
+        }
+
+        for (var p in this._frameNames)
+        {
+            if (this._frameNames.hasOwnProperty(p))
+            {
+                output._frameNames.push(this._frameNames[p]);
+            }
+        }
+
+        return output;
 
     },
 

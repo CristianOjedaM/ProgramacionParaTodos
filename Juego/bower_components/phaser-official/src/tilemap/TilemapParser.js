@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -89,7 +89,7 @@ Phaser.TilemapParser = {
 
             for (var x = 0; x < column.length; x++)
             {
-                output[y][x] = new Phaser.Tile(0, parseInt(column[x], 10), x, y, tileWidth, tileHeight);
+                output[y][x] = new Phaser.Tile(map.layers[0], parseInt(column[x], 10), x, y, tileWidth, tileHeight);
             }
 
             if (width === 0)
@@ -98,6 +98,7 @@ Phaser.TilemapParser = {
             }
         }
 
+        map.format = Phaser.Tilemap.CSV;
         map.name = key;
         map.width = width;
         map.height = height;
@@ -118,6 +119,7 @@ Phaser.TilemapParser = {
 
     /**
     * Returns an empty map data object.
+    *
     * @method Phaser.TilemapParser.getEmptyData
     * @return {object} Generated map data.
     */
@@ -157,6 +159,7 @@ Phaser.TilemapParser = {
             properties: {},
             indexes: [],
             callbacks: [],
+            bodies: [],
             data: []
 
         };
@@ -186,7 +189,7 @@ Phaser.TilemapParser = {
 
         if (json.orientation !== 'orthogonal')
         {
-            console.warn('TilemapParser.parseTiledJSON: Only orthogonal map types are supported in this version of Phaser');
+            console.warn('TilemapParser.parseTiledJSON - Only orthogonal map types are supported in this version of Phaser');
             return null;
         }
 
@@ -198,6 +201,7 @@ Phaser.TilemapParser = {
         map.tileWidth = json.tilewidth;
         map.tileHeight = json.tileheight;
         map.orientation = json.orientation;
+        map.format = Phaser.Tilemap.TILED_JSON;
         map.version = json.version;
         map.properties = json.properties;
         map.widthInPixels = map.width * map.tileWidth;
@@ -239,23 +243,86 @@ Phaser.TilemapParser = {
             var x = 0;
             var row = [];
             var output = [];
+            var rotation, flipped, flippedVal, gid;
 
             //  Loop through the data field in the JSON.
 
-            //  This is an array containing the tile indexes, one after the other. null = no tile, everything else = the tile index (starting at 1 for Tiled, 0 for CSV)
+            //  This is an array containing the tile indexes, one after the other. -1 = no tile, everything else = the tile index (starting at 1 for Tiled, 0 for CSV)
             //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from.
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
             for (var t = 0, len = json.layers[i].data.length; t < len; t++)
             {
-                //  index, x, y, width, height
-                if (json.layers[i].data[t] > 0)
+                rotation = 0;
+                flipped = false;
+                gid = json.layers[i].data[t];
+
+                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                if (gid > 0x20000000)
                 {
-                    row.push(new Phaser.Tile(layer, json.layers[i].data[t], x, output.length, json.tilewidth, json.tileheight));
+                    flippedVal = 0;
+
+                    // FlippedX
+                    if (gid > 0x80000000)
+                    {
+                        gid -= 0x80000000;
+                        flippedVal += 4;
+                    }
+
+                    // FlippedY
+                    if (gid > 0x40000000)
+                    {
+                        gid -= 0x40000000;
+                        flippedVal += 2;
+                    }
+
+                    // FlippedAD
+                    if (gid > 0x20000000)
+                    {
+                        gid -= 0x20000000;
+                        flippedVal += 1;
+                    }
+                   
+                    switch (flippedVal)
+                    {
+                        case 5:
+                            rotation = Math.PI/2;
+                            break;
+                        case 6:
+                            rotation = Math.PI;
+                            break;
+                        case 3:
+                            rotation = 3*Math.PI/2;
+                            break;
+                        case 4:
+                            rotation = 0;
+                            flipped = true;
+                            break;
+                        case 7:
+                            rotation = Math.PI/2;
+                            flipped = true;
+                            break;
+                        case 2:
+                            rotation = Math.PI;
+                            flipped = true;
+                            break;
+                        case 1:
+                            rotation = 3*Math.PI/2;
+                            flipped = true;
+                            break;
+                    }
+                }
+
+                //  index, x, y, width, height
+                if (gid > 0)
+                {
+                    row.push(new Phaser.Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight));
+                    row[row.length - 1].rotation = rotation;
+                    row[row.length - 1].flipped = flipped;
                 }
                 else
                 {
-                    row.push(null);
+                    row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
                 }
 
                 x++;
@@ -316,25 +383,27 @@ Phaser.TilemapParser = {
         {
             //  name, firstgid, width, height, margin, spacing, properties
             var set = json.tilesets[i];
-            var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
 
-            if (set.tileproperties)
+            if (set.image)
             {
-                newSet.tileProperties = set.tileproperties;
-            }
+                var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
 
-            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
-            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
-            newSet.total = newSet.rows * newSet.columns;
+                if (set.tileproperties)
+                {
+                    newSet.tileProperties = set.tileproperties;
+                }
 
-            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
-            {
-                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
+                // For a normal sliced tileset the row/count/size information is computed when updated.
+                // This is done (again) after the image is set.
+                newSet.updateTileData(set.imagewidth, set.imageheight);
+                tilesets.push(newSet);
             }
             else
             {
-                tilesets.push(newSet);
+                // TODO: Handle Tileset Image Collections (multiple images in a tileset, no slicing into each image)
+                console.warn("Phaser.TilemapParser - Image Collection Tilesets are not support");
             }
+
         }
 
         map.tilesets = tilesets;
@@ -342,6 +411,23 @@ Phaser.TilemapParser = {
         //  Objects & Collision Data (polylines, etc)
         var objects = {};
         var collision = {};
+
+        function slice (obj, fields) {
+
+            var sliced = {};
+
+            for (var k in fields)
+            {
+                var key = fields[k];
+
+                if (obj[key])
+                {
+                    sliced[key] = obj[key];
+                }
+            }
+
+            return sliced;
+        }
 
         for (var i = 0; i < json.layers.length; i++)
         {
@@ -362,12 +448,18 @@ Phaser.TilemapParser = {
 
                         gid: json.layers[i].objects[v].gid,
                         name: json.layers[i].objects[v].name,
+                        type: json.layers[i].objects[v].hasOwnProperty("type") ? json.layers[i].objects[v].type : "",
                         x: json.layers[i].objects[v].x,
                         y: json.layers[i].objects[v].y,
                         visible: json.layers[i].objects[v].visible,
                         properties: json.layers[i].objects[v].properties
 
                     };
+
+                    if (json.layers[i].objects[v].rotation)
+                    {
+                        object.rotation = json.layers[i].objects[v].rotation;
+                    }
 
                     objects[json.layers[i].name].push(object);
                 }
@@ -376,6 +468,7 @@ Phaser.TilemapParser = {
                     var object = {
 
                         name: json.layers[i].objects[v].name,
+                        type: json.layers[i].objects[v].type,
                         x: json.layers[i].objects[v].x,
                         y: json.layers[i].objects[v].y,
                         width: json.layers[i].objects[v].width,
@@ -384,6 +477,11 @@ Phaser.TilemapParser = {
                         properties: json.layers[i].objects[v].properties
 
                     };
+
+                    if (json.layers[i].objects[v].rotation)
+                    {
+                        object.rotation = json.layers[i].objects[v].rotation;
+                    }
 
                     object.polyline = [];
 
@@ -394,9 +492,40 @@ Phaser.TilemapParser = {
                     }
 
                     collision[json.layers[i].name].push(object);
+                    objects[json.layers[i].name].push(object);
+                }
+                // polygon
+                else if (json.layers[i].objects[v].polygon)
+                {
+                    var object = slice(json.layers[i].objects[v],
+                                       ["name", "type", "x", "y", "visible", "rotation", "properties" ]);
+
+                    //  Parse the polygon into an array
+                    object.polygon = [];
+
+                    for (var p = 0; p < json.layers[i].objects[v].polygon.length; p++)
+                    {
+                        object.polygon.push([ json.layers[i].objects[v].polygon[p].x, json.layers[i].objects[v].polygon[p].y ]);
+                    }
+
+                    objects[json.layers[i].name].push(object);
 
                 }
-
+                // ellipse
+                else if (json.layers[i].objects[v].ellipse)
+                {
+                    var object = slice(json.layers[i].objects[v],
+                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
+                    objects[json.layers[i].name].push(object);
+                }
+                // otherwise it's a rectangle
+                else
+                {
+                    var object = slice(json.layers[i].objects[v],
+                                       ["name", "type", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
+                    object.rectangle = true;
+                    objects[json.layers[i].name].push(object);
+                }
             }
         }
 
@@ -448,6 +577,48 @@ Phaser.TilemapParser = {
                 }
             }
 
+        }
+
+        // assign tile properties
+
+        var layer;
+        var tile;
+        var sid;
+        var set;
+
+        // go through each of the map layers
+        for (var i = 0; i < map.layers.length; i++)
+        {
+            layer = map.layers[i];
+
+            // rows of tiles
+            for (var j = 0; j < layer.data.length; j++)
+            {
+                row = layer.data[j];
+
+                // individual tiles
+                for (var k = 0; k < row.length; k++)
+                {
+                    tile = row[k];
+
+                    if (tile.index < 0)
+                    {
+                        continue;
+                    }
+
+                    // find the relevant tileset
+
+                    sid = map.tiles[tile.index][2];
+                    set = map.tilesets[sid];
+
+                    // if that tile type has any properties, add them to the tile object
+
+                    if (set.tileProperties && set.tileProperties[tile.index - set.firstgid])
+                    {
+                        tile.properties = Phaser.Utils.mixin(set.tileProperties[tile.index - set.firstgid], tile.properties);
+                    }
+                }
+            }
         }
 
         return map;
