@@ -48,10 +48,10 @@
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
 
-  Pause.prototype.reset = function(){
+  Pause.prototype.reset = function(game){
      //this.game.state.getCurrentState().game.state.restart(true);
-     this.game.state.getCurrentState().game.state.clearCurrentState();
-     this.game.state.getCurrentState().game.state.start(this.game.state.current);
+     this.game.state.getCurrentState().clearCurrentState();
+     game.state.getCurrentState().game.state.start(this.game.state.current);
   };
  
   module.exports = Pause;
