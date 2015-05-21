@@ -51,7 +51,7 @@
   Pause.prototype.reset = function(game){
      //this.game.state.getCurrentState().game.state.restart(true);
      this.game.state.clearCurrentState();
-     game.state.getCurrentState().game.state.start(this.game.state.current);
+     game.state.start(game.state.current);
   };
  
   module.exports = Pause;

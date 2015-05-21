@@ -274,7 +274,7 @@
         }
       }else if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
          //Se esconde el panel de pausa        
-          this.pnlPausa.reset(game);
+          this.pnlPausa.reset(this.game);
       }
     }
   };
