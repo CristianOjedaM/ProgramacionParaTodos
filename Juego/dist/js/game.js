@@ -577,13 +577,13 @@ module.exports = Menu;
             this.flagpause = true;
           }
             
-        }else {
+        }
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
-      }
     }
   };
   
@@ -956,11 +956,8 @@ module.exports = Menu;
   Nivel2.prototype = {
 
     //Definición de propiedades
-    scoreText: new Array(),
-    score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
+    score: 0,
     maxtime: 120,
-    prev_score: {},
-    prev_score_base: {},
     itemsCompletos: 0,
     vel:100,//Velocidad de inicio para movimiento de items
     itemSelec: false,
@@ -978,11 +975,8 @@ module.exports = Menu;
     
     init: function(){
       //Definición de propiedades
-      this.scoreText= new Array();
-      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.score= 0;
       this.maxtime= 120;
-      this.prev_score= {};
-      this.prev_score_base= {};
       this.itemsCompletos= 0;
       this.vel=100;//Velocidad de inicio para movimiento de items
       this.itemSelec= false;
@@ -1271,9 +1265,18 @@ module.exports = Menu;
       this.ultResultado = this.logResultados.add(this.game.add.text( 5, this.logResultados.ultY , 'var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), { font: '12px calibri', fill: '#000', align:'center'}));
       this.logResultados.ultY += 10;
       if(error){
+        if(this.score > 10){
+          this.score -= 10;
+        }else{
+          this.score = 0;
+        }
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
         this.error_sound.play();
       }else{        
+        var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
+        var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 350, Phaser.Easing.Linear.None, true);
+        tween.onComplete.add(function(){punto.destroy();}, this);
+        this.score += 20;
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
       }
       this.cajaTexto.destruir();
