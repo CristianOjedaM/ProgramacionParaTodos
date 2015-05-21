@@ -21,20 +21,21 @@
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
+    
     init:function(){
        //Definición de propiedades
-      this.score: 0;
-      this.maxtime: 120;
-      this.prev_score: {};
-      this.prev_score_base: {};
-      this.itemsCompletos: 0;
-      this.vel:100;//Velocidad de inicio para movimiento de items
-      this.itemSelec: false;
+      this.score = 0;
+      this.maxtime = 120;
+      this.prev_score =  {};
+      this.prev_score_base = {};
+      this.itemsCompletos = 0;
+      this.vel =100;//Velocidad de inicio para movimiento de items
+      this.itemSelec = false;
 
       //Variables de control
-      this.colocados: 0;
-      this.solicitado: true;
-      this.resp_time:20;
+      this.colocados = 0;
+      this.solicitado = true;
+      this.resp_time = 20;
     },
     create: function() {
       //Habilitacion de fisicas

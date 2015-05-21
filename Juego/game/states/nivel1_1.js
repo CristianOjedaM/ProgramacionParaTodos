@@ -69,10 +69,10 @@
 
       //Control de score
       this.cuadroScore = this.game.add.sprite(10,(this.game.height - 60),'score1_1');
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 35, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 72, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 108, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 141, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 2, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 200 , this.cuadroScore.y + 2, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 300 , this.cuadroScore.y + 2, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 400 , this.cuadroScore.y + 2, '0', { font: '24px calibri', fill: '#000', align:'center'});
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
