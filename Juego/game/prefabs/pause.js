@@ -50,7 +50,7 @@
 
   Pause.prototype.reset = function(game){
      //this.game.state.getCurrentState().game.state.restart(true);
-     this.game.state.getCurrentState().clearCurrentState();
+     this.game.state.clearCurrentState();
      game.state.getCurrentState().game.state.start(this.game.state.current);
   };
  
