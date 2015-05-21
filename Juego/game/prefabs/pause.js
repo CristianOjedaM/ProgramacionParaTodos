@@ -49,7 +49,9 @@
   }; 
 
   Pause.prototype.reset = function(){
-     this.game.state.getCurrentState().restart(true);
+     this.game.state.getCurrentState().game.state.destroy();
+     this.game.state.getCurrentState().game.state.start('nivel1');
+     //this.game.state.getCurrentState().restart(true);
   };
  
   module.exports = Pause;
