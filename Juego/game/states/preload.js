@@ -50,7 +50,7 @@ Preload.prototype = {
     this.load.audio('jump_sound', 'assets/audio/generales/salto.wav');
 
     /*Bitmap text*/
-    this.load.bitmapFont('kenpixelblocks', 'assets/fonts/kenpixelblocks/kenpixelblocks.png', 'assets/fonts/kenpixelblocks/kenpixelblocks.fnt');
+    this.load.bitmapFont('font1', 'assets/fonts/font1/font1.png', 'assets/fonts/font1/font1.fnt');
   },
   create: function() {
     this.asset.cropEnabled = false;

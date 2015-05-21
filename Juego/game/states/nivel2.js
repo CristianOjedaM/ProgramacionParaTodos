@@ -106,6 +106,7 @@
 
       //Se setea el texto para el cronometro
       this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer.anchor.setTo(0.5,0);
       this.timer.fixedToCamera = true; 
 
       //Se agrega el boton de pausa

@@ -35,27 +35,35 @@ window.onload = function () {
     //this.game.onPause.add(enPausa, this);
 
     // Add text
-    this.pauseText = this.game.add.text(100, 20, 'Juego pausado', { font: '24px calibri', fill: '#000', align:'center'});
+    this.pauseText = this.game.add.text(230, 20, 'Juego pausado', { font: '24px calibri', fill: '#000', align:'center'});
     this.pauseText.fixedToCamera = true;
     //this.pauseText = this.game.add.bitmapText(100, 20, 'kenpixelblocks', 'Game paused', 24);
     this.add(this.pauseText);
 
-    //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
-    this.btnPlay.fixedToCamera = true;
-    this.btnPlay.frame = 0;
-    this.add(this.btnPlay);
-
     //Boton de reinicial
-    this.btnReiniciar = this.game.add.button((this.game.width - 130), 10, 'btnPausa');
+    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 60, 'btnPausa');
     this.btnReiniciar.fixedToCamera = true;
     this.btnReiniciar.frame = 0;
     this.add(this.btnReiniciar);
 
+
+    //Boton de play o resume
+    this.btnPlay = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnPlay.fixedToCamera = true;
+    this.btnPlay.frame = 0;
+    this.add(this.btnPlay);
+
+    
+    //Boton de ayuda
+    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 60, 'btnPausa');
+    this.btnAyuda.fixedToCamera = true;
+    this.btnAyuda.frame = 0;
+    this.add(this.btnAyuda);
+
     
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
-    this.y = -100;
+    this.y = -160;
     this.game.input.onDown.add(this.reset,this);
   };
 
@@ -64,19 +72,19 @@ window.onload = function () {
 
   Pause.prototype.show = function(){
     var game_ = this.game;
-    var tween = this.game.add.tween(this).to({y:0}, 500, Phaser.Easing.Bounce.Out, true);
+    var tween = this.game.add.tween(this).to({y:150}, 500, Phaser.Easing.Bounce.Out, true);
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
-    this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
+    this.game.add.tween(this).to({y:-160}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
 
   Pause.prototype.reset = function(game){
      
-      var x1 = (this.game.width - 130);
-      var x2 = (this.game.width - 85);
-      var y1 = 10;
-      var y2 = 55;
+      var x1 = (this.game.width/2) - 130;
+      var x2 = (this.game.width/2) - 85;
+      var y1 = 210; 
+      var y2 = 255;
      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
          //Se esconde el panel de pausa
           if(this.game.paused){
@@ -821,7 +829,9 @@ module.exports = Menu;
                     tempScoreText[3].text = tempScore.tipoArray;
                     break;
                 }
-                tubo.game.add.bitmapText(tubo.x, tubo.y, 'kenpixelblocks', '+1', 24);
+                var punto = tubo.game.add.bitmapText(tubo.x, tubo.y, 'font1', '+1', 24);
+                var tween = tubo.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 350, Phaser.Easing.Linear.None, true);
+                tween.onComplete.add(function(){punto.destroy();}, this);
                 finalizarForech = true;
               }
             }
@@ -1044,6 +1054,7 @@ module.exports = Menu;
 
       //Se setea el texto para el cronometro
       this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer.anchor.setTo(0.5,0);
       this.timer.fixedToCamera = true; 
 
       //Se agrega el boton de pausa
@@ -1931,7 +1942,7 @@ Preload.prototype = {
     this.load.audio('jump_sound', 'assets/audio/generales/salto.wav');
 
     /*Bitmap text*/
-    this.load.bitmapFont('kenpixelblocks', 'assets/fonts/kenpixelblocks/kenpixelblocks.png', 'assets/fonts/kenpixelblocks/kenpixelblocks.fnt');
+    this.load.bitmapFont('font1', 'assets/fonts/font1/font1.png', 'assets/fonts/font1/font1.fnt');
   },
   create: function() {
     this.asset.cropEnabled = false;

@@ -238,7 +238,9 @@
                     tempScoreText[3].text = tempScore.tipoArray;
                     break;
                 }
-                tubo.game.add.bitmapText(tubo.x, tubo.y, 'kenpixelblocks', '+1', 24);
+                var punto = tubo.game.add.bitmapText(tubo.x, tubo.y, 'font1', '+1', 24);
+                var tween = tubo.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 350, Phaser.Easing.Linear.None, true);
+                tween.onComplete.add(function(){punto.destroy();}, this);
                 finalizarForech = true;
               }
             }
