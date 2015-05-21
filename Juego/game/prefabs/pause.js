@@ -51,7 +51,7 @@
   Pause.prototype.reset = function(game){
      //this.game.state.getCurrentState().game.state.restart(true);
      this.game.state.clearCurrentState();
-     game.state.start('nivel1');
+     game.state.start(game.state.current);
   };
  
   module.exports = Pause;

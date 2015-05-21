@@ -10,8 +10,15 @@
     score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
     maxtime: 60,
     flagpause: false,
-
+    init: function(){
+      this.scoreText= new Array();
+      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.maxtime= 60;
+      this.flagpause= false;      
+    },
     create: function() {
+      //se inicializan las variables
+      this.init;
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -273,8 +280,13 @@
           this.flagpause = false;
         }
       }else if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
-         //Se esconde el panel de pausa        
-          this.pnlPausa.reset(this.game);
+         //Se esconde el panel de pausa
+          if(this.game.paused){
+            this.game.paused = false;
+            this.pnlPausa.hide();
+            this.flagpause = false;      
+            this.pnlPausa.reset(this.game);
+          }
       }
     }
   };
