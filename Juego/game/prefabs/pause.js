@@ -36,7 +36,7 @@
 
   Pause.prototype.show = function(){
     var game_ = this.game;
-    var tween = this.game.add.tween(this).to({y:this.game.world.centerY}, 500, Phaser.Easing.Bounce.Out, true);
+    var tween = this.game.add.tween(this).to({y:this.game.height/2}, 500, Phaser.Easing.Bounce.Out, true);
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
