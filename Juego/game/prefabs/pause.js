@@ -8,7 +8,7 @@
     //Se agrega el panel
     this.panel = this.create(this.game.width/2, 10, 'fondoPausa');
     this.panel.fixedToCamera = true;
-    this.panel.anchor.setTo(0.5, 0);
+    this.panel.anchor.setTo(0.5, 0.5);
 
     //this.game.onPause.add(enPausa, this);
 
@@ -42,7 +42,7 @@
 
   Pause.prototype.show = function(){
     var game_ = this.game;
-    var tween = this.game.add.tween(this).to({y:0}, 500, Phaser.Easing.Bounce.Out, true);
+    var tween = this.game.add.tween(this).to({y:this.game.height/2}, 500, Phaser.Easing.Bounce.Out, true);
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
