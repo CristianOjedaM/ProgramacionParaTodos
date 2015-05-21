@@ -21,7 +21,7 @@
     lanzamiento:false,
     enPregunta:false,
     estado:0,
-
+    flagpause: false,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
@@ -43,6 +43,7 @@
       this.lanzamiento=false;
       this.enPregunta=false;
       this.estado=0;
+      this.flagpause = false;
     },
 
     create: function() {

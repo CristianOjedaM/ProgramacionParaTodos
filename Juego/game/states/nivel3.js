@@ -17,7 +17,7 @@
     colocados: 0,
     solicitado: true,
     resp_time:20,
-
+    flagpause: false,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
@@ -36,6 +36,7 @@
       this.colocados = 0;
       this.solicitado = true;
       this.resp_time = 20;
+      this.flagpause = false;
     },
     create: function() {
       //Habilitacion de fisicas
