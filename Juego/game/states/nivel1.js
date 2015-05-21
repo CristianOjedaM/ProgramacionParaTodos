@@ -86,7 +86,7 @@
       this.items.enableBody = true;
 
       //Control de score
-      this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score');
+      this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score1');
       this.cuadroScore.fixedToCamera = true;
       this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[0].fixedToCamera = true;
