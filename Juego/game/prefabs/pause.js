@@ -59,8 +59,7 @@
          //Se esconde el panel de pausa
           if(this.game.paused){
             this.game.paused = false;
-            this.pnlPausa.hide();
-            this.flagpause = false;      
+            this.hide();                  
             this.game.state.clearCurrentState();
             game.state.start(game.state.current);
           }
