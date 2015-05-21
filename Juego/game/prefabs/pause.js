@@ -8,7 +8,7 @@
     //Se agrega el panel
     this.panel = this.create(this.game.width/2, 10, 'fondoPausa');
     this.panel.fixedToCamera = true;
-    this.panel.anchor.setTo(0.5, 0.5);
+    this.panel.anchor.setTo(0.5, 0);
 
     //this.game.onPause.add(enPausa, this);
 
@@ -33,7 +33,7 @@
     
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
-    this.y = -100;
+    this.y = -150;
     this.game.input.onDown.add(this.reset,this);
   };
 
@@ -42,11 +42,11 @@
 
   Pause.prototype.show = function(){
     var game_ = this.game;
-    var tween = this.game.add.tween(this).to({y:130}, 500, Phaser.Easing.Bounce.Out, true);
+    var tween = this.game.add.tween(this).to({y:150}, 500, Phaser.Easing.Bounce.Out, true);
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
-    this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
+    this.game.add.tween(this).to({y:-150}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
 
   Pause.prototype.reset = function(game){
