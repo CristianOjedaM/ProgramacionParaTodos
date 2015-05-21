@@ -30,7 +30,7 @@
     this.btnReiniciar.frame = 0;
     this.add(this.btnReiniciar);
 
-    
+    this.game.input.onDown.add(function(){ reiniciarLevel(); },this);
 
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
@@ -48,5 +48,12 @@
   Pause.prototype.hide = function(){
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
+
+  function reiniciarLevel(game){
+    if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
+         //Se esconde el panel de pausa        
+        this.game.state.getCurrentState().restart(true);
+      }
+  }
 
   module.exports = Pause;
