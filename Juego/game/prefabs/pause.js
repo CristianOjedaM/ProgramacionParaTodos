@@ -33,7 +33,7 @@
 
     
     //Boton de ayuda
-    this.btnAyuda = this.game.add.button((this.game.width/2) + 130, 60, 'btnPausa');
+    this.btnAyuda = this.game.add.button((this.game.width/2) + 100, 60, 'btnPausa');
     this.btnAyuda.fixedToCamera = true;
     this.btnAyuda.frame = 0;
     this.add(this.btnAyuda);
@@ -59,8 +59,8 @@
 
   Pause.prototype.reset = function(game){
      
-      var x1 = (this.game.width - 130);
-      var x2 = (this.game.width - 85);
+      var x1 = (this.game.width/2) - 130;
+      var x2 = (this.game.width/2) - 85;
       var y1 = 10;
       var y2 = 55;
      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
