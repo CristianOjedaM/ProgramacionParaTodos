@@ -205,6 +205,9 @@
 
     clickItem: function(item){
       if(!item.usado){
+
+        console.log(item.i + " - " + item.j);
+
         item.movimiento = true;
         item.usado = true;
         item.bringToTop();
@@ -429,8 +432,6 @@
           this.items.forEach(function(item) {
             if(usados[i][j] == false){
               if(item.new_i == 99 && item.new_j == 99){
-                item.i = item.new_i;
-                item.j = item.new_j;
                 item.new_i = i;
                 item.new_j = j;
                 usados[i][j] = true;
@@ -441,12 +442,16 @@
       }
       //Efecto y reposicion de cada item
       this.items.forEach(function(item) {
-        item.game.add.tween(item).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
+        item.game.add.tween(item).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
         if(item.texto){
-          item.game.add.tween(item.texto).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
+          item.game.add.tween(item.texto).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
         }
+        item.i = item.new_i;
+        item.j = item.new_j;
         item.new_i = 99;//Numero para validacion de asignados
         item.new_j = 99;//Numero para validacion de asignados
+
+        console.log(item.i + " - " + item.j);
       });
     },
   };

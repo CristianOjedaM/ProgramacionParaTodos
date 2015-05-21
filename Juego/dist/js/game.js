@@ -70,8 +70,10 @@ window.onload = function () {
     this.game.add.tween(this).to({y:-100}, 200, Phaser.Easing.Linear.NONE, true);
   }; 
 
-  Pause.prototype.reset = function(){
-     this.game.state.getCurrentState().restart(true);
+  Pause.prototype.reset = function(game){
+     //this.game.state.getCurrentState().game.state.restart(true);
+     this.game.state.getCurrentState().clearCurrentState();
+     game.state.getCurrentState().game.state.start(this.game.state.current);
   };
  
   module.exports = Pause;
@@ -549,7 +551,7 @@ module.exports = Menu;
         }
       }else if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
          //Se esconde el panel de pausa        
-          this.pnlPausa.reset();
+          this.pnlPausa.reset(game);
       }
     }
   };
@@ -1021,11 +1023,11 @@ module.exports = Menu;
         }
   
         /*Validaciones sobre municiones de lanzamiento*/
-        if(this.lanzador.body.x < 0 || this.lanzador.body.x > 800 || this.lanzador.body.y < 0 || this.lanzador.body.y > 600){
+        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){
           this.lanzador.destroy();
           this.jugador.animations.play('lanzar');
         }
-  
+        
         /*Validaciones sobre items*/
         this.items.forEach(function(item) {
           //Se verifican los items para realizar su movimiento en caso de click
@@ -1234,10 +1236,12 @@ module.exports = Menu;
     },
 
     preRender: function(){
-      //if(!this.lanzamiento){
-        this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
-        this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
-      //}
+      if(this.resorte){
+        if(!this.lanzamiento){
+          this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+          this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
+        }
+      }
     },
 
     render: function() {
@@ -1274,12 +1278,6 @@ module.exports = Menu;
       }
     }
   };
-
-  function updateAlterno(game){
-    if(game.paused){
-      setTimeout(updateAlterno,50,game);
-    }
-  }
   
   module.exports = Nivel2;
 },{"../prefabs/pause":2,"../prefabs/textBox":3}],10:[function(require,module,exports){
@@ -1490,6 +1488,9 @@ module.exports = Menu;
 
     clickItem: function(item){
       if(!item.usado){
+
+        console.log(item.i + " - " + item.j);
+
         item.movimiento = true;
         item.usado = true;
         item.bringToTop();
@@ -1714,8 +1715,6 @@ module.exports = Menu;
           this.items.forEach(function(item) {
             if(usados[i][j] == false){
               if(item.new_i == 99 && item.new_j == 99){
-                item.i = item.new_i;
-                item.j = item.new_j;
                 item.new_i = i;
                 item.new_j = j;
                 usados[i][j] = true;
@@ -1726,12 +1725,16 @@ module.exports = Menu;
       }
       //Efecto y reposicion de cada item
       this.items.forEach(function(item) {
-        item.game.add.tween(item).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
+        item.game.add.tween(item).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
         if(item.texto){
-          item.game.add.tween(item.texto).to({x:(70+(85*item.new_i)),y:(70+(85*item.new_j))}, 350, Phaser.Easing.Linear.None, true);
+          item.game.add.tween(item.texto).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
         }
+        item.i = item.new_i;
+        item.j = item.new_j;
         item.new_i = 99;//Numero para validacion de asignados
         item.new_j = 99;//Numero para validacion de asignados
+
+        console.log(item.i + " - " + item.j);
       });
     },
   };

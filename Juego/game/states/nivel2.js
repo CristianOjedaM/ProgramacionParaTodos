@@ -116,11 +116,11 @@
         }
   
         /*Validaciones sobre municiones de lanzamiento*/
-        if(this.lanzador.body.x < 0 || this.lanzador.body.x > 800 || this.lanzador.body.y < 0 || this.lanzador.body.y > 600){
+        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){
           this.lanzador.destroy();
           this.jugador.animations.play('lanzar');
         }
-  
+        
         /*Validaciones sobre items*/
         this.items.forEach(function(item) {
           //Se verifican los items para realizar su movimiento en caso de click
@@ -329,10 +329,12 @@
     },
 
     preRender: function(){
-      //if(!this.lanzamiento){
-        this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
-        this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
-      //}
+      if(this.resorte){
+        if(!this.lanzamiento){
+          this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+          this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
+        }
+      }
     },
 
     render: function() {
@@ -369,11 +371,5 @@
       }
     }
   };
-
-  function updateAlterno(game){
-    if(game.paused){
-      setTimeout(updateAlterno,50,game);
-    }
-  }
   
   module.exports = Nivel2;
