@@ -19,13 +19,13 @@
     this.add(this.pauseText);
 
     //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+    this.btnPlay = this.game.add.button((this.game.width/2)- 81, 10, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
 
     //Boton de reinicial
-    this.btnReiniciar = this.game.add.button((this.game.width - 130), 10, 'btnPausa');
+    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 10, 'btnPausa');
     this.btnReiniciar.fixedToCamera = true;
     this.btnReiniciar.frame = 0;
     this.add(this.btnReiniciar);
@@ -42,7 +42,7 @@
 
   Pause.prototype.show = function(){
     var game_ = this.game;
-    var tween = this.game.add.tween(this).to({y:this.game.height/2}, 500, Phaser.Easing.Bounce.Out, true);
+    var tween = this.game.add.tween(this).to({y:100}, 500, Phaser.Easing.Bounce.Out, true);
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){
