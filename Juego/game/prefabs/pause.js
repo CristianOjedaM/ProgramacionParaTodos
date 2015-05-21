@@ -7,6 +7,8 @@
 
     //Se agrega el panel
     this.panel = this.create(this.game.width/2, 10, 'fondoPausa');
+    this.height = 300;
+    this.width = 400;
     this.panel.fixedToCamera = true;
     this.panel.anchor.setTo(0.5, 0);
 
