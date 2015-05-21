@@ -92,6 +92,9 @@
       this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[3].fixedToCamera = true;
       
+      //Imagen de fondo para el tiempo
+      this.cuadroTime = this.game.add.sprite(((this.game.width)/2), 16,'time')
+      this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
       this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
       this.timer.fixedToCamera = true; 

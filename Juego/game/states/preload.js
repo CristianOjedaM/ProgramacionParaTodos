@@ -18,10 +18,11 @@ Preload.prototype = {
     this.load.image('nivel1', 'assets/images/Menu/nivel1.png');
     this.load.image('nivel2', 'assets/images/Menu/nivel2.png');
 
-    /*Botones*/
+    /*Botones y generales*/
     this.load.image('btnContinuar', 'assets/images/Botones/btnContinuar.png');
     this.load.spritesheet('btnPausa', 'assets/images/Botones/btnPausa.png',45,45);
     this.load.image('fondoPausa', 'assets/images/Botones/fondoPausa.png');
+    this.load.image('time','assets/images/Botones/time.png');
 
     /*Imagenes nivel 1*/
     this.load.image('tile_nivel1', 'assets/images/Nivel 1/tile.jpg');
