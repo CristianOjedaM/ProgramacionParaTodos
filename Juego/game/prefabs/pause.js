@@ -61,6 +61,8 @@
      
       var x1 = (this.game.width/2) - 130;
       var x2 = (this.game.width/2) - 85;
+      var y1 = 210; 
+      var y2 = 255;
      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
          //Se esconde el panel de pausa
           if(this.game.paused){
