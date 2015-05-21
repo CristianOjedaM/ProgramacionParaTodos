@@ -56,6 +56,7 @@ window.onload = function () {
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
     this.y = -100;
+    this.game.input.onDown.add(this.reset,this);
   };
 
   Pause.prototype = Object.create(Phaser.Group.prototype);
@@ -71,10 +72,25 @@ window.onload = function () {
   }; 
 
   Pause.prototype.reset = function(game){
-     //this.game.state.getCurrentState().game.state.restart(true);
-     this.game.state.getCurrentState().clearCurrentState();
-     game.state.getCurrentState().game.state.start(this.game.state.current);
-  };
+     
+      var x1 = (this.game.width - 130);
+      var x2 = (this.game.width - 85);
+      var y1 = 10;
+      var y2 = 55;
+     if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+         //Se esconde el panel de pausa
+          if(this.game.paused){
+            this.game.paused = false;
+            this.hide();                  
+            this.game.state.clearCurrentState();
+            if(game.game.state.current == "nivel1_1"){
+              game.game.state.start("nivel1");
+            }else{
+              game.game.state.start(game.game.state.current);
+            }
+          }
+      }
+  }; 
  
   module.exports = Pause;
 },{}],3:[function(require,module,exports){
@@ -290,7 +306,12 @@ module.exports = Menu;
     score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
     maxtime: 60,
     flagpause: false,
-
+    init: function(){
+      this.scoreText= new Array();
+      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.maxtime= 60;
+      this.flagpause= false;      
+    },
     create: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -361,7 +382,7 @@ module.exports = Menu;
       this.items.enableBody = true;
 
       //Control de score
-      this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score');
+      this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score1');
       this.cuadroScore.fixedToCamera = true;
       this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[0].fixedToCamera = true;
@@ -373,10 +394,12 @@ module.exports = Menu;
       this.scoreText[3].fixedToCamera = true;
       
       //Imagen de fondo para el tiempo
-      this.cuadroTime = this.game.add.sprite(((this.game.width)/2), 16,'time')
+      this.cuadroTime = this.game.add.sprite(((this.game.width)/2), 5,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -552,9 +575,6 @@ module.exports = Menu;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
-      }else if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
-         //Se esconde el panel de pausa        
-          this.pnlPausa.reset(game);
       }
     }
   };
@@ -589,7 +609,15 @@ module.exports = Menu;
     init: function(score){//Funcion para recibir los argumentos de score (base del nivel)
       //Asignacion de scores previos
       this.prev_score = score;
-      this.prev_score_base = score;
+      this.prev_score_base = score;      
+      this.scoreText= new Array();
+      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.maxtime= 10;
+      this.error_score= {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0};
+      this.itemsCompletos= 0;
+      this.vel=50;//Velocidad de inicio para movimiento de items
+      this.itemSelec= false;
+      this.flagpause= false;
     },
 
     create: function() {
@@ -623,11 +651,11 @@ module.exports = Menu;
       this.items.inputEnabled = true;
 
       //Control de score
-      this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score');
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 35, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 72, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 108, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 100 , this.cuadroScore.y + 141, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.cuadroScore = this.game.add.sprite(10,(this.game.height - 60),'score1_1');
+      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 75 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 180 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 285 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 390 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -931,12 +959,30 @@ module.exports = Menu;
     lanzamiento:false,
     enPregunta:false,
     estado:0,
-
+    flagpause: false,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
     booleanItems: new Array({pregunta:'Es niño?',variable:'nino'}),
     arrayItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
+    
+    init: function(){
+      //Definición de propiedades
+      this.scoreText= new Array();
+      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.maxtime= 120;
+      this.prev_score= {};
+      this.prev_score_base= {};
+      this.itemsCompletos= 0;
+      this.vel=100;//Velocidad de inicio para movimiento de items
+      this.itemSelec= false;
+
+      this.mover=false;
+      this.lanzamiento=false;
+      this.enPregunta=false;
+      this.estado=0;
+      this.flagpause = false;
+    },
 
     create: function() {
       //Habilitacion de fisicas
@@ -963,8 +1009,8 @@ module.exports = Menu;
 
       //Creacion de sprite jugador
       this.jugador = this.game.add.sprite(80,this.game.world.height - 115,'personaje2');
-      this.jugador.animations.add('idle', [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], 10, true,60, true);
-      this.animLanzar = this.jugador.animations.add('lanzar', [0,1,2,3,4,5,6,7,8,9], 10, false);
+      this.jugador.animations.add('idle', [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24], 12, true,60, true);
+      this.animLanzar = this.jugador.animations.add('lanzar', [0,1,2,3,4,5,6,7,8,9], 12, false);
       this.animLanzar.onComplete.add(function() {
         this.jugador.animations.play('idle');
         //Se realiza creacion de la resortera (lanzador)
@@ -1286,7 +1332,7 @@ module.exports = Menu;
 },{"../prefabs/pause":2,"../prefabs/textBox":3}],10:[function(require,module,exports){
 
   'use strict';
-
+ var Pausa = require('../prefabs/pause');
   function Nivel3() {}
   Nivel3.prototype = {
 
@@ -1303,11 +1349,27 @@ module.exports = Menu;
     colocados: 0,
     solicitado: true,
     resp_time:20,
-
+    flagpause: false,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
+    
+    init:function(){
+       //Definición de propiedades
+      this.score = 0;
+      this.maxtime = 120;
+      this.prev_score =  {};
+      this.prev_score_base = {};
+      this.itemsCompletos = 0;
+      this.vel =100;//Velocidad de inicio para movimiento de items
+      this.itemSelec = false;
 
+      //Variables de control
+      this.colocados = 0;
+      this.solicitado = true;
+      this.resp_time = 20;
+      this.flagpause = false;
+    },
     create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -1357,6 +1419,16 @@ module.exports = Menu;
       //Creacion de texto de puntaje
       this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
       this.solicitud();
+
+      //Se agrega el boton de pausa
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
+      this.btnPausa.fixedToCamera = true;
+
+       //Se incluye el panel de pausa al nivel
+      this.pnlPausa = new Pausa(this.game);
+      this.game.add.existing(this.pnlPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);
     },
 
     update: function(){
@@ -1740,10 +1812,31 @@ module.exports = Menu;
         console.log(item.i + " - " + item.j);
       });
     },
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;
+        }
+      }
+    }
   };
 
   module.exports = Nivel3;
-},{}],11:[function(require,module,exports){
+},{"../prefabs/pause":2}],11:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -1818,7 +1911,8 @@ Preload.prototype = {
     this.load.image('plataforma', 'assets/images/Nivel 1/plataforma.jpg');
     this.load.spritesheet('item', 'assets/images/Nivel 1/item.png',32,31);
     this.load.spritesheet('personaje', 'assets/images/personaje.png', 48, 68);
-    this.load.image('score', 'assets/images/Nivel 1/score_1_1.png');
+    this.load.image('score1', 'assets/images/Nivel 1/score_1.png');
+    this.load.image('score1_1', 'assets/images/Nivel 1/score_1_1.png');
     this.load.spritesheet('tubo', 'assets/images/Nivel 1/tubo.png',190,100);
     this.load.spritesheet('MensajeAyuda','assets/images/Nivel 1/msjs.png',275,180);
 

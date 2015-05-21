@@ -98,10 +98,12 @@
       this.scoreText[3].fixedToCamera = true;
       
       //Imagen de fondo para el tiempo
-      this.cuadroTime = this.game.add.sprite(((this.game.width)/2), 16,'time')
+      this.cuadroTime = this.game.add.sprite(((this.game.width)/2), 5,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
