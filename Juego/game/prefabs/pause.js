@@ -34,6 +34,7 @@
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
     this.y = -100;
+    this.game.input.onDown.add(this.pausaJuego,this);
   };
 
   Pause.prototype = Object.create(Phaser.Group.prototype);
@@ -53,5 +54,35 @@
      this.game.state.clearCurrentState();
      game.state.start(game.state.current);
   };
+
+  Pause.prototype.pausaJuego = function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else {
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;
+        }
+      }else if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
+         //Se esconde el panel de pausa
+          if(this.game.paused){
+            this.game.paused = false;
+            this.pnlPausa.hide();
+            this.flagpause = false;      
+            this.pnlPausa.reset(this.game);
+          }
+      }
+    };
  
   module.exports = Pause;

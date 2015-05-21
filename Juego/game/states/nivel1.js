@@ -119,7 +119,7 @@
       //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
-      this.game.input.onDown.add(this.pausaJuego,this);
+      
     },
 
     update: function() {
@@ -258,37 +258,9 @@
     clickListener: function() {
       //Se da paso al seiguiente nivel de juego (Segunda parte del nivel 1)
       this.game.state.start('nivel1_1',true,false,this.score);
-    },
-
-    pausaJuego: function(game){
-      var x1 = (this.game.width - 81);
-      var x2 = (this.game.width - 36);
-      var y1 = 10;
-      var y2 = 55;
-      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
-        if(this.game.paused == false){
-          //Se muestra panel de pausa
-          if(this.flagpause==false){
-            this.pnlPausa.show();   
-            this.flagpause = true;
-          }
-            
-        }else {
-          //Se esconde el panel de pausa
-          this.game.paused = false;
-          this.pnlPausa.hide();
-          this.flagpause = false;
-        }
-      }else if(game.x > (this.game.width - 130) && game.x < (this.game.width - 85) && game.y > y1 && game.y < y2 ){
-         //Se esconde el panel de pausa
-          if(this.game.paused){
-            this.game.paused = false;
-            this.pnlPausa.hide();
-            this.flagpause = false;      
-            this.pnlPausa.reset(this.game);
-          }
-      }
     }
+
+   
   };
   
   module.exports = Nivel1;

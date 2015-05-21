@@ -26,7 +26,7 @@
     init: function(score){//Funcion para recibir los argumentos de score (base del nivel)
       //Asignacion de scores previos
       this.prev_score = score;
-      this.prev_score_base = score;
+      this.prev_score_base = score;      
     },
 
     create: function() {
