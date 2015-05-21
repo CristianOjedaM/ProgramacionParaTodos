@@ -60,7 +60,12 @@
           if(this.game.paused){
             this.game.paused = false;
             this.hide();                  
-            this.game.state.getCurrentState().game.state.restart(true);
+            this.game.state.clearCurrentState();
+            if(game.game.state.current == "nivel1_1"){
+              game.game.state.start("nivel1");
+            }else{
+              game.game.state.start(game.game.state.current);
+            }
           }
       }
   }; 

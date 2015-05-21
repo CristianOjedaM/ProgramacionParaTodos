@@ -17,8 +17,6 @@
       this.flagpause= false;      
     },
     create: function() {
-      //se inicializan las variables
-      this.init;
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 

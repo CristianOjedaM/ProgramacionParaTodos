@@ -27,6 +27,14 @@
       //Asignacion de scores previos
       this.prev_score = score;
       this.prev_score_base = score;      
+      this.scoreText= new Array();
+      this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
+      this.maxtime= 10;
+      this.error_score= {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0};
+      this.itemsCompletos= 0;
+      this.vel=50;//Velocidad de inicio para movimiento de items
+      this.itemSelec= false;
+      this.flagpause= false;
     },
 
     create: function() {
