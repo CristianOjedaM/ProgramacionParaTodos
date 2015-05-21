@@ -7,8 +7,6 @@
 
     //Se agrega el panel
     this.panel = this.create(this.game.width/2, 10, 'fondoPausa');
-    this.height = 300;
-    this.width = 400;
     this.panel.fixedToCamera = true;
     this.panel.anchor.setTo(0.5, 0);
 
@@ -26,6 +24,12 @@
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
 
+    //Boton de reinicial
+    this.btnReiniciar = this.game.add.button((this.game.width - 130), 10, 'btnPausa');
+    this.btnReiniciar.fixedToCamera = true;
+    this.btnReiniciar.frame = 0;
+    this.add(this.btnReiniciar);
+
     
 
     //Se establece la posicion fuera de los limites de juego
@@ -38,7 +42,7 @@
 
   Pause.prototype.show = function(){
     var game_ = this.game;
-    var tween = this.game.add.tween(this).to({y:this.game.height/2}, 500, Phaser.Easing.Bounce.Out, true);
+    var tween = this.game.add.tween(this).to({y:0}, 500, Phaser.Easing.Bounce.Out, true);
     tween.onComplete.add(function(){this.game.paused = true;}, this);
   };
   Pause.prototype.hide = function(){

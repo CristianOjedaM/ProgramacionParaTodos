@@ -263,12 +263,14 @@
             this.flagpause = true;
           }
             
-        }else{
+        }else {
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
+      }else  if(game.x > (this.game.width - 130) && game.x < 85 && game.y > y1 && game.y < y2 ){
+         this.game.state.start('nivel1');
       }
     }
   };
