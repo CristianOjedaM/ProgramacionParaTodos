@@ -30,8 +30,7 @@
     this.btnReiniciar.frame = 0;
     this.add(this.btnReiniciar);
 
-    this.game.input.onDown.add(reiniciarLevel,this);
-
+    
     //Se establece la posicion fuera de los limites de juego
     this.x = 0;
     this.y = -100;
