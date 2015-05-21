@@ -50,7 +50,7 @@
   }; 
 
   Pause.prototype.reset = function(game){
-     //this.game.state.getCurrentState().game.state.restart(true);
+     
       var x1 = (this.game.width - 130);
       var x2 = (this.game.width - 85);
       var y1 = 10;
@@ -60,8 +60,7 @@
           if(this.game.paused){
             this.game.paused = false;
             this.hide();                  
-            this.game.state.clearCurrentState();
-            game.state.start(game.state.current);
+            this.game.state.getCurrentState().game.state.restart(true);
           }
       }
   }; 
