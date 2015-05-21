@@ -33,7 +33,7 @@
 
     
     //Boton de ayuda
-    this.btnAyuda = this.game.add.button((this.game.width/2) + 100, 60, 'btnPausa');
+    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 60, 'btnPausa');
     this.btnAyuda.fixedToCamera = true;
     this.btnAyuda.frame = 0;
     this.add(this.btnAyuda);
