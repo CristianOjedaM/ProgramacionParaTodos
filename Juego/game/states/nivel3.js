@@ -10,8 +10,8 @@
     prev_score: {},
     prev_score_base: {},
     itemsCompletos: 0,
-    vel:100,//Velocidad de inicio para movimiento de items
     itemSelec: false,
+    estado:0,
 
     //Variables de control
     colocados: 0,
@@ -23,13 +23,13 @@
     operadorItems: new Array('>','<','>=','<=','==','!='),
     
     init:function(){
-       //Definición de propiedades
+      //Definición de propiedades
+      this.estado = 0;
       this.score = 0;
       this.maxtime = 120;
       this.prev_score =  {};
       this.prev_score_base = {};
       this.itemsCompletos = 0;
-      this.vel =100;//Velocidad de inicio para movimiento de items
       this.itemSelec = false;
 
       //Variables de control
@@ -38,6 +38,7 @@
       this.resp_time = 20;
       this.flagpause = false;
     },
+
     create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -118,22 +119,22 @@
     },
 
     solicitud:function(){
+      console.log("nueva solicitud");
       var sol = Math.floor(Math.random()*2);
       if(sol == 0){//Solicitud de veradero{}
         this.solicitado = true;
       }else{//Solicitud de falso
         this.solicitado = false;
       }
-      if(this.solicitudTxt){
-        this.solicitudTxt.setText(this.solicitado);
-      }else{
+      if(this.estado == 0){
         this.solicitudTxt = this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
-      }
-      if(this.solicitudTime){
-        this.resp_time = 20;
-      }else{
         this.solicitudTime = this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+        this.estado = 1;
+      }else{
+        this.solicitudTxt.setText(this.solicitado.toString());
+        this.resp_time = 20;
       }
+
       this.slots.forEach(function(slot) {
         if(slot.item){
           if(slot.item.texto){slot.item.texto.destroy();}
@@ -480,6 +481,7 @@
         console.log(item.i + " - " + item.j);
       });
     },
+
     pausaJuego: function(game){
       var x1 = (this.game.width - 81);
       var x2 = (this.game.width - 36);

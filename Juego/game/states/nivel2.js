@@ -38,6 +38,7 @@
       this.enPregunta=false;
       this.estado=0;
       this.flagpause = false;
+      mouseSpring = null;
     },
 
     create: function() {
@@ -71,7 +72,7 @@
         this.jugador.animations.play('idle');
         //Se realiza creacion de la resortera (lanzador)
         this.nuevoLanzador();
-        if(!this.resorte){
+        if(this.estado == 0){
           this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
           this.resorte2 = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
           this.estado = 1;
