@@ -26,10 +26,16 @@
 
 
     //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnPlay = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
+
+    //Boton de inicio
+    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnInicio.fixedToCamera = true;
+    this.btnInicio.frame = 0;
+    this.add(this.btnInicio);
 
     
     //Boton de ayuda
@@ -74,6 +80,13 @@
             }else{
               game.game.state.start(game.game.state.current);
             }
+          }
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+           if(this.game.paused){
+            this.game.paused = false;
+            this.hide();                  
+            this.game.state.clearCurrentState();
+            game.game.state.start("play");
           }
       }
   }; 
