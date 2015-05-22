@@ -379,15 +379,17 @@
           if(this.flagpause==false){
             this.pnlPausa.show();   
             this.flagpause = true;
-          }
-            
-        }else{
+          }            
+        }
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+        if(this.game.paused){
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
       }
+
     }
   };
   
