@@ -575,15 +575,16 @@ module.exports = Menu;
           if(this.flagpause==false){
             this.pnlPausa.show();   
             this.flagpause = true;
-          }
-            
+          }            
         }
       }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+        if(this.game.paused){
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
+      }
     }
   };
   
@@ -892,7 +893,15 @@ module.exports = Menu;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
-      }else{
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+          if(this.game.paused){
+            //Se esconde el panel de pausa
+            this.game.paused = false;
+            this.pnlPausa.hide();
+            this.flagpause = false;
+          }       
+      }
+      else{
         if(this.game.paused){
           this.MensajeAyuda.destroy();
           this.game.paused = false;
@@ -1274,7 +1283,7 @@ module.exports = Menu;
         this.error_sound.play();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
-        var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 350, Phaser.Easing.Linear.None, true);
+        var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
         tween.onComplete.add(function(){punto.destroy();}, this);
         this.score += 20;
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
@@ -1330,15 +1339,17 @@ module.exports = Menu;
           if(this.flagpause==false){
             this.pnlPausa.show();   
             this.flagpause = true;
-          }
-            
-        }else{
+          }            
+        }
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+        if(this.game.paused){
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
       }
+
     }
   };
   
@@ -1839,13 +1850,16 @@ module.exports = Menu;
             this.flagpause = true;
           }
             
-        }else{
+        }
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+        if(this.game.paused){
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
       }
+
     }
   };
 

@@ -326,7 +326,7 @@
         this.error_sound.play();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
-        var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 350, Phaser.Easing.Linear.None, true);
+        var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
         tween.onComplete.add(function(){punto.destroy();}, this);
         this.score += 20;
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
