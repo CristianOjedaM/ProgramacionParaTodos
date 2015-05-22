@@ -26,7 +26,7 @@
 
 
     //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+    this.btnPlay = this.game.add.button((this.game.width - 81), -100, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
