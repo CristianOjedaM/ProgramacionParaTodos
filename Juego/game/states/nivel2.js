@@ -414,7 +414,8 @@
 
     MensajeEquivocacion: function(){        
         var frame = Math.floor((Math.random()*4) + 1);        
-        if((this.fallosDeclaracion%5)==0){
+        if(this.fallosDeclaracion==5){
+          this.fallosDeclaracion = 0;
           this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
           this.game.paused = true;
         }
