@@ -19,6 +19,7 @@
     enPregunta:false,
     estado:0,
     flagpause: false,
+    fallosDeclaracion: 0,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
@@ -38,6 +39,7 @@
       this.enPregunta=false;
       this.estado=0;
       this.flagpause = false;
+      this.fallosDeclaracion = 0;
       mouseSpring = null;
     },
 
@@ -334,6 +336,9 @@
         }
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
         this.error_sound.play();
+        //Se suma 1 al contador de fallos para retroalimentacion
+        fallosDeclaracion++;
+        this.MensajeEquivocacion();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
@@ -399,7 +404,20 @@
           this.pnlPausa.hide();
           this.flagpause = false;
         }
+      }else{
+        if(this.game.paused){
+          this.MensajeAyuda.destroy();
+          this.game.paused = false;
+        }
       }
+    },
+
+    MensajeEquivocacion: function(){        
+        var frame = Math.floor((Math.random()*4) + 1);        
+        if((this.fallosDeclaracion%5)==0){
+          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+          this.game.paused = true;
+        }
     }
   };
   
