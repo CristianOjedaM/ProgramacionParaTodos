@@ -119,7 +119,6 @@
     },
 
     solicitud:function(){
-      console.log("nueva solicitud");
       var sol = Math.floor(Math.random()*2);
       if(sol == 0){//Solicitud de veradero{}
         this.solicitado = true;
@@ -477,8 +476,6 @@
         item.j = item.new_j;
         item.new_i = 99;//Numero para validacion de asignados
         item.new_j = 99;//Numero para validacion de asignados
-
-        console.log(item.i + " - " + item.j);
       });
     },
 

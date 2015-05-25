@@ -240,7 +240,16 @@
       this.tipoValida = body2.sprite.tipo;
       //Se destruyen los elementos de colision
       body2.sprite.kill();
+      //Se realiza la creacion de la explosion
+      this.explosion = this.game.add.sprite(body1.x,body1.y,'explosion');
+      this.explosion.anchor.setTo(0.5,0.5);
+      this.animExplosion = this.explosion.animations.add('explotar', [1,2,3,4,5,6,7,8,9,10,11], 12, false);
+      this.animExplosion.onComplete.add(function() {
+        this.explosion.destroy();
+      },this);
       body1.sprite.destroy();
+      this.explosion.animations.play('explotar');      
+      //Se define la pregunta
       this.enPregunta = true;
       switch(this.tipoValida){//Tipo de variable sobre el cual se realizara la definicion
         case 0://Tipo string

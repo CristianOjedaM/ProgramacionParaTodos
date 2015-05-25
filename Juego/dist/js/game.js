@@ -48,10 +48,16 @@ window.onload = function () {
 
 
     //Boton de play o resume
-    this.btnPlay = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnPlay = this.game.add.button((this.game.width - 81), -140, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
+
+    //Boton de inicio
+    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnInicio.fixedToCamera = true;
+    this.btnInicio.frame = 0;
+    this.add(this.btnInicio);
 
     
     //Boton de ayuda
@@ -96,6 +102,13 @@ window.onload = function () {
             }else{
               game.game.state.start(game.game.state.current);
             }
+          }
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+           if(this.game.paused){
+            this.game.paused = false;
+            this.hide();                  
+            this.game.state.clearCurrentState();
+            game.game.state.start("play");
           }
       }
   }; 
@@ -576,9 +589,7 @@ module.exports = Menu;
             this.pnlPausa.show();   
             this.flagpause = true;
           }            
-        }
-      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
-        if(this.game.paused){
+        }else{
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
@@ -893,15 +904,7 @@ module.exports = Menu;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
-      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
-          if(this.game.paused){
-            //Se esconde el panel de pausa
-            this.game.paused = false;
-            this.pnlPausa.hide();
-            this.flagpause = false;
-          }       
-      }
-      else{
+      }else{
         if(this.game.paused){
           this.MensajeAyuda.destroy();
           this.game.paused = false;
@@ -995,6 +998,7 @@ module.exports = Menu;
       this.enPregunta=false;
       this.estado=0;
       this.flagpause = false;
+      mouseSpring = null;
     },
 
     create: function() {
@@ -1028,7 +1032,7 @@ module.exports = Menu;
         this.jugador.animations.play('idle');
         //Se realiza creacion de la resortera (lanzador)
         this.nuevoLanzador();
-        if(!this.resorte){
+        if(this.estado == 0){
           this.resorte = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
           this.resorte2 = new Phaser.Line(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
           this.estado = 1;
@@ -1196,7 +1200,16 @@ module.exports = Menu;
       this.tipoValida = body2.sprite.tipo;
       //Se destruyen los elementos de colision
       body2.sprite.kill();
+      //Se realiza la creacion de la explosion
+      this.explosion = this.game.add.sprite(body1.x,body1.y,'explosion');
+      this.explosion.anchor.setTo(0.5,0.5);
+      this.animExplosion = this.explosion.animations.add('explotar', [1,2,3,4,5,6,7,8,9,10,11], 12, false);
+      this.animExplosion.onComplete.add(function() {
+        this.explosion.destroy();
+      },this);
       body1.sprite.destroy();
+      this.explosion.animations.play('explotar');      
+      //Se define la pregunta
       this.enPregunta = true;
       switch(this.tipoValida){//Tipo de variable sobre el cual se realizara la definicion
         case 0://Tipo string
@@ -1340,16 +1353,13 @@ module.exports = Menu;
             this.pnlPausa.show();   
             this.flagpause = true;
           }            
-        }
-      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
-        if(this.game.paused){
+        }else{
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
       }
-
     }
   };
   
@@ -1367,8 +1377,8 @@ module.exports = Menu;
     prev_score: {},
     prev_score_base: {},
     itemsCompletos: 0,
-    vel:100,//Velocidad de inicio para movimiento de items
     itemSelec: false,
+    estado:0,
 
     //Variables de control
     colocados: 0,
@@ -1380,13 +1390,13 @@ module.exports = Menu;
     operadorItems: new Array('>','<','>=','<=','==','!='),
     
     init:function(){
-       //Definición de propiedades
+      //Definición de propiedades
+      this.estado = 0;
       this.score = 0;
       this.maxtime = 120;
       this.prev_score =  {};
       this.prev_score_base = {};
       this.itemsCompletos = 0;
-      this.vel =100;//Velocidad de inicio para movimiento de items
       this.itemSelec = false;
 
       //Variables de control
@@ -1395,6 +1405,7 @@ module.exports = Menu;
       this.resp_time = 20;
       this.flagpause = false;
     },
+
     create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -1481,16 +1492,15 @@ module.exports = Menu;
       }else{//Solicitud de falso
         this.solicitado = false;
       }
-      if(this.solicitudTxt){
-        this.solicitudTxt.setText(this.solicitado);
-      }else{
+      if(this.estado == 0){
         this.solicitudTxt = this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
-      }
-      if(this.solicitudTime){
-        this.resp_time = 20;
-      }else{
         this.solicitudTime = this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+        this.estado = 1;
+      }else{
+        this.solicitudTxt.setText(this.solicitado.toString());
+        this.resp_time = 20;
       }
+
       this.slots.forEach(function(slot) {
         if(slot.item){
           if(slot.item.texto){slot.item.texto.destroy();}
@@ -1833,10 +1843,9 @@ module.exports = Menu;
         item.j = item.new_j;
         item.new_i = 99;//Numero para validacion de asignados
         item.new_j = 99;//Numero para validacion de asignados
-
-        console.log(item.i + " - " + item.j);
       });
     },
+
     pausaJuego: function(game){
       var x1 = (this.game.width - 81);
       var x2 = (this.game.width - 36);
@@ -1850,13 +1859,11 @@ module.exports = Menu;
             this.flagpause = true;
           }
             
-        }
-      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
-        if(this.game.paused){
+        }else{
           //Se esconde el panel de pausa
           this.game.paused = false;
           this.pnlPausa.hide();
-          this.flagpause = false;
+          this.flagpause = false;          
         }
       }
 
@@ -1949,6 +1956,7 @@ Preload.prototype = {
     this.load.image('resortera', 'assets/images/Nivel 2/resortera.png');
     this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
     this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
+    this.load.spritesheet('explosion','assets/images/Nivel 2/explosion.png',84,93);
 
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);

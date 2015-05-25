@@ -40,6 +40,7 @@ Preload.prototype = {
     this.load.image('resortera', 'assets/images/Nivel 2/resortera.png');
     this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
     this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
+    this.load.spritesheet('explosion','assets/images/Nivel 2/explosion.png',84,93);
 
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
