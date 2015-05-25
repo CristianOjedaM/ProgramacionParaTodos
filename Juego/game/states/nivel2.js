@@ -337,7 +337,7 @@
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
         this.error_sound.play();
         //Se suma 1 al contador de fallos para retroalimentacion
-        fallosDeclaracion++;
+        this.fallosDeclaracion++;
         this.MensajeEquivocacion();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
