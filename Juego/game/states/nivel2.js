@@ -408,6 +408,7 @@
         if(this.game.paused == true && this.MensajeAyuda != null){
           this.MensajeAyuda.destroy();
           this.game.paused = false;
+          this.flagpause = false;
         }
       }
     },
