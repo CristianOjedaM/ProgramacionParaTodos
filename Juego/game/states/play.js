@@ -29,6 +29,11 @@
       this.nivel3.nivel = 'nivel3'
       this.nivel3.inputEnabled = true;
       this.nivel3.events.onInputDown.add(this.clickListener, this);
+
+      this.nivel5 = this.game.add.sprite(this.game.width/3, 500,'nivel2');
+      this.nivel5.nivel = 'nivel5'
+      this.nivel5.inputEnabled = true;
+      this.nivel5.events.onInputDown.add(this.clickListener, this);
     },
     update: function() {
 

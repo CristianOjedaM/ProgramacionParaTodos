@@ -13,13 +13,134 @@ window.onload = function () {
   game.state.add('nivel1_1', require('./states/nivel1_1'));
   game.state.add('nivel2', require('./states/nivel2'));
   game.state.add('nivel3', require('./states/nivel3'));
+  game.state.add('nivel5', require('./states/nivel5'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
   
 
   game.state.start('boot');
 };
-},{"./states/boot":4,"./states/gameover":5,"./states/menu":6,"./states/nivel1":7,"./states/nivel1_1":8,"./states/nivel2":9,"./states/nivel3":10,"./states/play":11,"./states/preload":12}],2:[function(require,module,exports){
+},{"./states/boot":5,"./states/gameover":6,"./states/menu":7,"./states/nivel1":8,"./states/nivel1_1":9,"./states/nivel2":10,"./states/nivel3":11,"./states/nivel5":12,"./states/play":13,"./states/preload":14}],2:[function(require,module,exports){
+'use strict';
+
+var Editor = function(game, x, y ,width , heigth, parent){
+  Phaser.Group.call(this, game, parent);
+
+  /*Definicion de propiedades*/
+  this.defaultTxt = '';
+  this.seleccionado = true;
+  this.shift = false;
+  //Se dibuja la caja de texto
+  this.cajaTexto = game.add.graphics( 0, 0 );
+  this.cajaTexto.beginFill(0xFFFFFF, 1);
+  this.cajaTexto.bounds = new PIXI.Rectangle(x, y, width, heigth);
+  this.cajaTexto.drawRect(x, y, width, heigth);
+  this.add(this.cajaTexto);
+  //Se define el texto
+  this.texto = game.add.text(x , y, this.defaultTxt, { font: '24px calibri', fill: '#000', align:'center'});
+  this.textData = "";
+  
+  //this.inputEnabled = true;
+  game.input.keyboard.addCallbacks(this, this.keyPress, this.keyUp, null);
+  //this.events.onInputDown.add(this.seleccionar, this);
+};
+
+Editor.prototype = Object.create(Phaser.Group.prototype);
+Editor.constructor = Editor;
+
+Editor.prototype.update = function() {
+  
+  // write your prefab's specific update code here
+  
+};
+
+Editor.prototype.seleccionar = function() {
+	this.seleccionado = true;
+};
+
+Editor.prototype.keyPress = function(data) {
+    if(this.seleccionado) {
+      var charCode = (typeof data.which == "number") ? data.which : data.keyCode;
+      console.log(charCode);
+      switch(data.keyCode) {
+        case 8://En caso de ser la tecla borrar
+          this.textData = this.textData.substring(0, this.textData.length - 1);
+          this.texto.text = this.textData;
+          break;
+        case 16://En caso de ser la tecla shift
+          this.shift = true;
+          break;
+        case 50://En caso de ser la tecla numero 2
+          if(this.shift){
+            this.textData += "\"";
+            this.texto.text = this.textData;
+          }else{
+            this.textData += "2";
+            this.texto.text = this.textData;
+          }
+          break;
+        case 188://Tecla para comas (,)
+          if(this.shift){
+            this.textData += ";";
+            this.texto.text = this.textData;
+          }else{
+            this.textData += ",";
+            this.texto.text = this.textData;
+          }
+          break;
+        case 191://Tecla para cierre de corchetes
+          if(this.shift){
+            this.textData += "]";
+            this.texto.text = this.textData;
+          }else{
+            this.textData += "}";
+            this.texto.text = this.textData;
+          }
+          break;
+        case 222://Tecla para apretura corchetes
+          if(this.shift){
+            this.textData += "[";
+            this.texto.text = this.textData;
+          }else{
+            this.textData += "{";
+            this.texto.text = this.textData;
+          }
+          break;
+        default:
+          if ((this.textData.length + 1) <= this.length) {
+            var letra = String.fromCharCode((96 <= charCode && charCode <= 105)? charCode-48 : charCode).toLowerCase();
+            if (letra.length > 0) {
+              this.textData += letra;
+              this.texto.text = this.textData;
+            }
+          }
+          break;
+      }
+    }
+};
+
+Editor.prototype.keyUp = function(data) {
+  if(this.seleccionado){
+    var charCode = (typeof data.which == "number") ? data.which : data.keyCode;
+    console.log(charCode);
+    switch(data.keyCode) {
+      case 16://En caso de ser la tecla shift
+        this.shift = false;
+        break;
+    }
+  }
+};
+
+Editor.prototype.destruir = function() {
+  this.cajaTexto.destroy();
+  this.texto.destroy();
+  this.seleccionado = false;
+  this.destroy();
+};
+
+module.exports = Editor;
+
+},{}],3:[function(require,module,exports){
 
   'use strict';
 
@@ -114,7 +235,7 @@ window.onload = function () {
   }; 
  
   module.exports = Pause;
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var TextBox = function(game, x, y, width, heigth, defaultTxt) {
@@ -235,7 +356,7 @@ TextBox.prototype.destruir = function() {
 
 module.exports = TextBox;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
 'use strict';
 
@@ -254,7 +375,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -282,7 +403,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 'use strict';
 function Menu() {}
@@ -314,7 +435,7 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -600,7 +721,7 @@ module.exports = Menu;
   };
   
   module.exports = Nivel1;
-},{"../prefabs/pause":2}],8:[function(require,module,exports){
+},{"../prefabs/pause":3}],9:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -918,31 +1039,36 @@ module.exports = Menu;
         var frame = Math.floor((Math.random()*final_) + inicio);        
         switch(tipo){
           case 0:
-            if(this.error_score.errorCadena != 0 && (this.error_score.errorCadena%3) == 0 ){
+            if(this.error_score.errorCadena == 3 ){
+              this.error_score.errorCadena =0 ;
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;              
             }                
           break;
           case 1:
-            if(this.error_score.errorNumero != 0 && (this.error_score.errorNumero%3) == 0 ){
+            if(this.error_score.errorNumero == 3 ){
+              this.error_score.errorNumero = 0;
               this.MensajeAyuda =this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;              
             }                                  
           break;
           case 2:
-            if(this.error_score.errorBool != 0 && (this.error_score.errorBool%3) == 0 ){
+            if(this.error_score.errorBool == 3 ){
+              this.error_score.errorBool =0 ;
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;              
             }                                
           break;
           case 3:
-            if(this.error_score.errorArray != 0 && (this.error_score.errorArray%3) == 0 ){
+            if(this.error_score.errorArray  == 3 ){
+              this.error_score.errorArray= 0;
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;
             }                                  
           break; 
           case 4:
-            if(this.error_score.errorGeneral != 0 && (this.error_score.errorGeneral%5) == 0 ){
+            if(this.error_score.errorGeneral == 5 ){
+              this.error_score.errorGeneral = 0;
               this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda',frame);
               this.game.paused = true;        
             }
@@ -957,7 +1083,7 @@ module.exports = Menu;
   module.exports = Nivel1_1;
 
   
-},{"../prefabs/pause":2}],9:[function(require,module,exports){
+},{"../prefabs/pause":3}],10:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -979,6 +1105,7 @@ module.exports = Menu;
     enPregunta:false,
     estado:0,
     flagpause: false,
+    fallosDeclaracion: 0,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
@@ -998,6 +1125,7 @@ module.exports = Menu;
       this.enPregunta=false;
       this.estado=0;
       this.flagpause = false;
+      this.fallosDeclaracion = 0;
       mouseSpring = null;
     },
 
@@ -1294,6 +1422,9 @@ module.exports = Menu;
         }
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
         this.error_sound.play();
+        //Se suma 1 al contador de fallos para retroalimentacion
+        this.fallosDeclaracion++;
+        this.MensajeEquivocacion();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
@@ -1359,12 +1490,26 @@ module.exports = Menu;
           this.pnlPausa.hide();
           this.flagpause = false;
         }
+      }else{
+        if(this.game.paused){
+          this.MensajeAyuda.destroy();
+          this.game.paused = false;
+        }
       }
+    },
+
+    MensajeEquivocacion: function(){        
+        var frame = Math.floor((Math.random()*4) + 1);        
+        if(this.fallosDeclaracion==5){
+          this.fallosDeclaracion = 0;
+          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+          this.game.paused = true;
+        }
     }
   };
   
   module.exports = Nivel2;
-},{"../prefabs/pause":2,"../prefabs/textBox":3}],10:[function(require,module,exports){
+},{"../prefabs/pause":3,"../prefabs/textBox":4}],11:[function(require,module,exports){
 
   'use strict';
  var Pausa = require('../prefabs/pause');
@@ -1871,7 +2016,23 @@ module.exports = Menu;
   };
 
   module.exports = Nivel3;
-},{"../prefabs/pause":2}],11:[function(require,module,exports){
+},{"../prefabs/pause":3}],12:[function(require,module,exports){
+
+  'use strict';
+  var Editor = require('../prefabs/editor');
+  function Nivel5() {}
+  Nivel5.prototype = {
+
+  	create: function() {
+	  	//Se incluye el panel de pausa al nivel
+      this.editor = new Editor(this.game,20,20,300,400);
+      this.game.add.existing(this.editor);
+  	}
+
+  };
+
+  module.exports = Nivel5;
+},{"../prefabs/editor":2}],13:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -1903,6 +2064,11 @@ module.exports = Menu;
       this.nivel3.nivel = 'nivel3'
       this.nivel3.inputEnabled = true;
       this.nivel3.events.onInputDown.add(this.clickListener, this);
+
+      this.nivel5 = this.game.add.sprite(this.game.width/3, 500,'nivel2');
+      this.nivel5.nivel = 'nivel5'
+      this.nivel5.inputEnabled = true;
+      this.nivel5.events.onInputDown.add(this.clickListener, this);
     },
     update: function() {
 
@@ -1913,7 +2079,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 'use strict';
 function Preload() {
@@ -1957,6 +2123,7 @@ Preload.prototype = {
     this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
     this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
     this.load.spritesheet('explosion','assets/images/Nivel 2/explosion.png',84,93);
+    this.load.spritesheet('MensajeAyuda2','assets/images/Nivel 2/msjs.png',275,180);
 
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
