@@ -6,7 +6,7 @@
 
   	create: function() {
 	  	//Se incluye el panel de pausa al nivel
-      this.editor = new Editor(this.game,20,20,300,400);
+      this.editor = new Editor(this.game,20,20,450,20);
       this.game.add.existing(this.editor);
   	}
 

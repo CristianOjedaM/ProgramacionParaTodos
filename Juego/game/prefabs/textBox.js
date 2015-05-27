@@ -45,6 +45,8 @@ TextBox.prototype.keyPress = function(data) {
           this.textData = this.textData.substring(0, this.textData.length - 1);
           this.texto.text = this.textData;
           break;
+        case 13://En caso de ser la tecla enter no se realiza ninguna accion
+          break;
         case 16://En caso de ser la tecla shift
           this.shift = true;
           break;
