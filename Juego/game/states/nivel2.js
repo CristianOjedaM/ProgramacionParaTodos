@@ -133,6 +133,7 @@
   
         /*Validaciones sobre municiones de lanzamiento*/
         if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){
+          console.log("Salio sin pegar");
           this.lanzador.destroy();
           this.jugador.animations.play('lanzar');
         }
