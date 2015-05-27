@@ -405,7 +405,7 @@
           this.flagpause = false;
         }
       }else{
-        if(this.game.paused == true && this.MensajeAyuda != null){
+        if(this.game.paused == true && this.MensajeAyuda != null && this.MensajeAyuda.visible == true){
           this.MensajeAyuda.destroy();
           this.game.paused = false;
           this.flagpause = false;
