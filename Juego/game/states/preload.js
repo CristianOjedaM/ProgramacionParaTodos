@@ -23,6 +23,7 @@ Preload.prototype = {
     this.load.spritesheet('btnPausa', 'assets/images/Botones/btnPausa.png',45,45);
     this.load.image('fondoPausa', 'assets/images/Botones/fondoPausa.png');
     this.load.image('time','assets/images/Botones/time.png');
+    this.load.spritesheet('OpcPausa', 'assets/images/Botones/opcPausa.png',54,49);
 
     /*Imagenes nivel 1*/
     this.load.image('tile_nivel1', 'assets/images/Nivel 1/tile.jpg');

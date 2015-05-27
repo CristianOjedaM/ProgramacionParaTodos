@@ -12,14 +12,10 @@
 
     //this.game.onPause.add(enPausa, this);
 
-    // Add text
-    this.pauseText = this.game.add.text(230, 20, 'Juego pausado', { font: '24px calibri', fill: '#000', align:'center'});
-    this.pauseText.fixedToCamera = true;
-    //this.pauseText = this.game.add.bitmapText(100, 20, 'kenpixelblocks', 'Game paused', 24);
-    this.add(this.pauseText);
+      
 
-    //Boton de reinicial
-    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 60, 'btnPausa');
+    //Boton de reiniciar
+    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 60, 'OpcPausa');
     this.btnReiniciar.fixedToCamera = true;
     this.btnReiniciar.frame = 0;
     this.add(this.btnReiniciar);
@@ -32,16 +28,16 @@
     this.add(this.btnPlay);
 
     //Boton de inicio
-    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 60, 'OpcPausa');
     this.btnInicio.fixedToCamera = true;
-    this.btnInicio.frame = 0;
+    this.btnInicio.frame = 1;
     this.add(this.btnInicio);
 
     
     //Boton de ayuda
-    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 60, 'btnPausa');
+    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 60, 'OpcPausa');
     this.btnAyuda.fixedToCamera = true;
-    this.btnAyuda.frame = 0;
+    this.btnAyuda.frame = 2;
     this.add(this.btnAyuda);
 
     
