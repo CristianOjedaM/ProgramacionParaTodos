@@ -12,30 +12,28 @@
 
     //this.game.onPause.add(enPausa, this);
 
-      
-
-    //Boton de reiniciar
-    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 60, 'OpcPausa');
-    this.btnReiniciar.fixedToCamera = true;
-    this.btnReiniciar.frame = 0;
-    this.add(this.btnReiniciar);
-
-
+    
     //Boton de play o resume
     this.btnPlay = this.game.add.button((this.game.width - 81), -140, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
 
+    //Boton de reiniciar
+    this.btnReiniciar = this.game.add.button((this.game.width/2) - 120, 50, 'OpcPausa');
+    this.btnReiniciar.fixedToCamera = true;
+    this.btnReiniciar.frame = 0;
+    this.add(this.btnReiniciar);   
+
     //Boton de inicio
-    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 60, 'OpcPausa');
+    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 50, 'OpcPausa');
     this.btnInicio.fixedToCamera = true;
     this.btnInicio.frame = 1;
     this.add(this.btnInicio);
 
     
     //Boton de ayuda
-    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 60, 'OpcPausa');
+    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 50, 'OpcPausa');
     this.btnAyuda.fixedToCamera = true;
     this.btnAyuda.frame = 2;
     this.add(this.btnAyuda);
@@ -61,12 +59,12 @@
 
   Pause.prototype.reset = function(game){
      
-      var x1 = (this.game.width/2) - 130;
-      var x2 = (this.game.width/2) - 85;
+      var x1 = (this.game.width/2) - 120;
+      var x2 = (this.game.width/2) - 75;
       var y1 = 210; 
       var y2 = 255;
      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
-         //Se esconde el panel de pausa
+           //Opcion Reiniciar
           if(this.game.paused){
             this.game.paused = false;
             this.hide();                  
@@ -78,6 +76,7 @@
             }
           }
       }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+          //Opcion Inicio
            if(this.game.paused){
             this.game.paused = false;
             this.hide();                  
