@@ -421,15 +421,19 @@
       var frame;
       if (tipo==1) {
         frame = Math.floor((Math.random()*3) + 0);
-      }else{
-        frame = Math.floor((Math.random()*7) + 4);
-      };         
         if(this.fallosDeclaracion==5){
           this.fallosDeclaracion = 0;
           this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
           this.game.paused = true;
         };
-            
+      }else{        
+        frame = Math.floor((Math.random()*7) + 4);
+        if(this.falloPunteria==5){
+          this.falloPunteria = 0;
+          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+          this.game.paused = true;
+        };
+      };     
     }
   };
   
