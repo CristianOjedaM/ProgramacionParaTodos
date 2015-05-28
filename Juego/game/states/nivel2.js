@@ -20,6 +20,7 @@
     estado:0,
     flagpause: false,
     fallosDeclaracion: 0,
+    falloPunteria:0,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
@@ -40,6 +41,7 @@
       this.estado=0;
       this.flagpause = false;
       this.fallosDeclaracion = 0;
+      this.falloPunteria = 0;
       mouseSpring = null;
     },
 
@@ -133,7 +135,8 @@
   
         /*Validaciones sobre municiones de lanzamiento*/
         if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){
-          console.log("Salio sin pegar");
+          this.falloPunteria++;
+          this.MensajeEquivocacion(2);
           this.lanzador.destroy();
           this.jugador.animations.play('lanzar');
         }
@@ -339,7 +342,7 @@
         this.error_sound.play();
         //Se suma 1 al contador de fallos para retroalimentacion
         this.fallosDeclaracion++;
-        this.MensajeEquivocacion();
+        this.MensajeEquivocacion(1);
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
@@ -414,13 +417,19 @@
       }
     },
 
-    MensajeEquivocacion: function(){        
-        var frame = Math.floor((Math.random()*4) + 1);        
+    MensajeEquivocacion: function(tipo){ 
+      var frame;
+      if (tipo==1) {
+        frame = Math.floor((Math.random()*3) + 0);
+      }else{
+        frame = Math.floor((Math.random()*7) + 4);
+      };         
         if(this.fallosDeclaracion==5){
           this.fallosDeclaracion = 0;
           this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
           this.game.paused = true;
-        }
+        };
+            
     }
   };
   
