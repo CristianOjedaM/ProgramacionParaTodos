@@ -15,8 +15,9 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.margen = 20;//Margen izquierda para texto de codigo
   this.lineas = new Array();//Array para control numero de lineas
   this.textos = new Array();//Array para control de textos por linea
-  this.fills = {normal: "#000",editor: "#666",texto: "", reservado: ""}//Tipo de color de fuente
+  this.fills = {normal: "#000",editor: "#666",cadena: "#988927", reservado: "#E21335"}//Tipo de color de fuente
   this.font = { font: this.hLinea+'px consolas', fill: this.fills.normal, align:'center'};//Fuente unica para el editor
+  this.reservados = /(\s)(if|else|for|while|switch|case|break)/ig;
   this.textData = ' ';//String para control de textos ingresados
   
   //Se dibuja la caja de texto
@@ -60,16 +61,24 @@ Editor.prototype.crearLinea = function() {
   var fontTemp2 = this.font;
   fontTemp2.fill = this.fills.normal;
   var ntexto = this.game.add.text((this.x + this.margen),(this.y+((this.created_lines)*this.hLinea)),'',fontTemp2);
+  ntexto.ult_tinta = 0;
+  ntexto.cont_string = 0;
+  ntexto.tipo_string = "";
   this.textos[this.created_lines] = ntexto;
   this.add(ntexto);  
 
   this.created_lines++;
-  console.log(this.textos);
 };
 
 Editor.prototype.borrarLinea = function() {
   if(this.created_lines>0 && this.current_line>0){
     this.lineas[this.created_lines-1].destroy();
+    if(this.current_line+1<this.created_lines){
+      for(var i=this.created_lines;i>this.current_line;i--){
+        this.textos[this.current_line].setText(this.textos[this.current_line+1].text);
+        this.textos[this.current_line+1].destroy();
+      }
+    }
     this.current_line--;
     this.created_lines--;
     this.updatePipe();
@@ -85,6 +94,40 @@ Editor.prototype.updatePipe = function() {
 Editor.prototype.setText = function(valor) {
   this.textData += valor;
   this.textos[this.current_line].setText(this.textData);
+};
+
+Editor.prototype.validaTexto = function() {
+  var length = this.textos[this.current_line].text.length;
+  var texto_valida = this.textos[this.current_line].text.substring(this.textos[this.current_line].ult_tinta,length);
+  switch(this.textos[this.current_line].cont_string){
+    case 0://Ingreso de texto normal (no cadena)
+      if(this.textos[this.current_line].text[length-1] == "\"" || this.textos[this.current_line].text[length-1] == "'"){//Se validan apertura de cadena
+        this.textos[this.current_line].tipo_string = this.textos[this.current_line].text[length-1];
+        this.textos[this.current_line].cont_string=1;
+        this.textos[this.current_line].addColor(this.fills.cadena,length-1);
+        console.log(this.textos[this.current_line].tipo_string);
+      }else if(this.reservados.test(texto_valida)){//Se validan palabras reservadas
+        for(var i=length;i>=this.textos[this.current_line].ult_tinta;i--){
+          if(this.textos[this.current_line].text[i] == ' '){
+            this.textos[this.current_line].addColor(this.fills.reservado,i+1);
+            this.textos[this.current_line].ult_tinta = length;
+            this.textos[this.current_line].addColor(this.fills.normal,length);
+            continue;
+          }
+        }
+      }
+      break;
+    case 1://En caso de encontrarse dentro de cadena
+      console.log(this.textos[this.current_line].tipo_string+" - "+texto_valida);
+      if(this.textos[this.current_line].text[length-1] == this.textos[this.current_line].tipo_string){//Se valida el cierre de cadena
+        console.log("sale cadena");
+        this.textos[this.current_line].cont_string = 0;
+        this.textos[this.current_line].addColor(this.fills.normal,length);
+        this.textos[this.current_line].ult_tinta = length;
+      }
+      break;
+  }
+  
 };
 
 Editor.prototype.seleccionar = function() {
@@ -133,40 +176,67 @@ Editor.prototype.keyPress = function(data) {
             this.updatePipe();
           }
           break;
+        case 48://En caso de ser la tecla numero 0
+          if(this.shift){
+            this.setText('=');
+          }else{
+            this.setText('0');
+          }
+          break;
         case 50://En caso de ser la tecla numero 2
           if(this.shift){
-            this.textData += "\"";
-            this.texto.text = this.textData;
+            this.setText('\"');
           }else{
-            this.textData += "2";
-            this.texto.text = this.textData;
+            this.setText('2');
+          }
+          break;
+        case 56://En case de ser la tecla numero 8
+          if(this.shift){
+            this.setText('(');
+          }else{
+            this.setText('8');
+          }
+          break;
+        case 57://En case de ser la tecla numero 8
+          if(this.shift){
+            this.setText(')');
+          }else{
+            this.setText('9');
           }
           break;
         case 188://Tecla para comas (,)
           if(this.shift){
-            this.textData += ";";
-            this.texto.text = this.textData;
+            this.setText(';');
           }else{
-            this.textData += ",";
-            this.texto.text = this.textData;
+            this.setText(',');
+          }
+          break;
+        case 190://Tecla para puntos (.,:)
+          if(this.shift){
+            this.setText(':');
+          }else{
+            this.setText('.');
           }
           break;
         case 191://Tecla para cierre de corchetes
           if(this.shift){
-            this.textData += "]";
-            this.texto.text = this.textData;
+            this.setText(']');
           }else{
-            this.textData += "}";
-            this.texto.text = this.textData;
+            this.setText('}');
           }
           break;
         case 222://Tecla para apretura corchetes
           if(this.shift){
-            this.textData += "[";
-            this.texto.text = this.textData;
+            this.setText('[');
           }else{
-            this.textData += "{";
-            this.texto.text = this.textData;
+            this.setText('{');
+          }
+          break;
+        case 226://Tecla para < , >
+          if(this.shift){
+            this.setText('>');
+          }else{
+            this.setText('<');
           }
           break;
         default:
@@ -183,10 +253,12 @@ Editor.prototype.keyPress = function(data) {
 Editor.prototype.keyUp = function(data) {
   if(this.seleccionado){
     var charCode = (typeof data.which == "number") ? data.which : data.keyCode;
-    console.log(charCode);
     switch(data.keyCode) {
       case 16://En caso de ser la tecla shift
         this.shift = false;
+        break;
+      default://Se realiza el llamado para validacion de textos
+        this.validaTexto();
         break;
     }
   }

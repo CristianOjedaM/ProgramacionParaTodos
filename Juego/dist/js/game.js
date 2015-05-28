@@ -38,8 +38,9 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.margen = 20;//Margen izquierda para texto de codigo
   this.lineas = new Array();//Array para control numero de lineas
   this.textos = new Array();//Array para control de textos por linea
-  this.fills = {normal: "#000",editor: "#666",texto: "", reservado: ""}//Tipo de color de fuente
+  this.fills = {normal: "#000",editor: "#666",cadena: "#988927", reservado: "#E21335"}//Tipo de color de fuente
   this.font = { font: this.hLinea+'px consolas', fill: this.fills.normal, align:'center'};//Fuente unica para el editor
+  this.reservados = /(\s)(if|else|for|while|switch|case|break)/ig;
   this.textData = ' ';//String para control de textos ingresados
   
   //Se dibuja la caja de texto
@@ -83,16 +84,24 @@ Editor.prototype.crearLinea = function() {
   var fontTemp2 = this.font;
   fontTemp2.fill = this.fills.normal;
   var ntexto = this.game.add.text((this.x + this.margen),(this.y+((this.created_lines)*this.hLinea)),'',fontTemp2);
+  ntexto.ult_tinta = 0;
+  ntexto.cont_string = 0;
+  ntexto.tipo_string = "";
   this.textos[this.created_lines] = ntexto;
   this.add(ntexto);  
 
   this.created_lines++;
-  console.log(this.textos);
 };
 
 Editor.prototype.borrarLinea = function() {
   if(this.created_lines>0 && this.current_line>0){
     this.lineas[this.created_lines-1].destroy();
+    if(this.current_line+1<this.created_lines){
+      for(var i=this.created_lines;i>this.current_line;i--){
+        this.textos[this.current_line].setText(this.textos[this.current_line+1].text);
+        this.textos[this.current_line+1].destroy();
+      }
+    }
     this.current_line--;
     this.created_lines--;
     this.updatePipe();
@@ -108,6 +117,40 @@ Editor.prototype.updatePipe = function() {
 Editor.prototype.setText = function(valor) {
   this.textData += valor;
   this.textos[this.current_line].setText(this.textData);
+};
+
+Editor.prototype.validaTexto = function() {
+  var length = this.textos[this.current_line].text.length;
+  var texto_valida = this.textos[this.current_line].text.substring(this.textos[this.current_line].ult_tinta,length);
+  switch(this.textos[this.current_line].cont_string){
+    case 0://Ingreso de texto normal (no cadena)
+      if(this.textos[this.current_line].text[length-1] == "\"" || this.textos[this.current_line].text[length-1] == "'"){//Se validan apertura de cadena
+        this.textos[this.current_line].tipo_string = this.textos[this.current_line].text[length-1];
+        this.textos[this.current_line].cont_string=1;
+        this.textos[this.current_line].addColor(this.fills.cadena,length-1);
+        console.log(this.textos[this.current_line].tipo_string);
+      }else if(this.reservados.test(texto_valida)){//Se validan palabras reservadas
+        for(var i=length;i>=this.textos[this.current_line].ult_tinta;i--){
+          if(this.textos[this.current_line].text[i] == ' '){
+            this.textos[this.current_line].addColor(this.fills.reservado,i+1);
+            this.textos[this.current_line].ult_tinta = length;
+            this.textos[this.current_line].addColor(this.fills.normal,length);
+            continue;
+          }
+        }
+      }
+      break;
+    case 1://En caso de encontrarse dentro de cadena
+      console.log(this.textos[this.current_line].tipo_string+" - "+texto_valida);
+      if(this.textos[this.current_line].text[length-1] == this.textos[this.current_line].tipo_string){//Se valida el cierre de cadena
+        console.log("sale cadena");
+        this.textos[this.current_line].cont_string = 0;
+        this.textos[this.current_line].addColor(this.fills.normal,length);
+        this.textos[this.current_line].ult_tinta = length;
+      }
+      break;
+  }
+  
 };
 
 Editor.prototype.seleccionar = function() {
@@ -156,40 +199,67 @@ Editor.prototype.keyPress = function(data) {
             this.updatePipe();
           }
           break;
+        case 48://En caso de ser la tecla numero 0
+          if(this.shift){
+            this.setText('=');
+          }else{
+            this.setText('0');
+          }
+          break;
         case 50://En caso de ser la tecla numero 2
           if(this.shift){
-            this.textData += "\"";
-            this.texto.text = this.textData;
+            this.setText('\"');
           }else{
-            this.textData += "2";
-            this.texto.text = this.textData;
+            this.setText('2');
+          }
+          break;
+        case 56://En case de ser la tecla numero 8
+          if(this.shift){
+            this.setText('(');
+          }else{
+            this.setText('8');
+          }
+          break;
+        case 57://En case de ser la tecla numero 8
+          if(this.shift){
+            this.setText(')');
+          }else{
+            this.setText('9');
           }
           break;
         case 188://Tecla para comas (,)
           if(this.shift){
-            this.textData += ";";
-            this.texto.text = this.textData;
+            this.setText(';');
           }else{
-            this.textData += ",";
-            this.texto.text = this.textData;
+            this.setText(',');
+          }
+          break;
+        case 190://Tecla para puntos (.,:)
+          if(this.shift){
+            this.setText(':');
+          }else{
+            this.setText('.');
           }
           break;
         case 191://Tecla para cierre de corchetes
           if(this.shift){
-            this.textData += "]";
-            this.texto.text = this.textData;
+            this.setText(']');
           }else{
-            this.textData += "}";
-            this.texto.text = this.textData;
+            this.setText('}');
           }
           break;
         case 222://Tecla para apretura corchetes
           if(this.shift){
-            this.textData += "[";
-            this.texto.text = this.textData;
+            this.setText('[');
           }else{
-            this.textData += "{";
-            this.texto.text = this.textData;
+            this.setText('{');
+          }
+          break;
+        case 226://Tecla para < , >
+          if(this.shift){
+            this.setText('>');
+          }else{
+            this.setText('<');
           }
           break;
         default:
@@ -206,10 +276,12 @@ Editor.prototype.keyPress = function(data) {
 Editor.prototype.keyUp = function(data) {
   if(this.seleccionado){
     var charCode = (typeof data.which == "number") ? data.which : data.keyCode;
-    console.log(charCode);
     switch(data.keyCode) {
       case 16://En caso de ser la tecla shift
         this.shift = false;
+        break;
+      default://Se realiza el llamado para validacion de textos
+        this.validaTexto();
         break;
     }
   }
@@ -223,7 +295,6 @@ Editor.prototype.destruir = function() {
 };
 
 module.exports = Editor;
-
 },{}],3:[function(require,module,exports){
 
   'use strict';
@@ -239,36 +310,30 @@ module.exports = Editor;
 
     //this.game.onPause.add(enPausa, this);
 
-    // Add text
-    this.pauseText = this.game.add.text(230, 20, 'Juego pausado', { font: '24px calibri', fill: '#000', align:'center'});
-    this.pauseText.fixedToCamera = true;
-    //this.pauseText = this.game.add.bitmapText(100, 20, 'kenpixelblocks', 'Game paused', 24);
-    this.add(this.pauseText);
-
-    //Boton de reinicial
-    this.btnReiniciar = this.game.add.button((this.game.width/2) - 130, 60, 'btnPausa');
-    this.btnReiniciar.fixedToCamera = true;
-    this.btnReiniciar.frame = 0;
-    this.add(this.btnReiniciar);
-
-
+    
     //Boton de play o resume
     this.btnPlay = this.game.add.button((this.game.width - 81), -140, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
     this.btnPlay.frame = 0;
     this.add(this.btnPlay);
 
+    //Boton de reiniciar
+    this.btnReiniciar = this.game.add.button((this.game.width/2) - 120, 50, 'OpcPausa');
+    this.btnReiniciar.fixedToCamera = true;
+    this.btnReiniciar.frame = 0;
+    this.add(this.btnReiniciar);   
+
     //Boton de inicio
-    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 60, 'btnPausa');
+    this.btnInicio = this.game.add.button((this.game.width/2) -30 , 50, 'OpcPausa');
     this.btnInicio.fixedToCamera = true;
-    this.btnInicio.frame = 0;
+    this.btnInicio.frame = 1;
     this.add(this.btnInicio);
 
     
     //Boton de ayuda
-    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 60, 'btnPausa');
+    this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 50, 'OpcPausa');
     this.btnAyuda.fixedToCamera = true;
-    this.btnAyuda.frame = 0;
+    this.btnAyuda.frame = 2;
     this.add(this.btnAyuda);
 
     
@@ -292,12 +357,12 @@ module.exports = Editor;
 
   Pause.prototype.reset = function(game){
      
-      var x1 = (this.game.width/2) - 130;
-      var x2 = (this.game.width/2) - 85;
+      var x1 = (this.game.width/2) - 120;
+      var x2 = (this.game.width/2) - 75;
       var y1 = 210; 
       var y2 = 255;
      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
-         //Se esconde el panel de pausa
+           //Opcion Reiniciar
           if(this.game.paused){
             this.game.paused = false;
             this.hide();                  
@@ -309,6 +374,7 @@ module.exports = Editor;
             }
           }
       }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+          //Opcion Inicio
            if(this.game.paused){
             this.game.paused = false;
             this.hide();                  
@@ -1112,7 +1178,7 @@ module.exports = Menu;
           this.flagpause = false;
         }
       }else{
-        if(this.game.paused){
+        if(this.game.paused == true && this.MensajeAyuda != null && this.MensajeAyuda.visible == true){
           this.MensajeAyuda.destroy();
           this.game.paused = false;
         }
@@ -1192,6 +1258,7 @@ module.exports = Menu;
     estado:0,
     flagpause: false,
     fallosDeclaracion: 0,
+    falloPunteria:0,
     //Definicion temporal de preguntas para mostrar por tipo de dato
     stringItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
@@ -1212,6 +1279,7 @@ module.exports = Menu;
       this.estado=0;
       this.flagpause = false;
       this.fallosDeclaracion = 0;
+      this.falloPunteria = 0;
       mouseSpring = null;
     },
 
@@ -1305,6 +1373,8 @@ module.exports = Menu;
   
         /*Validaciones sobre municiones de lanzamiento*/
         if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){
+          this.falloPunteria++;
+          this.MensajeEquivocacion(2);
           this.lanzador.destroy();
           this.jugador.animations.play('lanzar');
         }
@@ -1510,7 +1580,7 @@ module.exports = Menu;
         this.error_sound.play();
         //Se suma 1 al contador de fallos para retroalimentacion
         this.fallosDeclaracion++;
-        this.MensajeEquivocacion();
+        this.MensajeEquivocacion(1);
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
@@ -1577,20 +1647,31 @@ module.exports = Menu;
           this.flagpause = false;
         }
       }else{
-        if(this.game.paused){
+        if(this.game.paused == true && this.MensajeAyuda != null && this.MensajeAyuda.visible == true){
           this.MensajeAyuda.destroy();
           this.game.paused = false;
+          this.flagpause = false;
         }
       }
     },
 
-    MensajeEquivocacion: function(){        
-        var frame = Math.floor((Math.random()*4) + 1);        
+    MensajeEquivocacion: function(tipo){ 
+      var frame;
+      if (tipo==1) {
+        frame = Math.floor((Math.random()*3) + 0);
         if(this.fallosDeclaracion==5){
           this.fallosDeclaracion = 0;
           this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
           this.game.paused = true;
-        }
+        };
+      }else if(tipo==2){        
+        frame = Math.floor((Math.random()*7) + 4);
+        if(this.falloPunteria==5){
+          this.falloPunteria = 0;
+          this.MensajeFallo = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+          this.game.paused = true;
+        };
+      };     
     }
   };
   
@@ -2191,6 +2272,7 @@ Preload.prototype = {
     this.load.spritesheet('btnPausa', 'assets/images/Botones/btnPausa.png',45,45);
     this.load.image('fondoPausa', 'assets/images/Botones/fondoPausa.png');
     this.load.image('time','assets/images/Botones/time.png');
+    this.load.spritesheet('OpcPausa', 'assets/images/Botones/opcPausa.png',54,49);
 
     /*Imagenes nivel 1*/
     this.load.image('tile_nivel1', 'assets/images/Nivel 1/tile.jpg');
