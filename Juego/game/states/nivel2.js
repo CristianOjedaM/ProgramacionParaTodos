@@ -11,7 +11,7 @@
     score: 0,
     maxtime: 120,
     itemsCompletos: 0,
-    vel:100,//Velocidad de inicio para movimiento de items
+    vel:10,//Velocidad de inicio para movimiento de items
     itemSelec: false,
 
     mover:false,
@@ -32,7 +32,7 @@
       this.score= 0;
       this.maxtime= 120;
       this.itemsCompletos= 0;
-      this.vel=100;//Velocidad de inicio para movimiento de items
+      this.vel=10;//Velocidad de inicio para movimiento de items
       this.itemSelec= false;
 
       this.mover=false;
@@ -134,7 +134,7 @@
         }
   
         /*Validaciones sobre municiones de lanzamiento*/
-        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){          
+        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
           if(this.lanzador.visible){
             this.falloPunteria++;
             this.MensajeEquivocacion(2);
@@ -204,15 +204,16 @@
       var yItem = 0;
       var velX = 0;
       var velY = 0;
+      this.vel +=10;
       if(puntoPartida == 0){//Punto de partida desde abajo, forma vertical
         yItem = this.game.height;
         xItem = Math.floor(Math.random() * ((this.game.width)/2)) + (this.game.width/2);//Numero aleatorio desde la mitad del escenario
-        velY = -100;
+        velY = -100 + this.vel;
       }else{//Punto de partida desde lateral, forma horizontal
         xItem = this.game.width;
         yItem = Math.floor(Math.random() * (this.game.height));//Numero aleatorio a lo largo del escenario        
-        velY = -50;
-        velX = -100;
+        velY = -50 + this.vel;
+        velX = -100 + this.vel;
       }
       var tipo = Math.floor(Math.random() * 4);//Numero aleatorio entre 0 y 4;
       var item = this.items.create(xItem, yItem, 'item', tipo);//Creacion del item
