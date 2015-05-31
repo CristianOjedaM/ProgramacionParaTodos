@@ -430,7 +430,7 @@
         frame = Math.floor((Math.random()*7) + 4);
         if(this.falloPunteria==5){
           this.falloPunteria = 0;
-          this.MensajeFallo = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
           this.game.paused = true;
         };
       };     
