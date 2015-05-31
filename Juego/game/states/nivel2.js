@@ -135,10 +135,12 @@
   
         /*Validaciones sobre municiones de lanzamiento*/
         if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){          
-          this.lanzador.destroy();
-          this.jugador.animations.play('lanzar');
-          this.falloPunteria++;
-          this.MensajeEquivocacion(2);
+          if(this.lanzador.visible){
+            this.falloPunteria++;
+            this.MensajeEquivocacion(2);
+          }
+          this.lanzador.destroy();          
+          this.jugador.animations.play('lanzar');          
         }
         
         /*Validaciones sobre items*/
