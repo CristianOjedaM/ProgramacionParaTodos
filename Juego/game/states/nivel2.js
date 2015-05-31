@@ -208,20 +208,20 @@
       if(puntoPartida == 0){//Punto de partida desde abajo, forma vertical
         yItem = this.game.height;
         xItem = Math.floor(Math.random() * ((this.game.width)/2)) + (this.game.width/2);//Numero aleatorio desde la mitad del escenario
-        velY = -100 + this.vel;
+        velY = -100;
       }else{//Punto de partida desde lateral, forma horizontal
         xItem = this.game.width;
         yItem = Math.floor(Math.random() * (this.game.height));//Numero aleatorio a lo largo del escenario        
-        velY = -50 + this.vel;
-        velX = -100 + this.vel;
+        velY = -50;
+        velX = -100;
       }
       var tipo = Math.floor(Math.random() * 4);//Numero aleatorio entre 0 y 4;
       var item = this.items.create(xItem, yItem, 'item', tipo);//Creacion del item
       item.tipo = tipo;
       item.body.collideWorldBounds = false;
       item.body.setCircle(10);
-      item.body.velocity.x = velX;
-      item.body.velocity.y = velY;
+      item.body.velocity.x = velX - this.vel;
+      item.body.velocity.y = velY - this.vel;
       item.body.setCollisionGroup(this.itemsGrupoColision);
       item.body.collides([this.lanzadorGrupoColision]);
     },
