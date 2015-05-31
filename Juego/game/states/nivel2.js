@@ -55,7 +55,7 @@
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
       this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      this.loop_creaItem = this.tiempo.loop(4000, this.crearItem, this);//Creacion de items
+      this.loop_creaItem = this.tiempo.loop((4000-this.vel), this.crearItem, this);//Creacion de items
       this.tiempo.start();
 
       //Se definen los audios del nivel
