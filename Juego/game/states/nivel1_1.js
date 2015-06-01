@@ -120,7 +120,7 @@
         this.siguiente.inputEnabled = true;
         this.siguiente.events.onInputDown.add(this.clickListener, this);
         //Se quita el boton de pausa
-        this.btnPausa.destroy();
+        this.btnPausa.kill();
 
         this.itemsCompletos = -1;
       }

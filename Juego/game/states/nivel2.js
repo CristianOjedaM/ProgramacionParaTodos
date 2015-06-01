@@ -397,7 +397,8 @@
     },
 
     clickListener: function(){
-      
+       this.game.state.clearCurrentState();
+      this.game.state.start("play");
     },
     pausaJuego: function(game){
       var x1 = (this.game.width - 81);
