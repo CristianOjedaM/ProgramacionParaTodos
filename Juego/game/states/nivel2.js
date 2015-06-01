@@ -66,7 +66,7 @@
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
 
        //Se define puntaje
-      this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText = this.game.add.text(20 , 10, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
    
       //Creacion de grupos de colision
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
@@ -105,7 +105,7 @@
 
       //Grupo de log de resultados 
       this.logResultados = this.game.add.group();
-      this.logResultados.ultY = 10;
+      this.logResultados.ultY = 40;
 
       //Se setea el texto para el cronometro
       this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
