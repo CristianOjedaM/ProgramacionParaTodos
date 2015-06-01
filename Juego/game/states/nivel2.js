@@ -52,6 +52,9 @@
       this.game.physics.p2.restitution = 0;
       this.game.world.setBounds(0, 0, 800, 600);
 
+      //Se define puntaje
+      this.scoreText = this.game.add.text(10 , 10, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
       this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
@@ -353,6 +356,8 @@
         this.score += 20;
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
       }
+      console.log(this.score);      
+      this.scoreText.text = 'Puntaje: ' + this.score;
       this.cajaTexto.destruir();
       this.grupoPregunta.destroy();
       this.jugador.animations.play('lanzar');
