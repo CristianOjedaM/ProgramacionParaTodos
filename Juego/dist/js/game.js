@@ -20,7 +20,7 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-},{"./states/boot":5,"./states/gameover":6,"./states/menu":7,"./states/nivel1":8,"./states/nivel1_1":9,"./states/nivel2":10,"./states/nivel3":11,"./states/nivel5":12,"./states/play":13,"./states/preload":14}],2:[function(require,module,exports){
+},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/nivel1":9,"./states/nivel1_1":10,"./states/nivel2":11,"./states/nivel3":12,"./states/nivel5":13,"./states/play":14,"./states/preload":15}],2:[function(require,module,exports){
 'use strict';
 
 var Editor = function(game, x, y ,width , lines, parent){
@@ -38,14 +38,15 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.margen = 20;//Margen izquierda para texto de codigo
   this.lineas = new Array();//Array para control numero de lineas
   this.textos = new Array();//Array para control de textos por linea
-  this.fills = {normal: "#000",editor: "#666",cadena: "#988927", reservado: "#E21335"}//Tipo de color de fuente
+  this.fills = {normal: "#fff",editor: "#666",cadena: "#988927", reservado: "#c92246", reservado2: "#2FC687"};//Tipo de color de fuente
   this.font = { font: this.hLinea+'px consolas', fill: this.fills.normal, align:'center'};//Fuente unica para el editor
-  this.reservados = /(\s)(if|else|for|while|switch|case|break)/ig;
+  this.reservados = /(\s|})(if|else|for|while|switch|case|break)/ig;
+  this.reservados2 = /(\s)(function|var)/ig;
   this.textData = ' ';//String para control de textos ingresados
   
   //Se dibuja la caja de texto
   this.cajaTexto = game.add.graphics( 0, 0 );
-  this.cajaTexto.beginFill(0xFFFFFF, 1);
+  this.cajaTexto.beginFill(0x272822, 1);
   this.cajaTexto.bounds = new PIXI.Rectangle(x, y, width, this.heigth);
   this.cajaTexto.drawRect(x, y, width, this.heigth);
   this.add(this.cajaTexto);
@@ -54,6 +55,7 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.crearLinea();
   //Se realiza la creacion del pipe ( | )
   this.pipe = this.game.add.text((this.x+this.margen) ,(this.y+(this.current_line*this.hLinea)),'|',this.font);
+  this.pipe.xPos = 1;//Posicion del pipe sobre la linea horizontal
   this.game.add.tween(this.pipe).to({alpha: 0}, 700, Phaser.Easing.Linear.NONE, true, 0, 1000, true);//Animacion de aparacion y desaparicion del pipe
   this.add(this.pipe);
   
@@ -119,22 +121,41 @@ Editor.prototype.setText = function(valor) {
   this.textos[this.current_line].setText(this.textData);
 };
 
+Editor.prototype.setTint = function(tinta,posicion) {
+  //this.textos[this.current_line].addColor(tinta,i+1);//Se define fuente para palabras reservadas
+  //this.textos[this.current_line].ult_tinta = length;//Se stea la ultima posicion de color
+  //this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
+};
+
 Editor.prototype.validaTexto = function() {
   var length = this.textos[this.current_line].text.length;
+  if(length == 1){
+    this.textos[this.current_line].cont_string = 0;
+    this.textos[this.current_line].ult_tinta = 0;
+    this.textos[this.current_line].clearColors();
+  }
   var texto_valida = this.textos[this.current_line].text.substring(this.textos[this.current_line].ult_tinta,length);
   switch(this.textos[this.current_line].cont_string){
     case 0://Ingreso de texto normal (no cadena)
       if(this.textos[this.current_line].text[length-1] == "\"" || this.textos[this.current_line].text[length-1] == "'"){//Se validan apertura de cadena
-        this.textos[this.current_line].tipo_string = this.textos[this.current_line].text[length-1];
-        this.textos[this.current_line].cont_string=1;
-        this.textos[this.current_line].addColor(this.fills.cadena,length-1);
-        console.log(this.textos[this.current_line].tipo_string);
+        this.textos[this.current_line].tipo_string = this.textos[this.current_line].text[length-1];//Se define el tipo de apertura de cadena
+        this.textos[this.current_line].cont_string=1;//Se establece el estado de apertura de cadena
+        this.textos[this.current_line].addColor(this.fills.cadena,length-1);//Se define fuente para cadenas
       }else if(this.reservados.test(texto_valida)){//Se validan palabras reservadas
         for(var i=length;i>=this.textos[this.current_line].ult_tinta;i--){
+          if(this.textos[this.current_line].text[i] == ' ' || this.textos[this.current_line].text[i] == '}'){
+            this.textos[this.current_line].addColor(this.fills.reservado,i+1);//Se define fuente para palabras reservadas
+            this.textos[this.current_line].ult_tinta = length;//Se stea la ultima posicion de color
+            this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
+            continue;
+          }
+        }
+      }else if(this.reservados2.test(texto_valida)){//Se validan palabras reservadas
+        for(var i=length;i>=this.textos[this.current_line].ult_tinta;i--){
           if(this.textos[this.current_line].text[i] == ' '){
-            this.textos[this.current_line].addColor(this.fills.reservado,i+1);
-            this.textos[this.current_line].ult_tinta = length;
-            this.textos[this.current_line].addColor(this.fills.normal,length);
+            this.textos[this.current_line].addColor(this.fills.reservado2,i+1);//Se define fuente para palabras reservadas
+            this.textos[this.current_line].ult_tinta = length;//Se stea la ultima posicion de color
+            this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
             continue;
           }
         }
@@ -143,20 +164,40 @@ Editor.prototype.validaTexto = function() {
     case 1://En caso de encontrarse dentro de cadena
       console.log(this.textos[this.current_line].tipo_string+" - "+texto_valida);
       if(this.textos[this.current_line].text[length-1] == this.textos[this.current_line].tipo_string){//Se valida el cierre de cadena
-        console.log("sale cadena");
-        this.textos[this.current_line].cont_string = 0;
-        this.textos[this.current_line].addColor(this.fills.normal,length);
-        this.textos[this.current_line].ult_tinta = length;
+        this.textos[this.current_line].cont_string = 0;//Se retorna el estado
+        this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
+        this.textos[this.current_line].ult_tinta = length;//Se setea la ultima posicion de color
       }
       break;
-  }
-  
+  }  
 };
 
 Editor.prototype.seleccionar = function() {
 
 	this.seleccionado = true;
 };
+
+Editor.prototype.getText = function() {
+  var textoRetorno = "";
+  for(var i=0;i<this.textos.length;i++){//Se recorren las lineas del editor
+    textoRetorno += this.textos[i].text;//Se concatena el texto de cada linea
+  }
+  return textoRetorno;
+};
+
+Editor.prototype.getTextLine = function(line) {
+  if(this.textos[line].text){
+    return this.textos[line].text;//Se concatena el texto de cada linea
+  }else{
+    return "error";
+  }
+};
+
+Editor.prototype.getTextLines = function() {
+  //Se retorna el array de textos
+  return this.textos;
+};
+
 
 Editor.prototype.keyPress = function(data) {
     if(this.seleccionado) {
@@ -182,21 +223,33 @@ Editor.prototype.keyPress = function(data) {
           this.shift = true;
           break;
         case 37://Flecha izquierda
-
+          if(this.pipe.xPos > 1){
+            this.pipe.xPos = this.textos[this.current_line].text.length - 1;
+          }else{
+            if(this.current_line > 0){
+              this.current_line--;
+              this.pipe.xPos = this.textos[this.current_line].text.length;
+            }
+          }
           break;
         case 38://Flecha arriba
           if(this.current_line > 0){
             this.current_line--;
-            this.updatePipe();
           }
           break;
         case 39://Flecha derecha
-
+          if(this.pipe.xPos < this.textos[this.current_line].text.length){
+            this.pipe.xPos = this.textos[this.current_line].text.length + 1;
+          }else{
+            if(this.current_line + 1 < this.created_lines){
+              this.current_line++;
+              this.pipe.xPos = this.textos[this.current_line].text.length;
+            }
+          }
           break;
         case 40://Flecha abajo
           if(this.current_line + 1 < this.created_lines){
             this.current_line++;
-            this.updatePipe();
           }
           break;
         case 48://En caso de ser la tecla numero 0
@@ -226,6 +279,14 @@ Editor.prototype.keyPress = function(data) {
           }else{
             this.setText('9');
           }
+          break;
+        case 107://En caso de ser +
+        case 187:
+          this.setText('+');
+          break;
+        case 109://En caso de ser -
+        case 189:
+          this.setText('-');
           break;
         case 188://Tecla para comas (,)
           if(this.shift){
@@ -388,6 +449,60 @@ module.exports = Editor;
 },{}],4:[function(require,module,exports){
 'use strict';
 
+var Tablero = function(game, x, y ,xCuadros , yCuadros, parent){
+  Phaser.Group.call(this, game, parent);  
+
+  /*Definicion de propiedades*/
+  this.x = x;
+  this.y = y;
+  this.xCuadros = xCuadros;
+  this.yCuadros = yCuadros;
+  this.dimension = 50;
+
+  //Se dibuja el tablero con base en los valores de entrada
+  for(var i=0;i<xCuadros;i++){
+    for(var j=0;j<yCuadros;j++){
+      this.dibujarCuadro(x+(i*this.dimension),y+(j*this.dimension),this.dimension);
+    }
+  }
+};
+
+Tablero.prototype = Object.create(Phaser.Group.prototype);
+Tablero.constructor = Tablero;
+
+Tablero.prototype.update = function() {
+  
+};
+
+Tablero.prototype.dibujarCuadro = function(x,y,dimension) {
+  var cuadro = this.game.add.graphics( 0, 0 );
+  cuadro.beginFill(0x272822, 1);
+  cuadro.lineStyle(2, 0xffffff);
+  cuadro.bounds = new PIXI.Rectangle(x, y, dimension, dimension);
+  cuadro.drawRect(x, y, dimension, dimension);
+  this.add(cuadro);
+};
+
+Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
+  if(obj != ''){
+    var obj = this.game.add.sprite(this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
+    this.add(obj);
+  }else{
+    sprite.x = this.x+(i*this.dimension);
+    sprite.y = this.y+(j*this.dimension);
+    console.log(this.y);
+  }
+  return obj;
+}
+
+Tablero.prototype.destruir = function() {
+ 
+};
+
+module.exports = Tablero;
+},{}],5:[function(require,module,exports){
+'use strict';
+
 var TextBox = function(game, x, y, width, heigth, defaultTxt) {
   Phaser.Sprite.call(this, game, x, y, '', 0);
 
@@ -508,7 +623,7 @@ TextBox.prototype.destruir = function() {
 
 module.exports = TextBox;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 'use strict';
 
@@ -527,7 +642,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -555,7 +670,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 'use strict';
 function Menu() {}
@@ -587,7 +702,7 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -873,7 +988,7 @@ module.exports = Menu;
   };
   
   module.exports = Nivel1;
-},{"../prefabs/pause":3}],9:[function(require,module,exports){
+},{"../prefabs/pause":3}],10:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -995,6 +1110,8 @@ module.exports = Menu;
         this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
         this.siguiente.inputEnabled = true;
         this.siguiente.events.onInputDown.add(this.clickListener, this);
+        //Se quita el boton de pausa
+        this.btnPausa.kill();
 
         this.itemsCompletos = -1;
       }
@@ -1155,7 +1272,8 @@ module.exports = Menu;
     },
 
     clickListener: function(){
-
+      this.game.state.clearCurrentState();
+      this.game.state.start("play");
     },
 
     pausaJuego: function(game){
@@ -1235,7 +1353,7 @@ module.exports = Menu;
   module.exports = Nivel1_1;
 
   
-},{"../prefabs/pause":3}],10:[function(require,module,exports){
+},{"../prefabs/pause":3}],11:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -1249,7 +1367,7 @@ module.exports = Menu;
     score: 0,
     maxtime: 120,
     itemsCompletos: 0,
-    vel:100,//Velocidad de inicio para movimiento de items
+    vel:10,//Velocidad de inicio para movimiento de items
     itemSelec: false,
 
     mover:false,
@@ -1270,7 +1388,7 @@ module.exports = Menu;
       this.score= 0;
       this.maxtime= 120;
       this.itemsCompletos= 0;
-      this.vel=100;//Velocidad de inicio para movimiento de items
+      this.vel=10;//Velocidad de inicio para movimiento de items
       this.itemSelec= false;
 
       this.mover=false;
@@ -1289,11 +1407,12 @@ module.exports = Menu;
       this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
       this.game.physics.p2.restitution = 0;
       this.game.world.setBounds(0, 0, 800, 600);
+     
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
       this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      this.loop_creaItem = this.tiempo.loop(4000, this.crearItem, this);//Creacion de items
+      this.loop_creaItem = this.tiempo.loop((4000-this.vel), this.crearItem, this);//Creacion de items
       this.tiempo.start();
 
       //Se definen los audios del nivel
@@ -1301,6 +1420,9 @@ module.exports = Menu;
 
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
+
+       //Se define puntaje
+      this.scoreText = this.game.add.text(20 , 10, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
    
       //Creacion de grupos de colision
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
@@ -1339,7 +1461,7 @@ module.exports = Menu;
 
       //Grupo de log de resultados 
       this.logResultados = this.game.add.group();
-      this.logResultados.ultY = 10;
+      this.logResultados.ultY = 40;
 
       //Se setea el texto para el cronometro
       this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
@@ -1372,11 +1494,13 @@ module.exports = Menu;
         }
   
         /*Validaciones sobre municiones de lanzamiento*/
-        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){
-          this.falloPunteria++;
-          this.MensajeEquivocacion(2);
-          this.lanzador.destroy();
-          this.jugador.animations.play('lanzar');
+        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
+          if(this.lanzador.visible){
+            this.falloPunteria++;
+            this.MensajeEquivocacion(2);
+          }
+          this.lanzador.destroy();          
+          this.jugador.animations.play('lanzar');          
         }
         
         /*Validaciones sobre items*/
@@ -1440,6 +1564,7 @@ module.exports = Menu;
       var yItem = 0;
       var velX = 0;
       var velY = 0;
+      this.vel +=10;
       if(puntoPartida == 0){//Punto de partida desde abajo, forma vertical
         yItem = this.game.height;
         xItem = Math.floor(Math.random() * ((this.game.width)/2)) + (this.game.width/2);//Numero aleatorio desde la mitad del escenario
@@ -1455,8 +1580,8 @@ module.exports = Menu;
       item.tipo = tipo;
       item.body.collideWorldBounds = false;
       item.body.setCircle(10);
-      item.body.velocity.x = velX;
-      item.body.velocity.y = velY;
+      item.body.velocity.x = velX - this.vel;
+      item.body.velocity.y = velY - this.vel;
       item.body.setCollisionGroup(this.itemsGrupoColision);
       item.body.collides([this.lanzadorGrupoColision]);
     },
@@ -1588,6 +1713,8 @@ module.exports = Menu;
         this.score += 20;
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
       }
+      console.log(this.score);      
+      this.scoreText.text = 'Puntaje: ' + this.score;
       this.cajaTexto.destruir();
       this.grupoPregunta.destroy();
       this.jugador.animations.play('lanzar');
@@ -1626,7 +1753,8 @@ module.exports = Menu;
     },
 
     clickListener: function(){
-      
+       this.game.state.clearCurrentState();
+      this.game.state.start("play");
     },
     pausaJuego: function(game){
       var x1 = (this.game.width - 81);
@@ -1668,7 +1796,7 @@ module.exports = Menu;
         frame = Math.floor((Math.random()*7) + 4);
         if(this.falloPunteria==5){
           this.falloPunteria = 0;
-          this.MensajeFallo = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
           this.game.paused = true;
         };
       };     
@@ -1676,7 +1804,7 @@ module.exports = Menu;
   };
   
   module.exports = Nivel2;
-},{"../prefabs/pause":3,"../prefabs/textBox":4}],11:[function(require,module,exports){
+},{"../prefabs/pause":3,"../prefabs/textBox":5}],12:[function(require,module,exports){
 
   'use strict';
  var Pausa = require('../prefabs/pause');
@@ -2183,23 +2311,75 @@ module.exports = Menu;
   };
 
   module.exports = Nivel3;
-},{"../prefabs/pause":3}],12:[function(require,module,exports){
+},{"../prefabs/pause":3}],13:[function(require,module,exports){
 
   'use strict';
   var Editor = require('../prefabs/editor');
+  var Tablero = require('../prefabs/tablero');
+
   function Nivel5() {}
   Nivel5.prototype = {
 
   	create: function() {
 	  	//Se incluye el panel de pausa al nivel
-      this.editor = new Editor(this.game,20,20,450,20);
+      this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
-  	}
+
+      this.tablero = new Tablero(this.game,20,20,5,5);
+      this.game.add.existing(this.tablero);
+
+      this.dude = this.tablero.setObjCuadro(0,0,'dude');
+      this.dude.posx = 0;
+      this.dude.posy = 0;
+
+
+      this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
+      this.crearFunc.inputEnabled = true;
+      this.crearFunc.events.onInputDown.add(this.crearFuncion, this);
+
+      this.run = this.game.add.sprite(500, 350,'btnContinuar');
+      this.run.inputEnabled = true;
+      this.run.events.onInputDown.add(this.correrCodigo, this);
+  	},
+
+    crearFuncion: function(){
+      
+    },
+
+    correrCodigo: function(){
+      /*for(var i=0;i<this.editor.created_lines;i++){
+        var instruccion = this.editor.getTextLine(i);
+        var F=new Function ("dude",instruccion);
+        F(this.dude);
+        this.tablero.setObjCuadro(this.dude.posx, this.dude.posy, '', this.dude);
+      }*/
+      
+      setTimeout(this.correrLinea,750,0,this);
+      
+
+      /*var theInstructions = this.editor.getText();
+      var F=new Function ("dude",theInstructions);
+      F(this.dude);
+      console.log("- "+this.dude.posy);
+      this.tablero.setObjCuadro(this.dude.posx, this.dude.posy, '', this.dude);
+      //eval(this.editor.getText());*/
+    },
+
+    correrLinea:function(i,e){
+      if(i < e.editor.created_lines){
+        var instruccion = e.editor.getTextLine(i);        
+        var F=new Function ("dude",instruccion);        
+        F(e.dude);        
+        e.tablero.setObjCuadro(e.dude.posx, e.dude.posy, '', e.dude);
+        i++;
+        setTimeout(e.correrLinea,750,i,e);
+      }
+    }
 
   };
 
   module.exports = Nivel5;
-},{"../prefabs/editor":2}],13:[function(require,module,exports){
+},{"../prefabs/editor":2,"../prefabs/tablero":4}],14:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -2246,7 +2426,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 'use strict';
 function Preload() {
@@ -2296,6 +2476,9 @@ Preload.prototype = {
     /*Imagenes nivel 3*/
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
     this.load.image('slot','assets/images/Nivel 3/slot.png');
+
+    /*Niveles editor*/
+    this.load.image('dude','assets/images/marciano.png');    
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');

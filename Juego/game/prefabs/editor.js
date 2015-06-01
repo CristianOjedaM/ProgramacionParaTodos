@@ -15,14 +15,15 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.margen = 20;//Margen izquierda para texto de codigo
   this.lineas = new Array();//Array para control numero de lineas
   this.textos = new Array();//Array para control de textos por linea
-  this.fills = {normal: "#000",editor: "#666",cadena: "#988927", reservado: "#E21335"}//Tipo de color de fuente
+  this.fills = {normal: "#fff",editor: "#666",cadena: "#988927", reservado: "#c92246", reservado2: "#2FC687"};//Tipo de color de fuente
   this.font = { font: this.hLinea+'px consolas', fill: this.fills.normal, align:'center'};//Fuente unica para el editor
-  this.reservados = /(\s)(if|else|for|while|switch|case|break)/ig;
+  this.reservados = /(\s|})(if|else|for|while|switch|case|break)/ig;
+  this.reservados2 = /(\s)(function|var)/ig;
   this.textData = ' ';//String para control de textos ingresados
   
   //Se dibuja la caja de texto
   this.cajaTexto = game.add.graphics( 0, 0 );
-  this.cajaTexto.beginFill(0xFFFFFF, 1);
+  this.cajaTexto.beginFill(0x272822, 1);
   this.cajaTexto.bounds = new PIXI.Rectangle(x, y, width, this.heigth);
   this.cajaTexto.drawRect(x, y, width, this.heigth);
   this.add(this.cajaTexto);
@@ -31,6 +32,7 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.crearLinea();
   //Se realiza la creacion del pipe ( | )
   this.pipe = this.game.add.text((this.x+this.margen) ,(this.y+(this.current_line*this.hLinea)),'|',this.font);
+  this.pipe.xPos = 1;//Posicion del pipe sobre la linea horizontal
   this.game.add.tween(this.pipe).to({alpha: 0}, 700, Phaser.Easing.Linear.NONE, true, 0, 1000, true);//Animacion de aparacion y desaparicion del pipe
   this.add(this.pipe);
   
@@ -96,22 +98,41 @@ Editor.prototype.setText = function(valor) {
   this.textos[this.current_line].setText(this.textData);
 };
 
+Editor.prototype.setTint = function(tinta,posicion) {
+  //this.textos[this.current_line].addColor(tinta,i+1);//Se define fuente para palabras reservadas
+  //this.textos[this.current_line].ult_tinta = length;//Se stea la ultima posicion de color
+  //this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
+};
+
 Editor.prototype.validaTexto = function() {
   var length = this.textos[this.current_line].text.length;
+  if(length == 1){
+    this.textos[this.current_line].cont_string = 0;
+    this.textos[this.current_line].ult_tinta = 0;
+    this.textos[this.current_line].clearColors();
+  }
   var texto_valida = this.textos[this.current_line].text.substring(this.textos[this.current_line].ult_tinta,length);
   switch(this.textos[this.current_line].cont_string){
     case 0://Ingreso de texto normal (no cadena)
       if(this.textos[this.current_line].text[length-1] == "\"" || this.textos[this.current_line].text[length-1] == "'"){//Se validan apertura de cadena
-        this.textos[this.current_line].tipo_string = this.textos[this.current_line].text[length-1];
-        this.textos[this.current_line].cont_string=1;
-        this.textos[this.current_line].addColor(this.fills.cadena,length-1);
-        console.log(this.textos[this.current_line].tipo_string);
+        this.textos[this.current_line].tipo_string = this.textos[this.current_line].text[length-1];//Se define el tipo de apertura de cadena
+        this.textos[this.current_line].cont_string=1;//Se establece el estado de apertura de cadena
+        this.textos[this.current_line].addColor(this.fills.cadena,length-1);//Se define fuente para cadenas
       }else if(this.reservados.test(texto_valida)){//Se validan palabras reservadas
         for(var i=length;i>=this.textos[this.current_line].ult_tinta;i--){
+          if(this.textos[this.current_line].text[i] == ' ' || this.textos[this.current_line].text[i] == '}'){
+            this.textos[this.current_line].addColor(this.fills.reservado,i+1);//Se define fuente para palabras reservadas
+            this.textos[this.current_line].ult_tinta = length;//Se stea la ultima posicion de color
+            this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
+            continue;
+          }
+        }
+      }else if(this.reservados2.test(texto_valida)){//Se validan palabras reservadas
+        for(var i=length;i>=this.textos[this.current_line].ult_tinta;i--){
           if(this.textos[this.current_line].text[i] == ' '){
-            this.textos[this.current_line].addColor(this.fills.reservado,i+1);
-            this.textos[this.current_line].ult_tinta = length;
-            this.textos[this.current_line].addColor(this.fills.normal,length);
+            this.textos[this.current_line].addColor(this.fills.reservado2,i+1);//Se define fuente para palabras reservadas
+            this.textos[this.current_line].ult_tinta = length;//Se stea la ultima posicion de color
+            this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
             continue;
           }
         }
@@ -120,20 +141,40 @@ Editor.prototype.validaTexto = function() {
     case 1://En caso de encontrarse dentro de cadena
       console.log(this.textos[this.current_line].tipo_string+" - "+texto_valida);
       if(this.textos[this.current_line].text[length-1] == this.textos[this.current_line].tipo_string){//Se valida el cierre de cadena
-        console.log("sale cadena");
-        this.textos[this.current_line].cont_string = 0;
-        this.textos[this.current_line].addColor(this.fills.normal,length);
-        this.textos[this.current_line].ult_tinta = length;
+        this.textos[this.current_line].cont_string = 0;//Se retorna el estado
+        this.textos[this.current_line].addColor(this.fills.normal,length);//Se define fuente normal
+        this.textos[this.current_line].ult_tinta = length;//Se setea la ultima posicion de color
       }
       break;
-  }
-  
+  }  
 };
 
 Editor.prototype.seleccionar = function() {
 
 	this.seleccionado = true;
 };
+
+Editor.prototype.getText = function() {
+  var textoRetorno = "";
+  for(var i=0;i<this.textos.length;i++){//Se recorren las lineas del editor
+    textoRetorno += this.textos[i].text;//Se concatena el texto de cada linea
+  }
+  return textoRetorno;
+};
+
+Editor.prototype.getTextLine = function(line) {
+  if(this.textos[line].text){
+    return this.textos[line].text;//Se concatena el texto de cada linea
+  }else{
+    return "error";
+  }
+};
+
+Editor.prototype.getTextLines = function() {
+  //Se retorna el array de textos
+  return this.textos;
+};
+
 
 Editor.prototype.keyPress = function(data) {
     if(this.seleccionado) {
@@ -159,21 +200,33 @@ Editor.prototype.keyPress = function(data) {
           this.shift = true;
           break;
         case 37://Flecha izquierda
-
+          if(this.pipe.xPos > 1){
+            this.pipe.xPos = this.textos[this.current_line].text.length - 1;
+          }else{
+            if(this.current_line > 0){
+              this.current_line--;
+              this.pipe.xPos = this.textos[this.current_line].text.length;
+            }
+          }
           break;
         case 38://Flecha arriba
           if(this.current_line > 0){
             this.current_line--;
-            this.updatePipe();
           }
           break;
         case 39://Flecha derecha
-
+          if(this.pipe.xPos < this.textos[this.current_line].text.length){
+            this.pipe.xPos = this.textos[this.current_line].text.length + 1;
+          }else{
+            if(this.current_line + 1 < this.created_lines){
+              this.current_line++;
+              this.pipe.xPos = this.textos[this.current_line].text.length;
+            }
+          }
           break;
         case 40://Flecha abajo
           if(this.current_line + 1 < this.created_lines){
             this.current_line++;
-            this.updatePipe();
           }
           break;
         case 48://En caso de ser la tecla numero 0
@@ -203,6 +256,14 @@ Editor.prototype.keyPress = function(data) {
           }else{
             this.setText('9');
           }
+          break;
+        case 107://En caso de ser +
+        case 187:
+          this.setText('+');
+          break;
+        case 109://En caso de ser -
+        case 189:
+          this.setText('-');
           break;
         case 188://Tecla para comas (,)
           if(this.shift){
