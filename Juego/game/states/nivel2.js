@@ -51,9 +51,7 @@
       this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
       this.game.physics.p2.restitution = 0;
       this.game.world.setBounds(0, 0, 800, 600);
-
-      //Se define puntaje
-      this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+     
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
@@ -66,6 +64,9 @@
 
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
+
+       //Se define puntaje
+      this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
    
       //Creacion de grupos de colision
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
