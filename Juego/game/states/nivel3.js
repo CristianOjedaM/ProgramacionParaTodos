@@ -55,7 +55,7 @@
       this.error_sound = this.game.add.audio('error_sound');
 
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel3');
 
       //Se realiza la creacion del grupo de slots o contenedores
       this.slots = this.game.add.group();
