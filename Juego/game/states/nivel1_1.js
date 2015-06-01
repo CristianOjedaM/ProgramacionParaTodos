@@ -119,6 +119,8 @@
         this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
         this.siguiente.inputEnabled = true;
         this.siguiente.events.onInputDown.add(this.clickListener, this);
+        //Se quita el boton de pausa
+        this.btnPausa.destroy();
 
         this.itemsCompletos = -1;
       }
@@ -279,7 +281,8 @@
     },
 
     clickListener: function(){
-
+      this.game.state.clearCurrentState();
+      this.game.state.start("play");
     },
 
     pausaJuego: function(game){
