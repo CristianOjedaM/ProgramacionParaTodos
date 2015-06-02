@@ -12,9 +12,9 @@ Preload.prototype = {
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(this.asset);
-    this.load.image('yeoman', 'assets/images/yeoman-logo.png');
 
-    /*Imagenes Menu*/
+    /*Imagenes Menu e intro*/
+    this.load.image('intro', 'assets/images/Menu/intro.jpg');
     this.load.image('nivel1', 'assets/images/Menu/nivel1.png');
     this.load.image('nivel2', 'assets/images/Menu/nivel2.png');
 
