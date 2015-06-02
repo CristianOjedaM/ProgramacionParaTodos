@@ -680,18 +680,10 @@ Menu.prototype = {
 
   },
   create: function() {
-    var style = { font: '45px Arial', fill: '#ffffff', align: 'center'};
-    this.sprite = this.game.add.sprite(this.game.world.centerX, 138, 'yeoman');
-    this.sprite.anchor.setTo(0.5, 0.5);
+    this.spriteIntro = this.game.add.sprite(0, 0, 'intro');
 
-    this.titleText = this.game.add.text(this.game.world.centerX, 300, 'Programación para todos', style);
-    this.titleText.anchor.setTo(0.5, 0.5);
-
-    this.instructionsText = this.game.add.text(this.game.world.centerX, 400, 'Click anywhere to play "Click The Yeoman Logo"', { font: '16px Arial', fill: '#ffffff', align: 'center'});
-    this.instructionsText.anchor.setTo(0.5, 0.5);
-
-    this.sprite.angle = -20;
-    this.game.add.tween(this.sprite).to({angle: 20}, 1000, Phaser.Easing.Linear.NONE, true, 0, 1000, true);
+    /*this.spriteIntro.angle = -20;
+    this.game.add.tween(this.sprite).to({angle: 20}, 1000, Phaser.Easing.Linear.NONE, true, 0, 1000, true);*/
   },
   update: function() {
     if(this.game.input.activePointer.justPressed()) {
@@ -721,6 +713,7 @@ module.exports = Menu;
       this.maxtime= 60;
       this.flagpause= false;      
     },
+
     create: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -793,13 +786,13 @@ module.exports = Menu;
       //Control de score
       this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score1');
       this.cuadroScore.fixedToCamera = true;
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
       this.scoreText[0].fixedToCamera = true;
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
       this.scoreText[1].fixedToCamera = true;
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
       this.scoreText[2].fixedToCamera = true;
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
       this.scoreText[3].fixedToCamera = true;
       
       //Imagen de fondo para el tiempo
@@ -807,7 +800,7 @@ module.exports = Menu;
       this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px HVD_Poster', fill: '#000',align:'center' });
       this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
@@ -923,7 +916,8 @@ module.exports = Menu;
     updateTimer: function() {
       //Se comprueba que el tiempo de juego haya terminado
       if(this.maxtime == 0){
-        this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+        this.siguiente = this.game.add.sprite(this.game.width/2, this.game.height/2,'btnContinuar');
+        this.siguiente.anchor.setTo(0.5,0.5);
         this.siguiente.inputEnabled = true;
         this.siguiente.events.onInputDown.add(this.clickListener, this);
         this.siguiente.fixedToCamera = true; 
@@ -1862,7 +1856,7 @@ module.exports = Menu;
       this.error_sound = this.game.add.audio('error_sound');
 
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel3');
 
       //Se realiza la creacion del grupo de slots o contenedores
       this.slots = this.game.add.group();
@@ -2441,9 +2435,9 @@ Preload.prototype = {
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.setPreloadSprite(this.asset);
-    this.load.image('yeoman', 'assets/images/yeoman-logo.png');
 
-    /*Imagenes Menu*/
+    /*Imagenes Menu e intro*/
+    this.load.image('intro', 'assets/images/Menu/intro.jpg');
     this.load.image('nivel1', 'assets/images/Menu/nivel1.png');
     this.load.image('nivel2', 'assets/images/Menu/nivel2.png');
 
