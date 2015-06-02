@@ -4,8 +4,8 @@
   Play.prototype = {
     create: function() {
       this.btns = this.game.add.group();
-      this.crearBoton(0,0,'nivel1',0,0);
-      this.crearBoton(0,100,'nivel2',0,100);
+      this.crearBoton(0,0,'nivel1',200,30);
+      this.crearBoton(0,100,'nivel2',320,130);
       this.crearBoton(0,200,'nivel3',0,200);
       this.crearBoton(0,400,'nivel5',0,400);
     },
@@ -41,6 +41,7 @@
     },
 
     out: function(boton){
+      boton.animations.stop('over');
       boton.frame = 0;
       if(boton.texto){
         boton.texto.kill();
