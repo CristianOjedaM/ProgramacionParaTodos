@@ -786,13 +786,13 @@ module.exports = Menu;
       //Control de score
       this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score1');
       this.cuadroScore.fixedToCamera = true;
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[0].fixedToCamera = true;
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
+      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[1].fixedToCamera = true;
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
+      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[2].fixedToCamera = true;
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px HVD_Poster', fill: '#000', align:'center'});
+      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[3].fixedToCamera = true;
       
       //Imagen de fondo para el tiempo
@@ -800,7 +800,7 @@ module.exports = Menu;
       this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px HVD_Poster', fill: '#000',align:'center' });
+      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
       this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
@@ -2379,43 +2379,48 @@ module.exports = Menu;
   function Play() {}
   Play.prototype = {
     create: function() {
-      /*this.game.physics.startSystem(Phaser.Physics.ARCADE);
-      this.sprite = this.game.add.sprite(this.game.width/2, this.game.height/2, 'yeoman');
-      this.sprite.inputEnabled = true;
-      
-      this.game.physics.arcade.enable(this.sprite);
-      this.sprite.body.collideWorldBounds = true;
-      this.sprite.body.bounce.setTo(1,1);
-      this.sprite.body.velocity.x = this.game.rnd.integerInRange(-500,500);
-      this.sprite.body.velocity.y = this.game.rnd.integerInRange(-500,500);
-
-      this.sprite.events.onInputDown.add(this.clickListener, this);*/
-
-      this.nivel1 = this.game.add.sprite(this.game.width/3, 20,'nivel1');
-      this.nivel1.nivel = 'nivel1';
-      this.nivel1.inputEnabled = true;
-      this.nivel1.events.onInputDown.add(this.clickListener, this);
-
-      this.nivel2 = this.game.add.sprite(this.game.width/3, 110,'nivel2');
-      this.nivel2.nivel = 'nivel2'
-      this.nivel2.inputEnabled = true;
-      this.nivel2.events.onInputDown.add(this.clickListener, this);
-
-      this.nivel3 = this.game.add.sprite(this.game.width/3, 200,'nivel2');
-      this.nivel3.nivel = 'nivel3'
-      this.nivel3.inputEnabled = true;
-      this.nivel3.events.onInputDown.add(this.clickListener, this);
-
-      this.nivel5 = this.game.add.sprite(this.game.width/3, 500,'nivel2');
-      this.nivel5.nivel = 'nivel5'
-      this.nivel5.inputEnabled = true;
-      this.nivel5.events.onInputDown.add(this.clickListener, this);
+      this.btns = this.game.add.group();
+      this.crearBoton(0,0,'nivel1',0,0);
+      this.crearBoton(0,100,'nivel2',0,100);
+      this.crearBoton(0,200,'nivel3',0,200);
+      this.crearBoton(0,400,'nivel5',0,400);
     },
+
     update: function() {
 
     },
+
+    crearBoton: function(x,y,llave,txt_x,txt_y){
+      var boton = this.game.add.sprite(x, y,llave,0);
+      boton.nivel = llave;
+      var anim = boton.animations.add('over', [0,1,2,3,4,5,6], 10, false);
+      anim.onComplete.add(function() {
+        if(boton.texto){
+          boton.texto.revive();
+        }else{
+          boton.texto = this.game.add.bitmapText(txt_x, txt_y, 'font', 'Algun texto', 24);
+        }
+      }, this);
+      boton.inputEnabled = true;
+      boton.events.onInputDown.add(this.clickListener, this);
+      boton.events.onInputOver.add(this.over, this);
+      boton.events.onInputOut.add(this.out, this);
+      this.btns.add(boton);
+    },
+
     clickListener: function(boton) {
       this.game.state.start(boton.nivel);
+    },
+
+    over: function(boton){
+      boton.animations.play('over');
+    },
+
+    out: function(boton){
+      boton.frame = 0;
+      if(boton.texto){
+        boton.texto.kill();
+      }
     }
   };
   
@@ -2438,8 +2443,10 @@ Preload.prototype = {
 
     /*Imagenes Menu e intro*/
     this.load.image('intro', 'assets/images/Menu/intro.jpg');
-    this.load.image('nivel1', 'assets/images/Menu/nivel1.png');
-    this.load.image('nivel2', 'assets/images/Menu/nivel2.png');
+    this.load.spritesheet('nivel1', 'assets/images/Menu/nivel1.jpg',800,100);
+    this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
+    this.load.spritesheet('nivel3', 'assets/images/Menu/nivel1.jpg',800,100);
+    this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
 
     /*Botones y generales*/
     this.load.image('btnContinuar', 'assets/images/Botones/btnContinuar.png');
@@ -2481,6 +2488,7 @@ Preload.prototype = {
 
     /*Bitmap text*/
     this.load.bitmapFont('font1', 'assets/fonts/font1/font1.png', 'assets/fonts/font1/font1.fnt');
+    this.load.bitmapFont('font', 'assets/fonts/font/font.png', 'assets/fonts/font/font.fnt');
   },
   create: function() {
     this.asset.cropEnabled = false;

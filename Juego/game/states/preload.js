@@ -15,8 +15,10 @@ Preload.prototype = {
 
     /*Imagenes Menu e intro*/
     this.load.image('intro', 'assets/images/Menu/intro.jpg');
-    this.load.image('nivel1', 'assets/images/Menu/nivel1.png');
-    this.load.image('nivel2', 'assets/images/Menu/nivel2.png');
+    this.load.spritesheet('nivel1', 'assets/images/Menu/nivel1.jpg',800,100);
+    this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
+    this.load.spritesheet('nivel3', 'assets/images/Menu/nivel1.jpg',800,100);
+    this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
 
     /*Botones y generales*/
     this.load.image('btnContinuar', 'assets/images/Botones/btnContinuar.png');
@@ -58,6 +60,7 @@ Preload.prototype = {
 
     /*Bitmap text*/
     this.load.bitmapFont('font1', 'assets/fonts/font1/font1.png', 'assets/fonts/font1/font1.fnt');
+    this.load.bitmapFont('font', 'assets/fonts/font/font.png', 'assets/fonts/font/font.fnt');
   },
   create: function() {
     this.asset.cropEnabled = false;

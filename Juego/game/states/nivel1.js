@@ -16,6 +16,7 @@
       this.maxtime= 60;
       this.flagpause= false;      
     },
+
     create: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -218,7 +219,8 @@
     updateTimer: function() {
       //Se comprueba que el tiempo de juego haya terminado
       if(this.maxtime == 0){
-        this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+        this.siguiente = this.game.add.sprite(this.game.width/2, this.game.height/2,'btnContinuar');
+        this.siguiente.anchor.setTo(0.5,0.5);
         this.siguiente.inputEnabled = true;
         this.siguiente.events.onInputDown.add(this.clickListener, this);
         this.siguiente.fixedToCamera = true; 
