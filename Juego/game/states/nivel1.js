@@ -10,14 +10,22 @@
     score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
     maxtime: 60,
     flagpause: false,
-    init: function(){
+    intro:true,
+
+    init: function(){      
       this.scoreText= new Array();
       this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
       this.maxtime= 60;
       this.flagpause= false;      
     },
 
-    create: function() {
+    create: function(){
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN1');
+    },
+
+    empezar: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -30,10 +38,7 @@
       this.tiempo.start();
 
       //Fondo de juego
-      //this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
-
-       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'intro');
+      this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');      
 
       //Se definen los audios del nivel
       this.jump_sound = this.game.add.audio('jump_sound');
@@ -127,62 +132,64 @@
     },
 
     update: function() {
-      this.game.physics.arcade.collide(this.jugador, this.plataformas);
-      this.game.physics.arcade.collide(this.items, this.plataformas);
+      if(!this.intro){
+        this.game.physics.arcade.collide(this.jugador, this.plataformas);
+        this.game.physics.arcade.collide(this.items, this.plataformas);
 
-      //Se define el metodo de colision entre jugador y estrellas
-      this.game.physics.arcade.overlap(this.jugador, this.items, this.recogerItem, null, this);
+        //Se define el metodo de colision entre jugador y estrellas
+        this.game.physics.arcade.overlap(this.jugador, this.items, this.recogerItem, null, this);
 
-      this.jugador.body.velocity.x = 0;//Reseteo de velocidad horizontal si no se presentan acciones sobre el jugador
+        this.jugador.body.velocity.x = 0;//Reseteo de velocidad horizontal si no se presentan acciones sobre el jugador
 
-      if (this.cursors.left.isDown){//Movimiento a la izquierda
-        this.jugador.body.velocity.x = -150;
-        if(this.jugador.esSalto){//En caso de encontrarse en el aire
-          this.jugador.animations.play('jump_left');//Se muestra animacion de salto
-        }else{
-          this.jugador.animations.play('left');//Se muestra animacion de caminado
-        }
-      }else if (this.cursors.right.isDown){//Movimiento a la derecha
-        this.jugador.body.velocity.x = 150;
-        if(this.jugador.esSalto){//En caso de encontrarse en el aire
-          this.jugador.animations.play('jump_right');//Se muestra animacion de salto
-        }else{
-          this.jugador.animations.play('right');//Se muestra animacino de caminado
-        }
-      }else{//Idle
-        if(this.jugador.esSalto){//En caso de encontrarse en el aire
-          this.jugador.animations.play('jump');//Se muestra animacion de salto
-        }else{
-          this.jugador.animations.stop();
-          this.jugador.frame = 15;
-        }
-      }
-      
-      if(this.jugador.body.touching.down){//En caso de tocar suelo
-        this.jugador.esSalto = false;
-      }
-
-      //Habilitar salto si el jugador toca alguna plataforma
-      if (this.cursors.up.isDown && this.jugador.body.touching.down){
-        this.jugador.esSalto = true;
-        this.jugador.body.velocity.y = -450;
-        this.jump_sound.play();
-      }
-
-      //Acciones de movimiento para las plataformas de juego
-      this.plataformas.forEach(function(plat) {
-        if(plat.desplazamiento == 1){//En caso de ser tipo 1, el desplazamiento sera hacia la derecha
-          if(plat.body.x > this.game.width){
-            plat.body.x = (0 - plat.body.width);
+        if (this.cursors.left.isDown){//Movimiento a la izquierda
+          this.jugador.body.velocity.x = -150;
+          if(this.jugador.esSalto){//En caso de encontrarse en el aire
+            this.jugador.animations.play('jump_left');//Se muestra animacion de salto
+          }else{
+            this.jugador.animations.play('left');//Se muestra animacion de caminado
           }
-          plat.body.velocity.x = 250;
-        }else if(plat.desplazamiento == 2){//En caso de ser tipo 2, el desplazamiento sera hacia la izquierda
-          if((plat.body.x + plat.body.width) < 0){
-            plat.body.x = this.game.width;
+        }else if (this.cursors.right.isDown){//Movimiento a la derecha
+          this.jugador.body.velocity.x = 150;
+          if(this.jugador.esSalto){//En caso de encontrarse en el aire
+            this.jugador.animations.play('jump_right');//Se muestra animacion de salto
+          }else{
+            this.jugador.animations.play('right');//Se muestra animacino de caminado
           }
-          plat.body.velocity.x = -150;
+        }else{//Idle
+          if(this.jugador.esSalto){//En caso de encontrarse en el aire
+            this.jugador.animations.play('jump');//Se muestra animacion de salto
+          }else{
+            this.jugador.animations.stop();
+            this.jugador.frame = 15;
+          }
         }
-      }, this);
+        
+        if(this.jugador.body.touching.down){//En caso de tocar suelo
+          this.jugador.esSalto = false;
+        }
+
+        //Habilitar salto si el jugador toca alguna plataforma
+        if (this.cursors.up.isDown && this.jugador.body.touching.down){
+          this.jugador.esSalto = true;
+          this.jugador.body.velocity.y = -450;
+          this.jump_sound.play();
+        }
+
+        //Acciones de movimiento para las plataformas de juego
+        this.plataformas.forEach(function(plat) {
+          if(plat.desplazamiento == 1){//En caso de ser tipo 1, el desplazamiento sera hacia la derecha
+            if(plat.body.x > this.game.width){
+              plat.body.x = (0 - plat.body.width);
+            }
+            plat.body.velocity.x = 250;
+          }else if(plat.desplazamiento == 2){//En caso de ser tipo 2, el desplazamiento sera hacia la izquierda
+            if((plat.body.x + plat.body.width) < 0){
+              plat.body.x = this.game.width;
+            }
+            plat.body.velocity.x = -150;
+          }
+        }, this);
+      }
     },
 
     crearItem: function(){
