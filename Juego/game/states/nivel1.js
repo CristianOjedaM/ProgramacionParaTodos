@@ -32,8 +32,7 @@
       var y1 = 480;
       var y2 = 550;
       if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
-        if(this.intro){
-          this.intro = false;
+        if(this.intro){          
           this.empezar;
         }
       }
@@ -143,6 +142,7 @@
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
+      this.intro = false;
     },
 
     update: function() {
