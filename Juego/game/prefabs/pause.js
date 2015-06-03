@@ -28,14 +28,14 @@
     //Boton de inicio
     this.btnInicio = this.game.add.button((this.game.width/2) -30 , 50, 'OpcPausa');
     this.btnInicio.fixedToCamera = true;
-    this.btnInicio.frame = 1;
+    this.btnInicio.frame = 2;
     this.add(this.btnInicio);
 
     
     //Boton de ayuda
     this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 50, 'OpcPausa');
     this.btnAyuda.fixedToCamera = true;
-    this.btnAyuda.frame = 2;
+    this.btnAyuda.frame = 1;
     this.add(this.btnAyuda);
 
     
