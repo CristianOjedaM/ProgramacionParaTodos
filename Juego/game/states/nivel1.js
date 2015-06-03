@@ -16,10 +16,8 @@
       this.maxtime= 60;
       this.flagpause= false;      
     },
-    create: function(){
-       this.game.add.tileSprite(0, 0,800,600, 'intro');
-    },
-    empezar: function() {
+
+    create: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -33,6 +31,9 @@
 
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
+
+       //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'intro');
 
       //Se definen los audios del nivel
       this.jump_sound = this.game.add.audio('jump_sound');
