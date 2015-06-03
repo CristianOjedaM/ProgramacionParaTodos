@@ -387,14 +387,14 @@ module.exports = Editor;
     //Boton de inicio
     this.btnInicio = this.game.add.button((this.game.width/2) -30 , 50, 'OpcPausa');
     this.btnInicio.fixedToCamera = true;
-    this.btnInicio.frame = 1;
+    this.btnInicio.frame = 2;
     this.add(this.btnInicio);
 
     
     //Boton de ayuda
     this.btnAyuda = this.game.add.button((this.game.width/2) + 60, 50, 'OpcPausa');
     this.btnAyuda.fixedToCamera = true;
-    this.btnAyuda.frame = 2;
+    this.btnAyuda.frame = 1;
     this.add(this.btnAyuda);
 
     
@@ -707,14 +707,36 @@ module.exports = Menu;
     score: {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0},
     maxtime: 60,
     flagpause: false,
-    init: function(){
+    intro:true,
+
+    init: function(){      
       this.scoreText= new Array();
       this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
       this.maxtime= 60;
-      this.flagpause= false;      
+      this.flagpause= false; 
+      this.intro = true;  
     },
 
-    create: function() {
+    create: function(){
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN1');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 115;
+      var x2 = 264;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.intro){          
+          this.empezar();
+        }
+      }
+    },
+
+    empezar: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -727,7 +749,7 @@ module.exports = Menu;
       this.tiempo.start();
 
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
+      this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');      
 
       //Se definen los audios del nivel
       this.jump_sound = this.game.add.audio('jump_sound');
@@ -818,65 +840,69 @@ module.exports = Menu;
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
+      this.intro = false;
     },
 
     update: function() {
-      this.game.physics.arcade.collide(this.jugador, this.plataformas);
-      this.game.physics.arcade.collide(this.items, this.plataformas);
+      if(!this.intro){
+        this.game.physics.arcade.collide(this.jugador, this.plataformas);
+        this.game.physics.arcade.collide(this.items, this.plataformas);
 
-      //Se define el metodo de colision entre jugador y estrellas
-      this.game.physics.arcade.overlap(this.jugador, this.items, this.recogerItem, null, this);
+        //Se define el metodo de colision entre jugador y estrellas
+        this.game.physics.arcade.overlap(this.jugador, this.items, this.recogerItem, null, this);
 
-      this.jugador.body.velocity.x = 0;//Reseteo de velocidad horizontal si no se presentan acciones sobre el jugador
+        this.jugador.body.velocity.x = 0;//Reseteo de velocidad horizontal si no se presentan acciones sobre el jugador
 
-      if (this.cursors.left.isDown){//Movimiento a la izquierda
-        this.jugador.body.velocity.x = -150;
-        if(this.jugador.esSalto){//En caso de encontrarse en el aire
-          this.jugador.animations.play('jump_left');//Se muestra animacion de salto
-        }else{
-          this.jugador.animations.play('left');//Se muestra animacion de caminado
-        }
-      }else if (this.cursors.right.isDown){//Movimiento a la derecha
-        this.jugador.body.velocity.x = 150;
-        if(this.jugador.esSalto){//En caso de encontrarse en el aire
-          this.jugador.animations.play('jump_right');//Se muestra animacion de salto
-        }else{
-          this.jugador.animations.play('right');//Se muestra animacino de caminado
-        }
-      }else{//Idle
-        if(this.jugador.esSalto){//En caso de encontrarse en el aire
-          this.jugador.animations.play('jump');//Se muestra animacion de salto
-        }else{
-          this.jugador.animations.stop();
-          this.jugador.frame = 15;
-        }
-      }
-      
-      if(this.jugador.body.touching.down){//En caso de tocar suelo
-        this.jugador.esSalto = false;
-      }
-
-      //Habilitar salto si el jugador toca alguna plataforma
-      if (this.cursors.up.isDown && this.jugador.body.touching.down){
-        this.jugador.esSalto = true;
-        this.jugador.body.velocity.y = -450;
-        this.jump_sound.play();
-      }
-
-      //Acciones de movimiento para las plataformas de juego
-      this.plataformas.forEach(function(plat) {
-        if(plat.desplazamiento == 1){//En caso de ser tipo 1, el desplazamiento sera hacia la derecha
-          if(plat.body.x > this.game.width){
-            plat.body.x = (0 - plat.body.width);
+        if (this.cursors.left.isDown){//Movimiento a la izquierda
+          this.jugador.body.velocity.x = -150;
+          if(this.jugador.esSalto){//En caso de encontrarse en el aire
+            this.jugador.animations.play('jump_left');//Se muestra animacion de salto
+          }else{
+            this.jugador.animations.play('left');//Se muestra animacion de caminado
           }
-          plat.body.velocity.x = 250;
-        }else if(plat.desplazamiento == 2){//En caso de ser tipo 2, el desplazamiento sera hacia la izquierda
-          if((plat.body.x + plat.body.width) < 0){
-            plat.body.x = this.game.width;
+        }else if (this.cursors.right.isDown){//Movimiento a la derecha
+          this.jugador.body.velocity.x = 150;
+          if(this.jugador.esSalto){//En caso de encontrarse en el aire
+            this.jugador.animations.play('jump_right');//Se muestra animacion de salto
+          }else{
+            this.jugador.animations.play('right');//Se muestra animacino de caminado
           }
-          plat.body.velocity.x = -150;
+        }else{//Idle
+          if(this.jugador.esSalto){//En caso de encontrarse en el aire
+            this.jugador.animations.play('jump');//Se muestra animacion de salto
+          }else{
+            this.jugador.animations.stop();
+            this.jugador.frame = 15;
+          }
         }
-      }, this);
+        
+        if(this.jugador.body.touching.down){//En caso de tocar suelo
+          this.jugador.esSalto = false;
+        }
+
+        //Habilitar salto si el jugador toca alguna plataforma
+        if (this.cursors.up.isDown && this.jugador.body.touching.down){
+          this.jugador.esSalto = true;
+          this.jugador.body.velocity.y = -450;
+          this.jump_sound.play();
+        }
+
+        //Acciones de movimiento para las plataformas de juego
+        this.plataformas.forEach(function(plat) {
+          if(plat.desplazamiento == 1){//En caso de ser tipo 1, el desplazamiento sera hacia la derecha
+            if(plat.body.x > this.game.width){
+              plat.body.x = (0 - plat.body.width);
+            }
+            plat.body.velocity.x = 250;
+          }else if(plat.desplazamiento == 2){//En caso de ser tipo 2, el desplazamiento sera hacia la izquierda
+            if((plat.body.x + plat.body.width) < 0){
+              plat.body.x = this.game.width;
+            }
+            plat.body.velocity.x = -150;
+          }
+        }, this);
+      }
     },
 
     crearItem: function(){
@@ -1007,7 +1033,8 @@ module.exports = Menu;
     numberItems: new Array('1','2','987987123'),
     booleanItems: new Array('false','true'),
     arrayItems: new Array('[]','[0]','["a","b","c"]','[9,8,7,25,1]','[{},{a:"1",b:true},{c:1,d:"abc"}]'),
-
+    //Variable para almacenar los errores en total
+    countErrorScore:0,
     init: function(score){//Funcion para recibir los argumentos de score (base del nivel)
       //Asignacion de scores previos
       this.prev_score = score;
@@ -1020,6 +1047,7 @@ module.exports = Menu;
       this.vel=50;//Velocidad de inicio para movimiento de items
       this.itemSelec= false;
       this.flagpause= false;
+      this.countErrorScore = 0;
     },
 
     create: function() {
@@ -1058,6 +1086,8 @@ module.exports = Menu;
       this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 180 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 285 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 390 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[4] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 5, '0', { font: '20px calibri', fill: '#000', align:'center'});
+      this.scoreText[5] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 32, '0', { font: '20px calibri', fill: '#000', align:'center'});
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -1234,6 +1264,7 @@ module.exports = Menu;
           }
         });
         if(error){
+          this.countErrorScore++;
           if(fueraTubo){
             tempError_score.errorGeneral++;
           }else{
@@ -1254,9 +1285,10 @@ module.exports = Menu;
           }     
           error_sound_temp.play();
           this.error_score = tempError_score;
-          console.log(this.error_score);
           if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
-        }        
+        }
+        tempScoreText[4].text  = tempScore.tipoCadena + tempScore.tipoNumero + tempScore.tipoBool  +tempScore.tipoArray;
+        tempScoreText[5].text  = this.countErrorScore;
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;
@@ -1376,7 +1408,8 @@ module.exports = Menu;
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
     booleanItems: new Array({pregunta:'Es niño?',variable:'nino'}),
     arrayItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
-    
+    //Define si se encuentra en el intro o no
+    intro:true,
     init: function(){
       //Definición de propiedades
       this.score= 0;
@@ -1393,9 +1426,29 @@ module.exports = Menu;
       this.fallosDeclaracion = 0;
       this.falloPunteria = 0;
       mouseSpring = null;
+      this.intro = true;
     },
 
-    create: function() {
+     create: function(){
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN2');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 531;
+      var x2 = 680;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.intro){          
+          this.empezar();
+        }
+      }
+    }, 
+
+    empezar: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
       this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
@@ -1471,46 +1524,50 @@ module.exports = Menu;
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
+      this.intro = false;
     },
 
     update: function(){
-      /*Validaciones sobre resortera*/
-      if(this.estado == 1){
-        if(!this.lanzamiento){
-          this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
-          this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
-        }else{
-          this.lanzador.angle += 1;
-        }
-        if(this.mover){
-          this.lanzador.body.x = this.game.input.x;
-          this.lanzador.body.y = this.game.input.y;
-        }
-  
-        /*Validaciones sobre municiones de lanzamiento*/
-        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
-          if(this.lanzador.visible){
-            this.falloPunteria++;
-            this.MensajeEquivocacion(2);
+      if(!this.intro){
+        /*Validaciones sobre resortera*/
+        if(this.estado == 1){
+          if(!this.lanzamiento){
+            this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+            this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
+          }else{
+            this.lanzador.angle += 1;
           }
-          this.lanzador.destroy();          
-          this.jugador.animations.play('lanzar');          
+          if(this.mover){
+            this.lanzador.body.x = this.game.input.x;
+            this.lanzador.body.y = this.game.input.y;
+          }
+    
+          /*Validaciones sobre municiones de lanzamiento*/
+          if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
+            if(this.lanzador.visible){
+              this.falloPunteria++;
+              this.MensajeEquivocacion(2);
+            }
+            this.lanzador.destroy();          
+            this.jugador.animations.play('lanzar');          
+          }
+          
+          /*Validaciones sobre items*/
+          this.items.forEach(function(item) {
+            //Se verifican los items para realizar su movimiento en caso de click
+            if(item.movimiento == true){
+              item.body.velocity.y = 0;//Se retira el movimiento vertical
+              item.body.x = mouseX
+              item.body.y = mouseY;
+            }
+    
+            //Se verifica que los items no hayan superado los limites del escenario
+            if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
+              item.kill();
+            }
+          }); 
         }
-        
-        /*Validaciones sobre items*/
-        this.items.forEach(function(item) {
-          //Se verifican los items para realizar su movimiento en caso de click
-          if(item.movimiento == true){
-            item.body.velocity.y = 0;//Se retira el movimiento vertical
-            item.body.x = mouseX
-            item.body.y = mouseY;
-          }
-  
-          //Se verifica que los items no hayan superado los limites del escenario
-          if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
-            item.kill();
-          }
-        }); 
       }
     },
 
@@ -1995,19 +2052,16 @@ module.exports = Menu;
       var defineTipo = Math.floor(Math.random() * 100);//Numero aleatorio de 1 a 100 para simular un porcentaje de 100
       var tipo = 0;
       if(defineTipo >= 0 && defineTipo < 45){//0 - 44 --> Item de dato
-        tipo = 1;
-      }else if(defineTipo >= 45 && defineTipo < 90){//45 - 89 --> Item de operador logico
-        tipo = 2;
-      }else{//90 - 99 --> Item comodin
         tipo = 0;
+      }else if(defineTipo >= 45 && defineTipo < 90){//45 - 89 --> Item de operador logico
+        tipo = 1;
+      }else{//90 - 99 --> Item comodin
+        tipo = 2;
       }
       var item = this.items.create(xItem,yItem,'item3',tipo);
       item.tipo = tipo;
       switch(item.tipo){
         case 0:
-
-          break;
-        case 1:
           var info = this.datosItems[Math.floor(Math.random() * this.datosItems.length)];
           if(info.variable){
             item.variable = info.variable;
@@ -2015,10 +2069,12 @@ module.exports = Menu;
           item.dato = info.dato;
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, info.texto, { font: '12px calibri', fill: '#000', align:'center'});
           break;
-        case 2:
+        case 1:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
+          break;
+        case 2:
           break;
       }
       item.new_i = 99;//Numero de control de no asignados
@@ -2093,27 +2149,27 @@ module.exports = Menu;
           this.slots.forEach(function(slot) {
             switch(slot.tipo){
               case 0://Slot dato 1
-                if(slot.item.tipo == 0){//Tipo de comodin
+                if(slot.item.tipo == 2){//Tipo de comodin
                   contComodin++;
-                }else if(slot.item.tipo == 1){//En caso de tipo dato se asigna
+                }else if(slot.item.tipo == 0){//En caso de tipo dato se asigna
                   dato1 = slot.item.dato;
                 }else{//En caso de tipo operador en primer slot e genera error
                   correcto = false;
                 }
                 break;
               case 1://Slot operador logica
-                if(slot.item.tipo == 2){//Tipo de operador logico
+                if(slot.item.tipo == 1){//Tipo de operador logico
                   operador = slot.item.dato;
-                }else if(slot.item.tipo == 0){//Tipo de comodin
+                }else if(slot.item.tipo == 2){//Tipo de comodin
                   contComodin++;
                 }else{
                   correcto = false;
                 }
                 break;
               case 2://Slot dato 2
-                if(slot.item.tipo == 0){//Tipo de comodin
+                if(slot.item.tipo == 2){//Tipo de comodin
                   contComodin++;
-                }else if(slot.item.tipo == 1){//En caso de tipo dato se asigna
+                }else if(slot.item.tipo == 0){//En caso de tipo dato se asigna
                   dato2 = slot.item.dato;
                 }else{//En caso de tipo operador en primer slot e genera error
                   correcto = false;
@@ -2446,7 +2502,7 @@ Preload.prototype = {
     this.load.image('intro', 'assets/images/Menu/intro.jpg');
     this.load.spritesheet('nivel1', 'assets/images/Menu/nivel1.jpg',800,100);
     this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
-    this.load.spritesheet('nivel3', 'assets/images/Menu/nivel1.jpg',800,100);
+    this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
 
     /*Botones y generales*/
@@ -2466,6 +2522,7 @@ Preload.prototype = {
     this.load.image('score1_1', 'assets/images/Nivel 1/score_1_1.png');
     this.load.spritesheet('tubo', 'assets/images/Nivel 1/tubo.png',190,100);
     this.load.spritesheet('MensajeAyuda','assets/images/Nivel 1/msjs.png',275,180);
+    this.load.image('introN1', 'assets/images/Nivel 1/intro.jpg');
 
     /*Imagenes nivel 2*/
     this.load.image('tile_nivel2', 'assets/images/Nivel 2/tile.jpg');
@@ -2474,11 +2531,13 @@ Preload.prototype = {
     this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
     this.load.spritesheet('explosion','assets/images/Nivel 2/explosion.png',84,93);
     this.load.spritesheet('MensajeAyuda2','assets/images/Nivel 2/msjs.png',275,180);
+    this.load.image('introN2', 'assets/images/Nivel 2/intro.jpg');
 
     /*Imagenes nivel 3*/
     this.load.image('tile_nivel3', 'assets/images/Nivel 3/tile.jpg');
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
     this.load.image('slot','assets/images/Nivel 3/slot.png');
+    this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
     /*Niveles editor*/
     this.load.image('dude','assets/images/marciano.png');    

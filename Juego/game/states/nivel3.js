@@ -194,19 +194,16 @@
       var defineTipo = Math.floor(Math.random() * 100);//Numero aleatorio de 1 a 100 para simular un porcentaje de 100
       var tipo = 0;
       if(defineTipo >= 0 && defineTipo < 45){//0 - 44 --> Item de dato
-        tipo = 1;
-      }else if(defineTipo >= 45 && defineTipo < 90){//45 - 89 --> Item de operador logico
-        tipo = 2;
-      }else{//90 - 99 --> Item comodin
         tipo = 0;
+      }else if(defineTipo >= 45 && defineTipo < 90){//45 - 89 --> Item de operador logico
+        tipo = 1;
+      }else{//90 - 99 --> Item comodin
+        tipo = 2;
       }
       var item = this.items.create(xItem,yItem,'item3',tipo);
       item.tipo = tipo;
       switch(item.tipo){
         case 0:
-
-          break;
-        case 1:
           var info = this.datosItems[Math.floor(Math.random() * this.datosItems.length)];
           if(info.variable){
             item.variable = info.variable;
@@ -214,10 +211,12 @@
           item.dato = info.dato;
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, info.texto, { font: '12px calibri', fill: '#000', align:'center'});
           break;
-        case 2:
+        case 1:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
           item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
+          break;
+        case 2:
           break;
       }
       item.new_i = 99;//Numero de control de no asignados
@@ -292,27 +291,27 @@
           this.slots.forEach(function(slot) {
             switch(slot.tipo){
               case 0://Slot dato 1
-                if(slot.item.tipo == 0){//Tipo de comodin
+                if(slot.item.tipo == 2){//Tipo de comodin
                   contComodin++;
-                }else if(slot.item.tipo == 1){//En caso de tipo dato se asigna
+                }else if(slot.item.tipo == 0){//En caso de tipo dato se asigna
                   dato1 = slot.item.dato;
                 }else{//En caso de tipo operador en primer slot e genera error
                   correcto = false;
                 }
                 break;
               case 1://Slot operador logica
-                if(slot.item.tipo == 2){//Tipo de operador logico
+                if(slot.item.tipo == 1){//Tipo de operador logico
                   operador = slot.item.dato;
-                }else if(slot.item.tipo == 0){//Tipo de comodin
+                }else if(slot.item.tipo == 2){//Tipo de comodin
                   contComodin++;
                 }else{
                   correcto = false;
                 }
                 break;
               case 2://Slot dato 2
-                if(slot.item.tipo == 0){//Tipo de comodin
+                if(slot.item.tipo == 2){//Tipo de comodin
                   contComodin++;
-                }else if(slot.item.tipo == 1){//En caso de tipo dato se asigna
+                }else if(slot.item.tipo == 0){//En caso de tipo dato se asigna
                   dato2 = slot.item.dato;
                 }else{//En caso de tipo operador en primer slot e genera error
                   correcto = false;
