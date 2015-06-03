@@ -33,7 +33,7 @@
       var y2 = 550;
       if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
         if(this.intro){          
-          this.empezar;
+          this.empezar();
         }
       }
     },
