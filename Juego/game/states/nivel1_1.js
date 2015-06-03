@@ -22,7 +22,8 @@
     numberItems: new Array('1','2','987987123'),
     booleanItems: new Array('false','true'),
     arrayItems: new Array('[]','[0]','["a","b","c"]','[9,8,7,25,1]','[{},{a:"1",b:true},{c:1,d:"abc"}]'),
-
+    //Variable para almacenar los errores en total
+    countErrorScore:0,
     init: function(score){//Funcion para recibir los argumentos de score (base del nivel)
       //Asignacion de scores previos
       this.prev_score = score;
@@ -35,6 +36,7 @@
       this.vel=50;//Velocidad de inicio para movimiento de items
       this.itemSelec= false;
       this.flagpause= false;
+      this.countErrorScore = 0;
     },
 
     create: function() {
@@ -73,6 +75,8 @@
       this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 180 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 285 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 390 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[4] = this.game.add.text(this.cuadroScore.x + 450 , this.cuadroScore.y + 3, '0', { font: '20px calibri', fill: '#000', align:'center'});
+      this.scoreText[5] = this.game.add.text(this.cuadroScore.x + 450 , this.cuadroScore.y + 23, '0', { font: '20px calibri', fill: '#000', align:'center'});
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -249,6 +253,7 @@
           }
         });
         if(error){
+          this.countErrorScore++;
           if(fueraTubo){
             tempError_score.errorGeneral++;
           }else{
@@ -269,9 +274,10 @@
           }     
           error_sound_temp.play();
           this.error_score = tempError_score;
-          console.log(this.error_score);
           if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
-        }        
+        }
+        tempScoreText[4].text  = tempScore.tipoCadena + tempScore.tipoNumero + tempScore.tipoBool  +tempScore.tipoArray;
+        tempScoreText[5].text  = this.countErrorScore;
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;
