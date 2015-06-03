@@ -26,7 +26,8 @@
     numberItems: new Array({pregunta:'Telefono?',variable:'tel'},{pregunta:'Edad?',variable:'edad'},{pregunta:'Peso?',variable:'peso'}),
     booleanItems: new Array({pregunta:'Es niño?',variable:'nino'}),
     arrayItems: new Array({pregunta:'Nombre?',variable:'nombre'},{pregunta:'Direccion?',variable:'direccion'}),
-    
+    //Define si se encuentra en el intro o no
+    intro:true,
     init: function(){
       //Definición de propiedades
       this.score= 0;
@@ -43,9 +44,29 @@
       this.fallosDeclaracion = 0;
       this.falloPunteria = 0;
       mouseSpring = null;
+      this.intro = true;
     },
 
-    create: function() {
+     create: function(){
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN2');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 550;
+      var x2 = 699;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.intro){          
+          this.empezar();
+        }
+      }
+    }, 
+
+    empezar: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
       this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
@@ -121,46 +142,50 @@
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
+      this.intro = false;
     },
 
     update: function(){
-      /*Validaciones sobre resortera*/
-      if(this.estado == 1){
-        if(!this.lanzamiento){
-          this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
-          this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
-        }else{
-          this.lanzador.angle += 1;
-        }
-        if(this.mover){
-          this.lanzador.body.x = this.game.input.x;
-          this.lanzador.body.y = this.game.input.y;
-        }
-  
-        /*Validaciones sobre municiones de lanzamiento*/
-        if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
-          if(this.lanzador.visible){
-            this.falloPunteria++;
-            this.MensajeEquivocacion(2);
+      if(!this.intro){
+        /*Validaciones sobre resortera*/
+        if(this.estado == 1){
+          if(!this.lanzamiento){
+            this.resorte.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x, this.resortera.y);
+            this.resorte2.setTo(this.lanzador.x, this.lanzador.y, this.resortera.x + 20, this.resortera.y);
+          }else{
+            this.lanzador.angle += 1;
           }
-          this.lanzador.destroy();          
-          this.jugador.animations.play('lanzar');          
+          if(this.mover){
+            this.lanzador.body.x = this.game.input.x;
+            this.lanzador.body.y = this.game.input.y;
+          }
+    
+          /*Validaciones sobre municiones de lanzamiento*/
+          if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
+            if(this.lanzador.visible){
+              this.falloPunteria++;
+              this.MensajeEquivocacion(2);
+            }
+            this.lanzador.destroy();          
+            this.jugador.animations.play('lanzar');          
+          }
+          
+          /*Validaciones sobre items*/
+          this.items.forEach(function(item) {
+            //Se verifican los items para realizar su movimiento en caso de click
+            if(item.movimiento == true){
+              item.body.velocity.y = 0;//Se retira el movimiento vertical
+              item.body.x = mouseX
+              item.body.y = mouseY;
+            }
+    
+            //Se verifica que los items no hayan superado los limites del escenario
+            if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
+              item.kill();
+            }
+          }); 
         }
-        
-        /*Validaciones sobre items*/
-        this.items.forEach(function(item) {
-          //Se verifican los items para realizar su movimiento en caso de click
-          if(item.movimiento == true){
-            item.body.velocity.y = 0;//Se retira el movimiento vertical
-            item.body.x = mouseX
-            item.body.y = mouseY;
-          }
-  
-          //Se verifica que los items no hayan superado los limites del escenario
-          if(((item.body.y+item.body.height) < 0) || ((item.body.x+item.body.width) < 0)){
-            item.kill();
-          }
-        }); 
       }
     },
 

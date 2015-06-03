@@ -143,6 +143,7 @@
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
       this.intro = false;
     },
 
