@@ -1429,7 +1429,7 @@ module.exports = Menu;
       this.intro = true;
     },
 
-     create: function(){
+    create: function(){
       this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN2');
@@ -1879,7 +1879,8 @@ module.exports = Menu;
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
-    
+    //Define si se encuentra en el intro o no
+    intro:true,
     init:function(){
       //Definición de propiedades
       this.estado = 0;
@@ -1895,9 +1896,29 @@ module.exports = Menu;
       this.solicitado = true;
       this.resp_time = 20;
       this.flagpause = false;
+      this.intro = true;
     },
 
-    create: function() {
+    create: function(){
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN3');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 115;
+      var x2 = 264;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.intro){          
+          this.empezar();
+        }
+      }
+    }, 
+
+    empezar: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.P2JS);
       this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
@@ -1956,24 +1977,28 @@ module.exports = Menu;
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
+      this.intro = false;
     },
 
     update: function(){
-      //Se obtienen las posiciones del cursor en el juego
-      var mouseX = this.game.input.x;
-      var mouseY = this.game.input.y;
-      //Se realizan las validaciones sobre el grupo de items
-      this.items.forEach(function(item) {
-        //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){
-          item.body.x = mouseX - item.body.width/2;
-          item.body.y = mouseY - item.body.height/2;
-          if(item.texto){
-            item.texto.x = mouseX - item.body.width/2;
-            item.texto.y = mouseY - item.body.height/2;
+      if(!this.intro){
+        //Se obtienen las posiciones del cursor en el juego
+        var mouseX = this.game.input.x;
+        var mouseY = this.game.input.y;
+        //Se realizan las validaciones sobre el grupo de items
+        this.items.forEach(function(item) {
+          //Se verifican los items para realizar su movimiento en caso de click
+          if(item.movimiento == true){
+            item.body.x = mouseX - item.body.width/2;
+            item.body.y = mouseY - item.body.height/2;
+            if(item.texto){
+              item.texto.x = mouseX - item.body.width/2;
+              item.texto.y = mouseY - item.body.height/2;
+            }
           }
-        }
-      });
+        });
+      }
     },
 
     solicitud:function(){
@@ -2537,6 +2562,7 @@ Preload.prototype = {
     this.load.image('tile_nivel3', 'assets/images/Nivel 3/tile.jpg');
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
     this.load.image('slot','assets/images/Nivel 3/slot.png');
+    this.load.image('introN3', 'assets/images/Nivel 3/intro.jpg');
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
     /*Niveles editor*/
