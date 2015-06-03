@@ -30,7 +30,7 @@
       this.tiempo.start();
 
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
+      //this.game.add.tileSprite(0, 0,800,1920, 'tile_nivel1');
 
        //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'intro');
