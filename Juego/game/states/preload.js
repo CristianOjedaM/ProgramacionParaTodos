@@ -37,6 +37,7 @@ Preload.prototype = {
     this.load.image('score1_1', 'assets/images/Nivel 1/score_1_1.png');
     this.load.spritesheet('tubo', 'assets/images/Nivel 1/tubo.png',190,100);
     this.load.spritesheet('MensajeAyuda','assets/images/Nivel 1/msjs.png',275,180);
+    this.load.image('intro', 'assets/images/Nivel 1/intro.jpg');
 
     /*Imagenes nivel 2*/
     this.load.image('tile_nivel2', 'assets/images/Nivel 2/tile.jpg');

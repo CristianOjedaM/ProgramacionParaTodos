@@ -16,8 +16,10 @@
       this.maxtime= 60;
       this.flagpause= false;      
     },
-
-    create: function() {
+    create: function(){
+       this.game.add.tileSprite(0, 0,800,600, 'intro');
+    },
+    empezar: function() {
       //Habilitacion de fisicas
       this.physics = this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
