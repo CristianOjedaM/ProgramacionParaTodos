@@ -16,7 +16,8 @@
       this.scoreText= new Array();
       this.score= {tipoCadena:0,tipoNumero:0,tipoBool:0,tipoArray:0};
       this.maxtime= 60;
-      this.flagpause= false;      
+      this.flagpause= false; 
+      this.intro = true;  
     },
 
     create: function(){
