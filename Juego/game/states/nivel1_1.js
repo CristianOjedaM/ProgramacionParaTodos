@@ -76,7 +76,7 @@
       this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 285 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 390 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
       this.scoreText[4] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 5, '0', { font: '20px calibri', fill: '#000', align:'center'});
-      this.scoreText[5] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 30, '0', { font: '20px calibri', fill: '#000', align:'center'});
+      this.scoreText[5] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 32, '0', { font: '20px calibri', fill: '#000', align:'center'});
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
