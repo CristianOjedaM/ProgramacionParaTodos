@@ -6,7 +6,7 @@
       this.btns = this.game.add.group();
       this.crearBoton(0,0,'nivel1',200,30);
       this.crearBoton(0,100,'nivel2',320,130);
-      this.crearBoton(0,200,'nivel3',0,200);
+      this.crearBoton(0,200,'nivel3',220,230);
       this.crearBoton(0,400,'nivel5',0,400);
     },
 
