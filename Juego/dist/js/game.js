@@ -1330,9 +1330,9 @@ module.exports = Menu;
     },
 
     ErrorScore: function(tipo){
-        var inicio = tipo + ( 3 * tipo);
-        var final_ = inicio + 3;
-        var frame = Math.floor((Math.random()*final_) + inicio);        
+        var inicio = 4 * tipo;
+        var final_ = inicio + 4;
+        var frame = Math.floor(Math.random() * (final_ - inicio) + inicio);        
         switch(tipo){
           case 0:
             if(this.error_score.errorCadena == 3 ){
@@ -1401,6 +1401,7 @@ module.exports = Menu;
     enPregunta:false,
     estado:0,
     flagpause: false,
+    error_score: {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0,errorPunteria:0},
     fallosDeclaracion: 0,
     falloPunteria:0,
     //Definicion temporal de preguntas para mostrar por tipo de dato
@@ -1427,6 +1428,7 @@ module.exports = Menu;
       this.falloPunteria = 0;
       mouseSpring = null;
       this.intro = true;
+      this.error_score= {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorPunteria:0};
     },
 
     create: function(){
@@ -1546,8 +1548,8 @@ module.exports = Menu;
           /*Validaciones sobre municiones de lanzamiento*/
           if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
             if(this.lanzador.visible){
-              this.falloPunteria++;
-              this.MensajeEquivocacion(2);
+              this.error_score.errorPunteria++;
+              this.MensajeEquivocacion();
             }
             this.lanzador.destroy();          
             this.jugador.animations.play('lanzar');          
@@ -1710,6 +1712,7 @@ module.exports = Menu;
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorCadena++;            
           }
           break;
         case 1://Solicitud variable de tipo numerico
@@ -1720,6 +1723,7 @@ module.exports = Menu;
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorNumero++;
           }
           break;
         case 2://Solicitud variable de tipo booleano
@@ -1730,6 +1734,7 @@ module.exports = Menu;
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorBool++;
           }
           break;
         case 3://Solicitud variable de tipo array
@@ -1740,6 +1745,7 @@ module.exports = Menu;
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorArray++;
           }
           break;
       }
@@ -1754,9 +1760,8 @@ module.exports = Menu;
         }
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
         this.error_sound.play();
-        //Se suma 1 al contador de fallos para retroalimentacion
-        this.fallosDeclaracion++;
-        this.MensajeEquivocacion(1);
+        //Se suma 1 al contador de fallos para retroalimentacion       
+        this.MensajeEquivocacion();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
@@ -1834,23 +1839,37 @@ module.exports = Menu;
       }
     },
 
-    MensajeEquivocacion: function(tipo){ 
-      var frame;
-      if (tipo==1) {
-        frame = Math.floor((Math.random()*3) + 0);
-        if(this.fallosDeclaracion==5){
-          this.fallosDeclaracion = 0;
-          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
-          this.game.paused = true;
-        };
-      }else if(tipo==2){        
-        frame = Math.floor((Math.random()*7) + 4);
-        if(this.falloPunteria==5){
-          this.falloPunteria = 0;
-          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
-          this.game.paused = true;
-        };
-      };     
+    MensajeEquivocacion: function(){ 
+      
+      var frame = 0;
+      if(this.error_score.errorCadena == 3){
+        this.error_score.errorCadena= 0;
+        frame = Math.floor(Math.random() * (4 - 0) + 0);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;
+      }else if(this.error_score.errorNumero == 3) {
+        this.error_score.errorNumero= 0;
+        frame = Math.floor(Math.random() * (8 - 4) + 4);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      } 
+      else if(this.error_score.errorBool == 3) {
+        this.error_score.errorBool= 0;
+        frame = Math.floor(Math.random() * (12 - 8) + 8);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      } 
+      else if(this.error_score.errorArray == 3) {
+        this.error_score.errorArray= 0;
+        frame = Math.floor(Math.random() * (16 - 12) + 12);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      }else if(this.error_score.errorPunteria == 5) {
+        this.error_score.errorPunteria= 0;
+        frame = Math.floor(Math.random() * (20 - 16) + 16);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      }     
     }
   };
   
@@ -1881,6 +1900,7 @@ module.exports = Menu;
     operadorItems: new Array('>','<','>=','<=','==','!='),
     //Define si se encuentra en el intro o no
     intro:true,
+
     init:function(){
       //Definición de propiedades
       this.estado = 0;
@@ -1936,22 +1956,24 @@ module.exports = Menu;
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel3');
 
+      this.game.add.sprite(116,50,'fondo3');
+
       //Se realiza la creacion del grupo de slots o contenedores
       this.slots = this.game.add.group();
       this.slots.enableBody = true;
-      var ySlot = 110;
+      var ySlot = 142;
       for(var i =0; i<3;i++){
-        var slot = this.slots.create(600,ySlot,'slot');
+        var slot = this.slots.create(580,ySlot,'slot');
         slot.tipo = i;//El tipo define: 0->Dato 1 - 1->Operador - 2->Dato 2
         slot.usado = false;
-        ySlot += 110;
+        ySlot += 105;
       }
 
       //Se realiza la creacion del grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
       //Se genera una matriz de items de 5 por 5
-      var xItems = 70;
+      var xItems = 125;
       var yItems = 70;
       for(var i=0;i<5;i++){
         for(var j=0;j<5;j++){
@@ -1960,7 +1982,7 @@ module.exports = Menu;
           item.j = j;
           xItems += 85;
         }
-        xItems = 70;
+        xItems = 125;
         yItems += 85;
       }
 
@@ -1993,8 +2015,8 @@ module.exports = Menu;
             item.body.x = mouseX - item.body.width/2;
             item.body.y = mouseY - item.body.height/2;
             if(item.texto){
-              item.texto.x = mouseX - item.body.width/2;
-              item.texto.y = mouseY - item.body.height/2;
+              item.texto.x = item.x + item.body.width/2;
+              item.texto.y = item.y + item.body.height/2;
             }
           }
         });
@@ -2009,8 +2031,10 @@ module.exports = Menu;
         this.solicitado = false;
       }
       if(this.estado == 0){
-        this.solicitudTxt = this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
-        this.solicitudTime = this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+        this.solicitudTxt = this.game.add.bitmapText(600, 70, 'font', this.solicitado.toString(), 24);//this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
+        this.solicitudTime = this.game.add.bitmapText(600, 110, 'font', '', 24);//this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+
+
         this.estado = 1;
       }else{
         this.solicitudTxt.setText(this.solicitado.toString());
@@ -2092,15 +2116,18 @@ module.exports = Menu;
             item.variable = info.variable;
           }
           item.dato = info.dato;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info.texto, { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y + (item.height/2), info.texto, { font: '12px calibri', fill: '#000', align:'center'});
           break;
         case 1:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y + (item.height/2), info, { font: '30px calibri', fill: '#000', align:'center'});
           break;
         case 2:
           break;
+      }
+      if(item.texto){
+        item.texto.anchor.setTo(0.5,0.5);
       }
       item.new_i = 99;//Numero de control de no asignados
       item.new_j = 99;//Numero de control de no asignados
@@ -2152,9 +2179,13 @@ module.exports = Menu;
                 if(item.dato){
                   item.texto.text = item.dato;
                 }
-              }
+              }              
               item.x = slot.body.x + (slot.body.width - item.body.width)/2;
               item.y = slot.body.y + (slot.body.height - item.body.height)/2;
+              if(item.texto){
+                item.texto.x = item.x + (item.width/2);
+                item.texto.y = item.y + (item.height/2);
+              }
               slot.usado = true;
               slot.item = item;
               colocadosTemp++;
@@ -2350,9 +2381,9 @@ module.exports = Menu;
       }
       //Efecto y reposicion de cada item
       this.items.forEach(function(item) {
-        item.game.add.tween(item).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
+        item.game.add.tween(item).to({x:(125+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
         if(item.texto){
-          item.game.add.tween(item.texto).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
+          item.game.add.tween(item.texto).to({x:(125+(85*item.new_j)+(item.width/2)),y:(70+(85*item.new_i)+(item.height/2))}, 350, Phaser.Easing.Linear.None, true);
         }
         item.i = item.new_i;
         item.j = item.new_j;
@@ -2546,7 +2577,7 @@ Preload.prototype = {
     this.load.image('score1', 'assets/images/Nivel 1/score_1.png');
     this.load.image('score1_1', 'assets/images/Nivel 1/score_1_1.png');
     this.load.spritesheet('tubo', 'assets/images/Nivel 1/tubo.png',190,100);
-    this.load.spritesheet('MensajeAyuda','assets/images/Nivel 1/msjs.png',275,180);
+    this.load.spritesheet('MensajeAyuda','assets/images/Nivel 1/msjs.png',234,135);
     this.load.image('introN1', 'assets/images/Nivel 1/intro.jpg');
 
     /*Imagenes nivel 2*/
@@ -2560,6 +2591,7 @@ Preload.prototype = {
 
     /*Imagenes nivel 3*/
     this.load.image('tile_nivel3', 'assets/images/Nivel 3/tile.jpg');
+    this.load.image('fondo3', 'assets/images/Nivel 3/cuadros.png');
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
     this.load.image('slot','assets/images/Nivel 3/slot.png');
     this.load.image('introN3', 'assets/images/Nivel 3/intro.jpg');

@@ -23,6 +23,7 @@
     operadorItems: new Array('>','<','>=','<=','==','!='),
     //Define si se encuentra en el intro o no
     intro:true,
+
     init:function(){
       //Definición de propiedades
       this.estado = 0;
@@ -78,22 +79,24 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel3');
 
+      this.game.add.sprite(116,50,'fondo3');
+
       //Se realiza la creacion del grupo de slots o contenedores
       this.slots = this.game.add.group();
       this.slots.enableBody = true;
-      var ySlot = 110;
+      var ySlot = 142;
       for(var i =0; i<3;i++){
-        var slot = this.slots.create(600,ySlot,'slot');
+        var slot = this.slots.create(580,ySlot,'slot');
         slot.tipo = i;//El tipo define: 0->Dato 1 - 1->Operador - 2->Dato 2
         slot.usado = false;
-        ySlot += 110;
+        ySlot += 105;
       }
 
       //Se realiza la creacion del grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
       //Se genera una matriz de items de 5 por 5
-      var xItems = 70;
+      var xItems = 125;
       var yItems = 70;
       for(var i=0;i<5;i++){
         for(var j=0;j<5;j++){
@@ -102,7 +105,7 @@
           item.j = j;
           xItems += 85;
         }
-        xItems = 70;
+        xItems = 125;
         yItems += 85;
       }
 
@@ -135,8 +138,8 @@
             item.body.x = mouseX - item.body.width/2;
             item.body.y = mouseY - item.body.height/2;
             if(item.texto){
-              item.texto.x = mouseX - item.body.width/2;
-              item.texto.y = mouseY - item.body.height/2;
+              item.texto.x = item.x + item.body.width/2;
+              item.texto.y = item.y + item.body.height/2;
             }
           }
         });
@@ -151,8 +154,10 @@
         this.solicitado = false;
       }
       if(this.estado == 0){
-        this.solicitudTxt = this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
-        this.solicitudTime = this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+        this.solicitudTxt = this.game.add.bitmapText(600, 70, 'font', this.solicitado.toString(), 24);//this.game.add.text(600,85,this.solicitado.toString(),{ font: '24px calibri', fill: '#000', align:'center'});
+        this.solicitudTime = this.game.add.bitmapText(600, 110, 'font', '', 24);//this.game.add.text(610 + this.solicitudTxt.width,85,'',{ font: '24px calibri', fill: '#000', align:'center'});
+
+
         this.estado = 1;
       }else{
         this.solicitudTxt.setText(this.solicitado.toString());
@@ -234,15 +239,18 @@
             item.variable = info.variable;
           }
           item.dato = info.dato;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info.texto, { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y + (item.height/2), info.texto, { font: '12px calibri', fill: '#000', align:'center'});
           break;
         case 1:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y, info, { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.text(item.x + (item.width/2), item.y + (item.height/2), info, { font: '30px calibri', fill: '#000', align:'center'});
           break;
         case 2:
           break;
+      }
+      if(item.texto){
+        item.texto.anchor.setTo(0.5,0.5);
       }
       item.new_i = 99;//Numero de control de no asignados
       item.new_j = 99;//Numero de control de no asignados
@@ -294,9 +302,13 @@
                 if(item.dato){
                   item.texto.text = item.dato;
                 }
-              }
+              }              
               item.x = slot.body.x + (slot.body.width - item.body.width)/2;
               item.y = slot.body.y + (slot.body.height - item.body.height)/2;
+              if(item.texto){
+                item.texto.x = item.x + (item.width/2);
+                item.texto.y = item.y + (item.height/2);
+              }
               slot.usado = true;
               slot.item = item;
               colocadosTemp++;
@@ -492,9 +504,9 @@
       }
       //Efecto y reposicion de cada item
       this.items.forEach(function(item) {
-        item.game.add.tween(item).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
+        item.game.add.tween(item).to({x:(125+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
         if(item.texto){
-          item.game.add.tween(item.texto).to({x:(70+(85*item.new_j)),y:(70+(85*item.new_i))}, 350, Phaser.Easing.Linear.None, true);
+          item.game.add.tween(item.texto).to({x:(125+(85*item.new_j)+(item.width/2)),y:(70+(85*item.new_i)+(item.height/2))}, 350, Phaser.Easing.Linear.None, true);
         }
         item.i = item.new_i;
         item.j = item.new_j;
