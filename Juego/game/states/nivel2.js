@@ -458,8 +458,8 @@
     },
 
     MensajeEquivocacion: function(){ 
-      error_score: {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0,errorPunteria:0},
-      var frame;
+      
+      var frame = 0;
       if(this.error_score.errorCadena == 3){
         this.error_score.errorCadena= 0;
         frame = Math.floor(Math.random() * (4 - 0) + 0);
