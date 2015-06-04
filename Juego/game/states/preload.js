@@ -52,6 +52,7 @@ Preload.prototype = {
     this.load.image('tile_nivel3', 'assets/images/Nivel 3/tile.jpg');
     this.load.spritesheet('item3','assets/images/Nivel 3/items.png',80,80);
     this.load.image('slot','assets/images/Nivel 3/slot.png');
+    this.load.image('introN3', 'assets/images/Nivel 3/intro.jpg');
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
     /*Niveles editor*/
