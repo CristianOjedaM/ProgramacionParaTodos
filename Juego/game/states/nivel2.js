@@ -19,6 +19,7 @@
     enPregunta:false,
     estado:0,
     flagpause: false,
+    error_score: {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0,errorPunteria:0},
     fallosDeclaracion: 0,
     falloPunteria:0,
     //Definicion temporal de preguntas para mostrar por tipo de dato
@@ -45,6 +46,7 @@
       this.falloPunteria = 0;
       mouseSpring = null;
       this.intro = true;
+      this.error_score= {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorPunteria:0};
     },
 
     create: function(){
@@ -164,8 +166,8 @@
           /*Validaciones sobre municiones de lanzamiento*/
           if(this.lanzador.x < 0 || this.lanzador.x > 800 || this.lanzador.y < 0 || this.lanzador.y > 600){                 
             if(this.lanzador.visible){
-              this.falloPunteria++;
-              this.MensajeEquivocacion(2);
+              this.error_score.errorPunteria++;
+              this.MensajeEquivocacion();
             }
             this.lanzador.destroy();          
             this.jugador.animations.play('lanzar');          
@@ -328,6 +330,7 @@
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorCadena++;            
           }
           break;
         case 1://Solicitud variable de tipo numerico
@@ -338,6 +341,7 @@
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorNumero++;
           }
           break;
         case 2://Solicitud variable de tipo booleano
@@ -348,6 +352,7 @@
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorBool++;
           }
           break;
         case 3://Solicitud variable de tipo array
@@ -358,6 +363,7 @@
           }else{
             //En caso de respuesta incorrecta
             console.log(false);
+            this.error_score.errorArray++;
           }
           break;
       }
@@ -372,9 +378,8 @@
         }
         this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
         this.error_sound.play();
-        //Se suma 1 al contador de fallos para retroalimentacion
-        this.fallosDeclaracion++;
-        this.MensajeEquivocacion(1);
+        //Se suma 1 al contador de fallos para retroalimentacion       
+        this.MensajeEquivocacion();
       }else{        
         var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
@@ -452,23 +457,37 @@
       }
     },
 
-    MensajeEquivocacion: function(tipo){ 
+    MensajeEquivocacion: function(){ 
+      error_score: {errorCadena:0,errorNumero:0,errorBool:0,errorArray:0,errorGeneral:0,errorPunteria:0},
       var frame;
-      if (tipo==1) {
-        frame = Math.floor((Math.random()*3) + 0);
-        if(this.fallosDeclaracion==5){
-          this.fallosDeclaracion = 0;
-          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
-          this.game.paused = true;
-        };
-      }else if(tipo==2){        
-        frame = Math.floor((Math.random()*7) + 4);
-        if(this.falloPunteria==5){
-          this.falloPunteria = 0;
-          this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
-          this.game.paused = true;
-        };
-      };     
+      if(this.error_score.errorCadena == 3){
+        this.error_score.errorCadena= 0;
+        frame = Math.floor(Math.random() * (4 - 0) + 0);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;
+      }else if(this.error_score.errorNumero == 3) {
+        this.error_score.errorNumero= 0;
+        frame = Math.floor(Math.random() * (8 - 4) + 4);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      } 
+      else if(this.error_score.errorBool == 3) {
+        this.error_score.errorBool= 0;
+        frame = Math.floor(Math.random() * (12 - 8) + 8);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      } 
+      else if(this.error_score.errorArray == 3) {
+        this.error_score.errorArray= 0;
+        frame = Math.floor(Math.random() * (16 - 12) + 12);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      }else if(this.error_score.errorPunteria == 5) {
+        this.error_score.errorPunteria= 0;
+        frame = Math.floor(Math.random() * (20 - 16) + 16);
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda2',frame);
+        this.game.paused = true;          
+      }     
     }
   };
   
