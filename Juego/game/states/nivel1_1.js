@@ -319,9 +319,9 @@
     },
 
     ErrorScore: function(tipo){
-        var inicio = tipo + ( 3 * tipo);
-        var final_ = inicio + 3;
-        var frame = Math.floor((Math.random()*final_) + inicio);        
+        var inicio = 4 * tipo;
+        var final_ = inicio + 4;
+        var frame = Math.floor(Math.random() * (final_ - inicio) + inicio);        
         switch(tipo){
           case 0:
             if(this.error_score.errorCadena == 3 ){
