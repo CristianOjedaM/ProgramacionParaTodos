@@ -308,7 +308,7 @@
       /*Se realiza la creacion del grupo de pregunta para la variable*/
       this.grupoPregunta = this.game.add.group();
       this.grupoPregunta.add(this.game.add.bitmapText( 300, 225 , 'font',this.textoPregunta.pregunta, 24));
-      this.grupoPregunta.add(this.game.add.bitmapText( 300, 250 , 'font','var',24));
+      this.grupoPregunta.add(this.game.add.bitmapText( 300, 250 , 'font','var ',24));
       this.varTemp = this.grupoPregunta.add(this.game.add.bitmapText( 335, 250 ,'font', this.textoPregunta.variable, 24));
       this.grupoPregunta.add(this.game.add.bitmapText( (this.varTemp.x + this.varTemp.width + 5), 250 ,'font', '=', 24));
       this.cajaTexto = new textBox(this.game,(this.game.width/2)-100,(this.game.height/2)-25,200,25,"Escribe aqui");
@@ -368,7 +368,7 @@
           break;
       }
       //Se registra el log de resultados
-      this.ultResultado = this.logResultados.add(this.game.add.bitmapText( 5, this.logResultados.ultY , 'font','var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), 12));
+      this.ultResultado = this.logResultados.add(this.game.add.bitmapText( 5, this.logResultados.ultY , 'font','var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), 14));
       this.logResultados.ultY += 10;
       if(error){
         if(this.score > 10){
@@ -376,16 +376,16 @@
         }else{
           this.score = 0;
         }
-        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , 'font','-10', 24));
+        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , 'font','-10', 14));
         this.error_sound.play();
         //Se suma 1 al contador de fallos para retroalimentacion       
         this.MensajeEquivocacion();
       }else{        
-        var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
+        var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 14);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
         tween.onComplete.add(function(){punto.destroy();}, this);
         this.score += 20;
-        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y ,'font' ,'+20', 12));
+        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y ,'font' ,'+20', 14));
       }
       console.log(this.score);      
       this.scoreText.setText('Puntaje: ' + this.score);
