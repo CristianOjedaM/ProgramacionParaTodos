@@ -71,12 +71,12 @@
 
       //Control de score
       this.cuadroScore = this.game.add.sprite(10,(this.game.height - 60),'score1_1');
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 75 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 180 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 285 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 390 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[4] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 5, '0', { font: '20px calibri', fill: '#000', align:'center'});
-      this.scoreText[5] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 32, '0', { font: '20px calibri', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.bitmapText(this.cuadroScore.x + 75 , this.cuadroScore.y + 18, 'font','0',24);
+      this.scoreText[1] = this.game.add.bitmapText(this.cuadroScore.x + 180 , this.cuadroScore.y + 18,'font','0',24);
+      this.scoreText[2] = this.game.add.bitmapText(this.cuadroScore.x + 285 , this.cuadroScore.y + 18,'font','0',24);
+      this.scoreText[3] = this.game.add.bitmapText(this.cuadroScore.x + 390 , this.cuadroScore.y + 18,'font','0',24);
+      this.scoreText[4] = this.game.add.bitmapText(this.cuadroScore.x + 470 , this.cuadroScore.y + 5, 'font','0',20);
+      this.scoreText[5] = this.game.add.bitmapText(this.cuadroScore.x + 470 , this.cuadroScore.y + 32,'font','0',20);
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -207,7 +207,7 @@
           break;
       }
 
-      this.textoItem = this.game.add.text(item.body.x , (item.body.y - 35), txtItem, { font: '24px calibri', fill: '#000', align:'center'});
+      this.textoItem = this.game.add.bitmapText(item.body.x , (item.body.y - 35),'font', txtItem, 24);
     },
 
     releaseItem: function(item){
@@ -229,19 +229,19 @@
                 switch(item.tipo){
                   case 0:
                     tempScore.tipoCadena++;
-                    tempScoreText[0].text = tempScore.tipoCadena;
+                    tempScoreText[0].setText(tempScore.tipoCadena);
                   break;
                   case 1:
                     tempScore.tipoNumero++;
-                    tempScoreText[1].text = tempScore.tipoNumero;
+                    tempScoreText[1].setText(tempScore.tipoNumero);
                     break;
                   case 2:
                     tempScore.tipoBool++;
-                    tempScoreText[2].text = tempScore.tipoBool;
+                    tempScoreText[2].setText(tempScore.tipoBool);
                     break;
                   case 3:
                     tempScore.tipoArray++;
-                    tempScoreText[3].text = tempScore.tipoArray;
+                    tempScoreText[3].setText(tempScore.tipoArray);
                     break;
                 }
                 var punto = tubo.game.add.bitmapText(tubo.x, tubo.y, 'font1', '+1', 24);
@@ -276,8 +276,8 @@
           this.error_score = tempError_score;
           if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         }
-        tempScoreText[4].text  = tempScore.tipoCadena + tempScore.tipoNumero + tempScore.tipoBool  +tempScore.tipoArray;
-        tempScoreText[5].text  = this.countErrorScore;
+        tempScoreText[4].setText(tempScore.tipoCadena + tempScore.tipoNumero + tempScore.tipoBool  +tempScore.tipoArray);
+        tempScoreText[5].setText(this.countErrorScore);
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;

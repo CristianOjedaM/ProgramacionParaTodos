@@ -110,7 +110,7 @@
       }
 
       //Creacion de texto de puntaje
-      this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText = this.game.add.bitmapText(580 , 450, 'font','Puntaje: 0', 24);
       this.solicitud();
 
       //Se agrega el boton de pausa
@@ -239,12 +239,12 @@
             item.variable = info.variable;
           }
           item.dato = info.dato;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y + (item.height/2), info.texto, { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.bitmapText(item.x + (item.width/2), item.y + (item.height/2),'font', info.texto, 12);
           break;
         case 1:
           var info = this.operadorItems[Math.floor(Math.random() * this.operadorItems.length)]
           item.dato = info;
-          item.texto = this.game.add.text(item.x + (item.width/2), item.y + (item.height/2), info, { font: '30px calibri', fill: '#000', align:'center'});
+          item.texto = this.game.add.bitmapText(item.x + (item.width/2), item.y + (item.height/2),'font' ,info, 30);
           break;
         case 2:
           break;
@@ -297,10 +297,10 @@
           if(!puesto){
             if(item.overlap(slot) && !slot.usado){
               if(item.variable){
-                item.texto.text = item.variable;
+                item.texto.setText(item.variable);
               }else{
                 if(item.dato){
-                  item.texto.text = item.dato;
+                  item.texto.setText(item.dato);
                 }
               }              
               item.x = slot.body.x + (slot.body.width - item.body.width)/2;
@@ -463,7 +463,7 @@
                 }
               }
             }
-            this.scoreText.text = 'Puntaje: ' + this.score;
+            this.scoreText.setText('Puntaje: ' + this.score);
             contComodin = 0;
           }
           this.solicitud();

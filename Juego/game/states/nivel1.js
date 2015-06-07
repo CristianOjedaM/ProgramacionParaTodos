@@ -111,13 +111,13 @@
       //Control de score
       this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score1');
       this.cuadroScore.fixedToCamera = true;
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, 'font', '0', 24);
       this.scoreText[0].fixedToCamera = true;
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[1] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, 'font', '0', 24);
       this.scoreText[1].fixedToCamera = true;
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[2] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, 'font', '0', 24);
       this.scoreText[2].fixedToCamera = true;
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[3] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, 'font', '0', 24);
       this.scoreText[3].fixedToCamera = true;
       
       //Imagen de fondo para el tiempo
@@ -125,7 +125,7 @@
       this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.bitmapText(((this.game.width)/2), 15 ,'font', '00:00', 32);
       this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
@@ -224,19 +224,19 @@
         switch(item.tipo){
           case 0://Tipo cadena
             this.score.tipoCadena += 1;
-            this.scoreText[0].text = this.score.tipoCadena;
+            this.scoreText[0].setText(this.score.tipoCadena);
             break;
           case 1://Tipo numero
             this.score.tipoNumero += 1;
-            this.scoreText[1].text = this.score.tipoNumero;
+            this.scoreText[1].setText(this.score.tipoNumero);
             break;
           case 2://Tipo booleano
             this.score.tipoBool += 1;
-            this.scoreText[2].text = this.score.tipoBool;
+            this.scoreText[2].setText(this.score.tipoBool);
             break;
           case 3://Tipo array
             this.score.tipoArray += 1;
-            this.scoreText[3].text = this.score.tipoArray;
+            this.scoreText[3].setText(this.score.tipoArray);
             break;
         }
         item.kill();

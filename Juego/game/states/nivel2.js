@@ -89,7 +89,7 @@
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
 
        //Se define puntaje
-      this.scoreText = this.game.add.text(20 , 10, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText = this.game.add.bitmapText(20 , 10, 'font' ,'Puntaje: 0', 24);
    
       //Creacion de grupos de colision
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
@@ -131,7 +131,7 @@
       this.logResultados.ultY = 40;
 
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.bitmapText(((this.game.width)/2), 16 ,'font', '00:00', 32);
       this.timer.anchor.setTo(0.5,0);
       this.timer.fixedToCamera = true; 
 
@@ -307,10 +307,10 @@
       }
       /*Se realiza la creacion del grupo de pregunta para la variable*/
       this.grupoPregunta = this.game.add.group();
-      this.grupoPregunta.add(this.game.add.text( 300, 225 , this.textoPregunta.pregunta, { font: '24px calibri', fill: '#000', align:'center'}));
-      this.grupoPregunta.add(this.game.add.text( 300, 250 , 'var', { font: '24px calibri', fill: '#00f', align:'center'}));
-      this.varTemp = this.grupoPregunta.add(this.game.add.text( 335, 250 , this.textoPregunta.variable, { font: '24px calibri', fill: '#000', align:'center'}));
-      this.grupoPregunta.add(this.game.add.text( (this.varTemp.x + this.varTemp.width + 5), 250 , '=', { font: '24px calibri', fill: '#800080', align:'center'}));
+      this.grupoPregunta.add(this.game.add.bitmapText( 300, 225 , 'font',this.textoPregunta.pregunta, 24));
+      this.grupoPregunta.add(this.game.add.bitmapText( 300, 250 , 'font','var',24));
+      this.varTemp = this.grupoPregunta.add(this.game.add.bitmapText( 335, 250 ,'font', this.textoPregunta.variable, 24));
+      this.grupoPregunta.add(this.game.add.bitmapText( (this.varTemp.x + this.varTemp.width + 5), 250 ,'font', '=', 24));
       this.cajaTexto = new textBox(this.game,(this.game.width/2)-100,(this.game.height/2)-25,200,25,"Escribe aqui");
       this.grupoPregunta.add(this.cajaTexto);
       this.btnValidar = this.game.add.button((this.game.width/2) - 50, (this.game.height/2), 'btnContinuar', this.validarRespuesta, this);
@@ -368,7 +368,7 @@
           break;
       }
       //Se registra el log de resultados
-      this.ultResultado = this.logResultados.add(this.game.add.text( 5, this.logResultados.ultY , 'var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), { font: '12px calibri', fill: '#000', align:'center'}));
+      this.ultResultado = this.logResultados.add(this.game.add.bitmapText( 5, this.logResultados.ultY , 'font','var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), 12));
       this.logResultados.ultY += 10;
       if(error){
         if(this.score > 10){
@@ -376,7 +376,7 @@
         }else{
           this.score = 0;
         }
-        this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
+        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , 'font','-10', 24));
         this.error_sound.play();
         //Se suma 1 al contador de fallos para retroalimentacion       
         this.MensajeEquivocacion();
@@ -385,10 +385,10 @@
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
         tween.onComplete.add(function(){punto.destroy();}, this);
         this.score += 20;
-        this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
+        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y ,'font' ,'+20', 12));
       }
       console.log(this.score);      
-      this.scoreText.text = 'Puntaje: ' + this.score;
+      this.scoreText.setText('Puntaje: ' + this.score);
       this.cajaTexto.destruir();
       this.grupoPregunta.destroy();
       this.jugador.animations.play('lanzar');
