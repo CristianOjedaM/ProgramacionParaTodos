@@ -14,13 +14,14 @@ window.onload = function () {
   game.state.add('nivel2', require('./states/nivel2'));
   game.state.add('nivel3', require('./states/nivel3'));
   game.state.add('nivel5', require('./states/nivel5'));
+  game.state.add('nivel6', require('./states/nivel6'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
   
 
   game.state.start('boot');
 };
-},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/nivel1":9,"./states/nivel1_1":10,"./states/nivel2":11,"./states/nivel3":12,"./states/nivel5":13,"./states/play":14,"./states/preload":15}],2:[function(require,module,exports){
+},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/nivel1":9,"./states/nivel1_1":10,"./states/nivel2":11,"./states/nivel3":12,"./states/nivel5":13,"./states/nivel6":14,"./states/play":15,"./states/preload":16}],2:[function(require,module,exports){
 'use strict';
 
 var Editor = function(game, x, y ,width , lines, parent){
@@ -822,7 +823,7 @@ module.exports = Menu;
       this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.bitmapText((this.game.width/2), 20, 'font', '00:00', 28);//this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
       this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
@@ -2430,6 +2431,25 @@ module.exports = Menu;
 	  	//Se incluye el panel de pausa al nivel
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
+  	},
+
+
+  };
+
+  module.exports = Nivel5;
+},{"../prefabs/editor":2,"../prefabs/tablero":4}],14:[function(require,module,exports){
+
+  'use strict';
+  var Editor = require('../prefabs/editor');
+  var Tablero = require('../prefabs/tablero');
+
+  function Nivel6() {}
+  Nivel6.prototype = {
+
+  	create: function() {
+	  	//Se incluye el panel de pausa al nivel
+      this.editor = new Editor(this.game,170,20,400,20);
+      this.game.add.existing(this.editor);
 
       this.tablero = new Tablero(this.game,20,20,5,5);
       this.game.add.existing(this.tablero);
@@ -2484,8 +2504,8 @@ module.exports = Menu;
 
   };
 
-  module.exports = Nivel5;
-},{"../prefabs/editor":2,"../prefabs/tablero":4}],14:[function(require,module,exports){
+  module.exports = Nivel6;
+},{"../prefabs/editor":2,"../prefabs/tablero":4}],15:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -2495,7 +2515,9 @@ module.exports = Menu;
       this.crearBoton(0,0,'nivel1',200,30);
       this.crearBoton(0,100,'nivel2',320,130);
       this.crearBoton(0,200,'nivel3',220,230);
-      this.crearBoton(0,400,'nivel5',0,400);
+      this.crearBoton(0,300,'nivel4',200,330);
+      this.crearBoton(0,400,'nivel5',320,430);
+      this.crearBoton(0,500,'nivel6',220,530);
     },
 
     update: function() {
@@ -2538,7 +2560,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 'use strict';
 function Preload() {
@@ -2559,7 +2581,9 @@ Preload.prototype = {
     this.load.spritesheet('nivel1', 'assets/images/Menu/nivel1.jpg',800,100);
     this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
     this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
+    this.load.spritesheet('nivel4', 'assets/images/Menu/nivel1.jpg',800,100);
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
+    this.load.spritesheet('nivel6', 'assets/images/Menu/nivel3.jpg',800,100);
 
     /*Botones y generales*/
     this.load.image('btnContinuar', 'assets/images/Botones/btnContinuar.png');
@@ -2586,7 +2610,7 @@ Preload.prototype = {
     this.load.spritesheet('lanzador','assets/images/Nivel 2/piedras.png',46,53);
     this.load.spritesheet('personaje2','assets/images/Nivel 2/jugador.png',49,75);
     this.load.spritesheet('explosion','assets/images/Nivel 2/explosion.png',84,93);
-    this.load.spritesheet('MensajeAyuda2','assets/images/Nivel 2/msjs.png',275,180);
+    this.load.spritesheet('MensajeAyuda2','assets/images/Nivel 2/msjs.png',234,135);
     this.load.image('introN2', 'assets/images/Nivel 2/intro.jpg');
 
     /*Imagenes nivel 3*/

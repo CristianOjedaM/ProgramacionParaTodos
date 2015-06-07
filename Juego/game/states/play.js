@@ -7,7 +7,9 @@
       this.crearBoton(0,0,'nivel1',200,30);
       this.crearBoton(0,100,'nivel2',320,130);
       this.crearBoton(0,200,'nivel3',220,230);
-      this.crearBoton(0,400,'nivel5',0,400);
+      this.crearBoton(0,300,'nivel4',200,330);
+      this.crearBoton(0,400,'nivel5',320,430);
+      this.crearBoton(0,500,'nivel6',220,530);
     },
 
     update: function() {
