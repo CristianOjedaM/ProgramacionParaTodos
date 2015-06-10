@@ -21,6 +21,8 @@
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
+    //Define la variable de errores para mensajes de retroalimentacion
+    errorCount: 0,
     //Define si se encuentra en el intro o no
     intro:true,
 
@@ -39,6 +41,7 @@
       this.solicitado = true;
       this.resp_time = 20;
       this.flagpause = false;
+      this.errorCount = 0;
       this.intro = true;
     },
 
@@ -457,13 +460,19 @@
                 if(verdadero){
                   this.score += 20;
                 }
+                else{
+                  this.errorCount++;
+                }
               }else{
                 if(!verdadero){
                   this.score += 20;
+                }else{
+                  this.errorCount++;
                 }
               }
             }
             this.scoreText.setText('Puntaje: ' + this.score);
+            this.MensajeEquivocacion();
             contComodin = 0;
           }
           this.solicitud();
@@ -534,8 +543,22 @@
           this.pnlPausa.hide();
           this.flagpause = false;          
         }
+      }else{
+        if(this.game.paused == true && this.MensajeAyuda != null && this.MensajeAyuda.visible == true){
+          this.MensajeAyuda.destroy();
+          this.game.paused = false;
+          this.flagpause = false;
+        }
       }
 
+    },
+    MensajeEquivocacion: function(){       
+      var frame = Math.floor(Math.random() * (8 - 0) + 0);
+      if(this.errorCount == 5){
+        this.errorCount= 0;        
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda3',frame);
+        this.game.paused = true;
+      } 
     }
   };
 

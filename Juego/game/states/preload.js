@@ -60,7 +60,7 @@ Preload.prototype = {
 
     /*Imagenes nivel 3*/
     this.load.image('Fondo4','assets/images/Nivel 4/fondo.jpg');
-    this.load.image('Carro','assets/images/Nivel 3/carro.png');
+    this.load.image('Carro','assets/images/Nivel 4/carro.png');
     
     /*Niveles editor*/
     this.load.image('dude','assets/images/marciano.png');    
