@@ -37,10 +37,10 @@
   	},
 
     crearCarro: function(){
-      var carro_1 = this.items.create(-100,455,'Carro');
+      var carro_1 = this.items.create(-100,455,'Carro',0);
       carro_1.body.velocity.x = this.vel;
-       var carro_2 = this.items.create(-100,395,'Carro');
-      carro_1.body.velocity.x = this.vel;
+       var carro_2 = this.items.create(-100,395,'Carro',0);
+      carro_2.body.velocity.x = this.vel;
     }
   };
 
