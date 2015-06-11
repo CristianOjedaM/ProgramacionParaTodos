@@ -13,6 +13,7 @@ window.onload = function () {
   game.state.add('nivel1_1', require('./states/nivel1_1'));
   game.state.add('nivel2', require('./states/nivel2'));
   game.state.add('nivel3', require('./states/nivel3'));
+  game.state.add('nivel4', require('./states/nivel4'));
   game.state.add('nivel5', require('./states/nivel5'));
   game.state.add('nivel6', require('./states/nivel6'));
   game.state.add('play', require('./states/play'));
@@ -21,7 +22,7 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/nivel1":9,"./states/nivel1_1":10,"./states/nivel2":11,"./states/nivel3":12,"./states/nivel5":13,"./states/nivel6":14,"./states/play":15,"./states/preload":16}],2:[function(require,module,exports){
+},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/nivel1":9,"./states/nivel1_1":10,"./states/nivel2":11,"./states/nivel3":12,"./states/nivel4":13,"./states/nivel5":14,"./states/nivel6":15,"./states/play":16,"./states/preload":17}],2:[function(require,module,exports){
 'use strict';
 
 var Editor = function(game, x, y ,width , lines, parent){
@@ -33,6 +34,7 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.seleccionado = true;
   this.shift = false;//Control tecla shift
   this.hLinea = 14;//Tamaño de fuente 
+  this.ancho = width;
   this.heigth = lines * this.hLinea;//Alto del editor
   this.created_lines = 0;//Lineas creadas
   this.current_line = 0;//Linea actual
@@ -199,6 +201,41 @@ Editor.prototype.getTextLines = function() {
   return this.textos;
 };
 
+Editor.prototype.showError = function(error,linea) {
+  //Se dibuja la caja de error
+  if(!this.errorGroup){
+    this.errorGroup = this.game.add.group();
+    this.errorGroup.alpha = 0;
+    this.cajaError = this.game.add.graphics( this.x, ((this.y + this.heigth) - 40) );
+    this.cajaError.beginFill(0xdb3a1e, 1);
+    this.cajaError.bounds = new PIXI.Rectangle(0, this.heigth, this.ancho, 40);
+    this.cajaError.drawRect(0, 0, this.ancho, 40);
+    this.errorGroup.add(this.cajaError);
+    this.txtError = this.game.add.text(this.cajaError.x+5,this.cajaError.y,'',this.font);
+    this.txtError.wordWrap = true;
+    this.txtError.wordWrapWidth = this.ancho;
+    this.errorGroup.add(this.txtError);
+    this.add(this.errorGroup);
+  }
+  switch(error){
+    case "SyntaxError":
+      this.txtError.setText('Ups, creo que tienes un error de sintaxis en la linea ' + (linea+1));
+      break;
+    case "ReferenceError":
+      this.txtError.setText('Ups, tal vez el objeto nombrado en la linea ' + (linea+1) + ' no exista');
+      break;
+    case "TypeError":
+
+      break;
+  }  
+  this.game.add.tween(this.errorGroup).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
+};
+
+Editor.prototype.hideError = function(error,linea) {
+  if(this.errorGroup){
+    this.game.add.tween(this.errorGroup).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
+  }
+}
 
 Editor.prototype.keyPress = function(data) {
     if(this.seleccionado) {
@@ -809,13 +846,13 @@ module.exports = Menu;
       //Control de score
       this.cuadroScore = this.game.add.sprite((this.game.width - 130),(this.game.height - 200),'score1');
       this.cuadroScore.fixedToCamera = true;
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 28, 'font', '0', 24);
       this.scoreText[0].fixedToCamera = true;
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[1] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 68, 'font', '0', 24);
       this.scoreText[1].fixedToCamera = true;
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[2] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 106, 'font', '0', 24);
       this.scoreText[2].fixedToCamera = true;
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, '0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText[3] = this.game.add.bitmapText(this.cuadroScore.x + 90 , this.cuadroScore.y + 145, 'font', '0', 24);
       this.scoreText[3].fixedToCamera = true;
       
       //Imagen de fondo para el tiempo
@@ -823,7 +860,9 @@ module.exports = Menu;
       this.cuadroTime.anchor.setTo(0.5, 0);
       this.cuadroTime.fixedToCamera = true;
       //Se setea el texto para el cronometro
+
       this.timer = this.game.add.bitmapText((this.game.width/2), 20, 'font', '00:00', 28);//this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+
       this.timer.anchor.setTo(0.5, 0);
       this.timer.fixedToCamera = true; 
 
@@ -922,19 +961,19 @@ module.exports = Menu;
         switch(item.tipo){
           case 0://Tipo cadena
             this.score.tipoCadena += 1;
-            this.scoreText[0].text = this.score.tipoCadena;
+            this.scoreText[0].setText(this.score.tipoCadena);
             break;
           case 1://Tipo numero
             this.score.tipoNumero += 1;
-            this.scoreText[1].text = this.score.tipoNumero;
+            this.scoreText[1].setText(this.score.tipoNumero);
             break;
           case 2://Tipo booleano
             this.score.tipoBool += 1;
-            this.scoreText[2].text = this.score.tipoBool;
+            this.scoreText[2].setText(this.score.tipoBool);
             break;
           case 3://Tipo array
             this.score.tipoArray += 1;
-            this.scoreText[3].text = this.score.tipoArray;
+            this.scoreText[3].setText(this.score.tipoArray);
             break;
         }
         item.kill();
@@ -1083,12 +1122,12 @@ module.exports = Menu;
 
       //Control de score
       this.cuadroScore = this.game.add.sprite(10,(this.game.height - 60),'score1_1');
-      this.scoreText[0] = this.game.add.text(this.cuadroScore.x + 75 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[1] = this.game.add.text(this.cuadroScore.x + 180 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[2] = this.game.add.text(this.cuadroScore.x + 285 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[3] = this.game.add.text(this.cuadroScore.x + 390 , this.cuadroScore.y + 18, '0', { font: '24px calibri', fill: '#000', align:'center'});
-      this.scoreText[4] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 5, '0', { font: '20px calibri', fill: '#000', align:'center'});
-      this.scoreText[5] = this.game.add.text(this.cuadroScore.x + 470 , this.cuadroScore.y + 32, '0', { font: '20px calibri', fill: '#000', align:'center'});
+      this.scoreText[0] = this.game.add.bitmapText(this.cuadroScore.x + 75 , this.cuadroScore.y + 18, 'font','0',24);
+      this.scoreText[1] = this.game.add.bitmapText(this.cuadroScore.x + 180 , this.cuadroScore.y + 18,'font','0',24);
+      this.scoreText[2] = this.game.add.bitmapText(this.cuadroScore.x + 285 , this.cuadroScore.y + 18,'font','0',24);
+      this.scoreText[3] = this.game.add.bitmapText(this.cuadroScore.x + 390 , this.cuadroScore.y + 18,'font','0',24);
+      this.scoreText[4] = this.game.add.bitmapText(this.cuadroScore.x + 470 , this.cuadroScore.y + 5, 'font','0',20);
+      this.scoreText[5] = this.game.add.bitmapText(this.cuadroScore.x + 470 , this.cuadroScore.y + 32,'font','0',20);
     
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -1219,7 +1258,7 @@ module.exports = Menu;
           break;
       }
 
-      this.textoItem = this.game.add.text(item.body.x , (item.body.y - 35), txtItem, { font: '24px calibri', fill: '#000', align:'center'});
+      this.textoItem = this.game.add.bitmapText(item.body.x , (item.body.y - 35),'font', txtItem, 24);
     },
 
     releaseItem: function(item){
@@ -1241,19 +1280,19 @@ module.exports = Menu;
                 switch(item.tipo){
                   case 0:
                     tempScore.tipoCadena++;
-                    tempScoreText[0].text = tempScore.tipoCadena;
+                    tempScoreText[0].setText(tempScore.tipoCadena);
                   break;
                   case 1:
                     tempScore.tipoNumero++;
-                    tempScoreText[1].text = tempScore.tipoNumero;
+                    tempScoreText[1].setText(tempScore.tipoNumero);
                     break;
                   case 2:
                     tempScore.tipoBool++;
-                    tempScoreText[2].text = tempScore.tipoBool;
+                    tempScoreText[2].setText(tempScore.tipoBool);
                     break;
                   case 3:
                     tempScore.tipoArray++;
-                    tempScoreText[3].text = tempScore.tipoArray;
+                    tempScoreText[3].setText(tempScore.tipoArray);
                     break;
                 }
                 var punto = tubo.game.add.bitmapText(tubo.x, tubo.y, 'font1', '+1', 24);
@@ -1288,8 +1327,8 @@ module.exports = Menu;
           this.error_score = tempError_score;
           if(fueraTubo){this.ErrorScore(4);}else{this.ErrorScore(item.tipo);}
         }
-        tempScoreText[4].text  = tempScore.tipoCadena + tempScore.tipoNumero + tempScore.tipoBool  +tempScore.tipoArray;
-        tempScoreText[5].text  = this.countErrorScore;
+        tempScoreText[4].setText(tempScore.tipoCadena + tempScore.tipoNumero + tempScore.tipoBool  +tempScore.tipoArray);
+        tempScoreText[5].setText(this.countErrorScore);
         this.score = tempScore;
         this.scoreText = tempScoreText;
         this.itemSelec = false;
@@ -1472,7 +1511,7 @@ module.exports = Menu;
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel2');
 
        //Se define puntaje
-      this.scoreText = this.game.add.text(20 , 10, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText = this.game.add.bitmapText(20 , 10, 'font' ,'Puntaje: 0', 24);
    
       //Creacion de grupos de colision
       this.lanzadorGrupoColision = this.game.physics.p2.createCollisionGroup();
@@ -1514,7 +1553,7 @@ module.exports = Menu;
       this.logResultados.ultY = 40;
 
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.text(((this.game.width)/2), 16 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+      this.timer = this.game.add.bitmapText(((this.game.width)/2), 16 ,'font', '00:00', 32);
       this.timer.anchor.setTo(0.5,0);
       this.timer.fixedToCamera = true; 
 
@@ -1690,10 +1729,10 @@ module.exports = Menu;
       }
       /*Se realiza la creacion del grupo de pregunta para la variable*/
       this.grupoPregunta = this.game.add.group();
-      this.grupoPregunta.add(this.game.add.text( 300, 225 , this.textoPregunta.pregunta, { font: '24px calibri', fill: '#000', align:'center'}));
-      this.grupoPregunta.add(this.game.add.text( 300, 250 , 'var', { font: '24px calibri', fill: '#00f', align:'center'}));
-      this.varTemp = this.grupoPregunta.add(this.game.add.text( 335, 250 , this.textoPregunta.variable, { font: '24px calibri', fill: '#000', align:'center'}));
-      this.grupoPregunta.add(this.game.add.text( (this.varTemp.x + this.varTemp.width + 5), 250 , '=', { font: '24px calibri', fill: '#800080', align:'center'}));
+      this.grupoPregunta.add(this.game.add.bitmapText( 300, 225 , 'font',this.textoPregunta.pregunta, 24));
+      this.grupoPregunta.add(this.game.add.bitmapText( 300, 250 , 'font','var ',24));
+      this.varTemp = this.grupoPregunta.add(this.game.add.bitmapText( 335, 250 ,'font', this.textoPregunta.variable, 24));
+      this.grupoPregunta.add(this.game.add.bitmapText( (this.varTemp.x + this.varTemp.width + 5), 250 ,'font', '=', 24));
       this.cajaTexto = new textBox(this.game,(this.game.width/2)-100,(this.game.height/2)-25,200,25,"Escribe aqui");
       this.grupoPregunta.add(this.cajaTexto);
       this.btnValidar = this.game.add.button((this.game.width/2) - 50, (this.game.height/2), 'btnContinuar', this.validarRespuesta, this);
@@ -1751,7 +1790,7 @@ module.exports = Menu;
           break;
       }
       //Se registra el log de resultados
-      this.ultResultado = this.logResultados.add(this.game.add.text( 5, this.logResultados.ultY , 'var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), { font: '12px calibri', fill: '#000', align:'center'}));
+      this.ultResultado = this.logResultados.add(this.game.add.bitmapText( 5, this.logResultados.ultY , 'font','var '+this.textoPregunta.variable+' = '+(this.cajaTexto.texto.text==this.cajaTexto.defaultTxt?"":this.cajaTexto.texto.text), 14));
       this.logResultados.ultY += 10;
       if(error){
         if(this.score > 10){
@@ -1759,19 +1798,19 @@ module.exports = Menu;
         }else{
           this.score = 0;
         }
-        this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '-10', { font: '12px calibri', fill: '#f00', align:'center'}));
+        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , 'font','-10', 14));
         this.error_sound.play();
         //Se suma 1 al contador de fallos para retroalimentacion       
         this.MensajeEquivocacion();
       }else{        
-        var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 24);
+        var punto = this.game.add.bitmapText(100, 30, 'font1', '+20', 14);
         var tween = this.game.add.tween(punto).to({y:(punto.y - 20),alpha:0}, 400, Phaser.Easing.Linear.None, true);
         tween.onComplete.add(function(){punto.destroy();}, this);
         this.score += 20;
-        this.logResultados.add(this.game.add.text( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y , '+20', { font: '12px calibri', fill: '#0f0', align:'center'}));
+        this.logResultados.add(this.game.add.bitmapText( (this.ultResultado.x + this.ultResultado.width + 5), this.ultResultado.y ,'font' ,'+20', 14));
       }
       console.log(this.score);      
-      this.scoreText.text = 'Puntaje: ' + this.score;
+      this.scoreText.setText('Puntaje: ' + this.score);
       this.cajaTexto.destruir();
       this.grupoPregunta.destroy();
       this.jugador.animations.play('lanzar');
@@ -1899,6 +1938,8 @@ module.exports = Menu;
     //Definicion temporal de preguntas para mostrar por tipo de dato
     datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
+    //Define la variable de errores para mensajes de retroalimentacion
+    errorCount: 0,
     //Define si se encuentra en el intro o no
     intro:true,
 
@@ -1917,6 +1958,7 @@ module.exports = Menu;
       this.solicitado = true;
       this.resp_time = 20;
       this.flagpause = false;
+      this.errorCount = 0;
       this.intro = true;
     },
 
@@ -1988,7 +2030,7 @@ module.exports = Menu;
       }
 
       //Creacion de texto de puntaje
-      this.scoreText = this.game.add.text(580 , 450, 'Puntaje: 0', { font: '24px calibri', fill: '#000', align:'center'});
+      this.scoreText = this.game.add.bitmapText(580 , 450, 'font','Puntaje: 0', 24);
       this.solicitud();
 
       //Se agrega el boton de pausa
@@ -2335,13 +2377,19 @@ module.exports = Menu;
                 if(verdadero){
                   this.score += 20;
                 }
+                else{
+                  this.errorCount++;
+                }
               }else{
                 if(!verdadero){
                   this.score += 20;
+                }else{
+                  this.errorCount++;
                 }
               }
             }
-            this.scoreText.text = 'Puntaje: ' + this.score;
+            this.scoreText.setText('Puntaje: ' + this.score);
+            this.MensajeEquivocacion();
             contComodin = 0;
           }
           this.solicitud();
@@ -2412,13 +2460,75 @@ module.exports = Menu;
           this.pnlPausa.hide();
           this.flagpause = false;          
         }
+      }else{
+        if(this.game.paused == true && this.MensajeAyuda != null && this.MensajeAyuda.visible == true){
+          this.MensajeAyuda.destroy();
+          this.game.paused = false;
+          this.flagpause = false;
+        }
       }
 
+    },
+    MensajeEquivocacion: function(){       
+      var frame = Math.floor(Math.random() * (8 - 0) + 0);
+      if(this.errorCount == 5){
+        this.errorCount= 0;        
+        this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda3',frame);
+        this.game.paused = true;
+      } 
     }
   };
 
   module.exports = Nivel3;
 },{"../prefabs/pause":3}],13:[function(require,module,exports){
+ 'use strict';
+ var Pausa = require('../prefabs/pause');
+
+
+  function Nivel4() {}
+  Nivel4.prototype = {
+    vel:50,//Velocidad de inicio para movimiento de items    
+  	create: function() {
+      //Habilitacion de fisicas
+      this.game.physics.startSystem(Phaser.Physics.ARCADE);
+	    this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
+
+      //Grupo de items
+      this.items = this.game.add.group();
+      this.items.enableBody = true;
+      this.items.physicsBodyType = Phaser.Physics.P2JS;
+      
+      this.crearCarro();
+  	},
+
+  	update: function(){
+       this.items.forEach(function(item) {
+        //Se verifican los items para realizar su movimiento en caso de click
+        if(item.movimiento == true){
+          item.body.velocity.y = 0;//Se retira el movimiento vertical
+          item.body.x = mouseX
+          item.body.y = mouseY;
+        }
+
+        //Se verifica que los items no hayan superado los limites del escenario
+        if((item.body.x+item.body.height) > 800){
+          item.kill();
+        }
+      });         
+  	},
+
+    crearCarro: function(){
+      var carro_1 = this.items.create(-100,455,'Carro');
+      carro_1.body.velocity.x = this.vel;
+       var carro_2 = this.items.create(-100,395,'Carro');
+      carro_1.body.velocity.x = this.vel;
+    }
+  };
+
+  module.exports = Nivel4;
+},{"../prefabs/pause":3}],14:[function(require,module,exports){
 
   'use strict';
   var Editor = require('../prefabs/editor');
@@ -2437,7 +2547,7 @@ module.exports = Menu;
   };
 
   module.exports = Nivel5;
-},{"../prefabs/editor":2,"../prefabs/tablero":4}],14:[function(require,module,exports){
+},{"../prefabs/editor":2,"../prefabs/tablero":4}],15:[function(require,module,exports){
 
   'use strict';
   var Editor = require('../prefabs/editor');
@@ -2446,66 +2556,113 @@ module.exports = Menu;
   function Nivel6() {}
   Nivel6.prototype = {
 
+    /*Definicion de propiedades*/
+    pasoActual: 0,
+
   	create: function() {
-	  	//Se incluye el panel de pausa al nivel
+	  	//Se incluye el editor de texto
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
-
+      this.editor.seleccionado = false;//Se inhabilita el editor de codigo
+      //S incluye el tablero juego
       this.tablero = new Tablero(this.game,20,20,5,5);
       this.game.add.existing(this.tablero);
-
+      //Se agregan los sprotes dentro del tablero de juego
       this.dude = this.tablero.setObjCuadro(0,0,'dude');
       this.dude.posx = 0;
       this.dude.posy = 0;
-
-
+      //Se registrar los eventos de los botones 
       this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
       this.crearFunc.inputEnabled = true;
       this.crearFunc.events.onInputDown.add(this.crearFuncion, this);
-
       this.run = this.game.add.sprite(500, 350,'btnContinuar');
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCodigo, this);
+
+      this.btnContinuar = this.game.add.sprite(165, 520,'btnContinuar');
+      this.btnContinuar.anchor.setTo(0.5,0.5);
+      this.btnContinuar.inputEnabled = true;
+      this.btnContinuar.events.onInputDown.add(this.pasoSiguiente, this);
+
+      //Se da inicio al nivel con el las instrucciones de juego
+      this.cuadroIns = this.game.add.graphics( 0, 0 );
+      this.cuadroIns.beginFill(0x272822, 1);
+      this.cuadroIns.lineStyle(2, 0xffffff);
+      this.cuadroIns.bounds = new PIXI.Rectangle(40, 300, 250, 200);
+      this.cuadroIns.drawRect(40, 300, 250, 200);
+
+      this.txtIns = this.game.add.bitmapText(50 , 310, 'font', '', 24);
+      this.txtIns.wordWrap = true;
+      this.txtIns.wordWrapWidth = 250;
+      this.txtIns.tint = 0xFFFFFF;
+      this.instrucciones(this.pasoActual);
   	},
+
+    instrucciones: function(paso){
+      switch(paso){//Se define la instruccion a mostrar
+        case 0:
+          this.txtIns.setText('Hola, por medio del\neditor de código\ndebemos ayudar al\npersonaje a cumplir \nuna serie de tareas ');
+          break;
+        case 1:
+          this.txtIns.setText('mmm');
+          break;
+        case 2:
+          break;
+        case 3:
+          break;
+        case 4:
+          break;
+        case 5:
+          break;
+        case 6:
+          break;
+        case 7:
+          break;
+        case 8:
+          break;
+        case 9:
+          break;
+        case 10:
+          break;
+      }
+    },
+
+    pasoSiguiente: function(){
+      switch(this.pasoActual){
+        case 0:
+          this.pasoActual++;
+          break;
+      }
+      this.instrucciones(this.pasoActual);
+    },
 
     crearFuncion: function(){
       
     },
 
     correrCodigo: function(){
-      /*for(var i=0;i<this.editor.created_lines;i++){
-        var instruccion = this.editor.getTextLine(i);
-        var F=new Function ("dude",instruccion);
-        F(this.dude);
-        this.tablero.setObjCuadro(this.dude.posx, this.dude.posy, '', this.dude);
-      }*/
-      
       setTimeout(this.correrLinea,750,0,this);
-      
-
-      /*var theInstructions = this.editor.getText();
-      var F=new Function ("dude",theInstructions);
-      F(this.dude);
-      console.log("- "+this.dude.posy);
-      this.tablero.setObjCuadro(this.dude.posx, this.dude.posy, '', this.dude);
-      //eval(this.editor.getText());*/
     },
 
     correrLinea:function(i,e){
-      if(i < e.editor.created_lines){
-        var instruccion = e.editor.getTextLine(i);        
-        var F=new Function ("dude",instruccion);        
-        F(e.dude);        
-        e.tablero.setObjCuadro(e.dude.posx, e.dude.posy, '', e.dude);
-        i++;
-        setTimeout(e.correrLinea,750,i,e);
+      try {
+        if(i < e.editor.created_lines){
+          var instruccion = e.editor.getTextLine(i);        
+          var F=new Function ("dude",instruccion);        
+          F(e.dude);        
+          e.tablero.setObjCuadro(e.dude.posx, e.dude.posy, '', e.dude);
+          i++;
+          setTimeout(e.correrLinea,750,i,e);
+        }
+        e.editor.hideError();
+      }catch(err) {
+        e.editor.showError(err.name,i);        
       }
     }
-
   };
 
   module.exports = Nivel6;
-},{"../prefabs/editor":2,"../prefabs/tablero":4}],15:[function(require,module,exports){
+},{"../prefabs/editor":2,"../prefabs/tablero":4}],16:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -2560,7 +2717,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
 'use strict';
 function Preload() {
@@ -2621,6 +2778,10 @@ Preload.prototype = {
     this.load.image('introN3', 'assets/images/Nivel 3/intro.jpg');
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
+    /*Imagenes nivel 3*/
+    this.load.image('Fondo4','assets/images/Nivel 4/fondo.jpg');
+    this.load.spritesheet('Carro','assets/images/Nivel 4/carro.png',100,50);
+    
     /*Niveles editor*/
     this.load.image('dude','assets/images/marciano.png');    
 

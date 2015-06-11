@@ -9,6 +9,7 @@ var Editor = function(game, x, y ,width , lines, parent){
   this.seleccionado = true;
   this.shift = false;//Control tecla shift
   this.hLinea = 14;//Tamaño de fuente 
+  this.ancho = width;
   this.heigth = lines * this.hLinea;//Alto del editor
   this.created_lines = 0;//Lineas creadas
   this.current_line = 0;//Linea actual
@@ -175,6 +176,41 @@ Editor.prototype.getTextLines = function() {
   return this.textos;
 };
 
+Editor.prototype.showError = function(error,linea) {
+  //Se dibuja la caja de error
+  if(!this.errorGroup){
+    this.errorGroup = this.game.add.group();
+    this.errorGroup.alpha = 0;
+    this.cajaError = this.game.add.graphics( this.x, ((this.y + this.heigth) - 40) );
+    this.cajaError.beginFill(0xdb3a1e, 1);
+    this.cajaError.bounds = new PIXI.Rectangle(0, this.heigth, this.ancho, 40);
+    this.cajaError.drawRect(0, 0, this.ancho, 40);
+    this.errorGroup.add(this.cajaError);
+    this.txtError = this.game.add.text(this.cajaError.x+5,this.cajaError.y,'',this.font);
+    this.txtError.wordWrap = true;
+    this.txtError.wordWrapWidth = this.ancho;
+    this.errorGroup.add(this.txtError);
+    this.add(this.errorGroup);
+  }
+  switch(error){
+    case "SyntaxError":
+      this.txtError.setText('Ups, creo que tienes un error de sintaxis en la linea ' + (linea+1));
+      break;
+    case "ReferenceError":
+      this.txtError.setText('Ups, tal vez el objeto nombrado en la linea ' + (linea+1) + ' no exista');
+      break;
+    case "TypeError":
+
+      break;
+  }  
+  this.game.add.tween(this.errorGroup).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
+};
+
+Editor.prototype.hideError = function(error,linea) {
+  if(this.errorGroup){
+    this.game.add.tween(this.errorGroup).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
+  }
+}
 
 Editor.prototype.keyPress = function(data) {
     if(this.seleccionado) {
