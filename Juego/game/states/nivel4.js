@@ -11,7 +11,10 @@
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
+      
+      this.tiempo = this.game.time.create(false);
       this.loop_creaItem = this.tiempo.loop(4000, this.crearCarro, this);//Creacion de items
+      this.tiempo.start();
   	},
 
   	update: function(){
