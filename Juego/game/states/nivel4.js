@@ -4,7 +4,7 @@
 
   function Nivel4() {}
   Nivel4.prototype = {
-    vel:5,//Velocidad de inicio para movimiento de items    
+    vel:25,//Velocidad de inicio para movimiento de items    
   	create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
@@ -21,16 +21,9 @@
   	},
 
   	update: function(){
-       this.items.forEach(function(item) {
-        //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){
-          item.body.velocity.y = 0;//Se retira el movimiento vertical
-          item.body.x = mouseX
-          item.body.y = mouseY;
-        }
-
+       this.items.forEach(function(item) {        
         //Se verifica que los items no hayan superado los limites del escenario
-        if((item.body.x+item.body.width) > 800){
+        if((item.body.x) > 800){
           item.kill();
         }
       });         
