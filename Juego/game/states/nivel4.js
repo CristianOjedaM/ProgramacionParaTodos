@@ -11,7 +11,7 @@
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
-      this,crearCarro();
+      this.crearCarro();
   	},
 
   	update: function(){
