@@ -4,12 +4,10 @@
 
   function Nivel4() {}
   Nivel4.prototype = {
-    vel:50,//Velocidad de inicio para movimiento de items    
+    vel:10,//Velocidad de inicio para movimiento de items    
   	create: function() {
       //Habilitacion de fisicas
-      this.game.physics.startSystem(Phaser.Physics.P2JS);
-      this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
-      this.game.physics.p2.restitution = 0;
+      this.game.physics.startSystem(Phaser.Physics.P2JS);      
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
@@ -41,7 +39,7 @@
     crearCarro: function(){
       var carro_1 = this.items.create(-100,455,'Carro',0);
       carro_1.body.velocity.x = this.vel;
-       var carro_2 = this.items.create(-100,395,'Carro',0);
+       var carro_2 = this.items.create(-150,395,'Carro',0);
       carro_2.body.velocity.x = this.vel;
     }
   };
