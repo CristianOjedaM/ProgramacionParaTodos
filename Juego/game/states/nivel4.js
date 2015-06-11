@@ -7,7 +7,9 @@
     vel:50,//Velocidad de inicio para movimiento de items    
   	create: function() {
       //Habilitacion de fisicas
-      this.game.physics.startSystem(Phaser.Physics.ARCADE);
+      this.game.physics.startSystem(Phaser.Physics.P2JS);
+      this.game.physics.p2.setImpactEvents(true);//Habilita colision para este tipo de fisicas
+      this.game.physics.p2.restitution = 0;
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
