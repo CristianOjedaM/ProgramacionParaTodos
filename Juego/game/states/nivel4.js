@@ -11,14 +11,29 @@
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
+
+      //Grupo de items
+      this.items = this.game.add.group();
+      this.items.enableBody = true;
+      this.items.physicsBodyType = Phaser.Physics.P2JS;
       
-      this.tiempo = this.game.time.create(false);
-      this.loop_creaItem = this.tiempo.loop(4000, this.crearCarro, this);//Creacion de items
-      this.tiempo.start();
+      this.crearCarro();
   	},
 
   	update: function(){
+       this.items.forEach(function(item) {
+        //Se verifican los items para realizar su movimiento en caso de click
+        if(item.movimiento == true){
+          item.body.velocity.y = 0;//Se retira el movimiento vertical
+          item.body.x = mouseX
+          item.body.y = mouseY;
+        }
 
+        //Se verifica que los items no hayan superado los limites del escenario
+        if((item.body.x+item.body.height) > 800){
+          item.kill();
+        }
+      });         
   	},
 
     crearCarro: function(){
