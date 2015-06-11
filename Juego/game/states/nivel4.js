@@ -30,7 +30,7 @@
         }
 
         //Se verifica que los items no hayan superado los limites del escenario
-        if((item.body.x+item.body.height) > 800){
+        if((item.body.x+item.body.width) > 800){
           item.kill();
         }
       });         
