@@ -4,7 +4,7 @@
 
   function Nivel4() {}
   Nivel4.prototype = {
-    vel:25,//Velocidad de inicio para movimiento de items    
+    vel:50,//Velocidad de inicio para movimiento de items    
   	create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
