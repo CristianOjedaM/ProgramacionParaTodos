@@ -8,6 +8,7 @@ var Entidad = function(game, x, y, key) {
   this.posy = 0;//Posicion relativa de y en el tablero
   this.propiedades = [{nombre:"Posicion X",prop:"posx",val:this.posx},
                 {nombre:"Posicion Y",prop:"posy",val:this.posy}];
+  this.consejos = ["consejo 1","consejo 2","consejo 3","consejo 4","consejo 5"];
 };
 
 Entidad.prototype = Object.create(Phaser.Sprite.prototype);
@@ -39,6 +40,7 @@ Entidad.prototype.ocultar = function(e) {
   e.game.add.tween(e.txtMostrar).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
   e.msjBandera = false;
   e.propBandera = false;
+  e.consBandera = false;
 };
 
 Entidad.prototype.prop = function() {
@@ -48,6 +50,12 @@ Entidad.prototype.prop = function() {
   }
   this.propBandera = true;
   return retorno;
+};
+
+Entidad.prototype.consejo = function() {
+  var random = Math.floor(Math.random() * this.consejos.length);
+  this.consBandera = true;
+  return this.consejos[random];
 };
 
 module.exports = Entidad;

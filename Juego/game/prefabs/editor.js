@@ -150,11 +150,6 @@ Editor.prototype.validaTexto = function() {
   }  
 };
 
-Editor.prototype.seleccionar = function() {
-
-	this.seleccionado = true;
-};
-
 Editor.prototype.getText = function() {
   var textoRetorno = "";
   for(var i=0;i<this.textos.length;i++){//Se recorren las lineas del editor
@@ -379,6 +374,16 @@ Editor.prototype.glow = function(estado,e) {
       }
       break;
   }  
+};
+
+Editor.prototype.limpiar = function() {
+  for(var i=1;i<this.created_lines;i++){
+    this.textos[i].destroy();
+  }
+  this.textos[0].setText(' ');
+  this.current_line=0;
+  this.created_lines=1;
+  this.updatePipe();
 };
 
 Editor.prototype.destruir = function() {

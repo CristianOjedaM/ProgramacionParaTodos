@@ -65,14 +65,18 @@
           this.habilitaEditor(true);
           break;
         case 4:
-          this.txtIns.setText('Muy bien, ahora\nveamos que puede\ndecirnos sobre el.\nIntenta con\ndude.mostrar(dude.prop())');
+          this.txtIns.setText('Muy bien, ahora\nveamos que puede\ndecirnos sobre el.\nIntenta con\ndude.mostrar(dude.prop())\nesto mostrara las\npropiedades que podemos\nmanipular sobre el\npersonaje');
           this.habilitaEditor(true);
           break;
         case 5:
+          this.txtIns.setText('Genial, ahora intenta\nobtener consejos de la\nsiguiente manera.\ndude.mostrar(dude.consejo())');
+          this.habilitaEditor(true);
           break;
         case 6:
+          this.txtIns.setText('Perfecto, recuerda que\npuedes hacer uso de\nlos consejos en cualquer\nmomento que desees\ny siempre se mostraran\nde forma aleatoria');
           break;
         case 7:
+          this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 8:
           break;
@@ -85,9 +89,12 @@
 
     pasoSiguiente: function(){
       switch(this.pasoActual){
+        /*Pasos de texto (Tan solo generan siguiente)*/
         case 0:
         case 1:
         case 2:
+        case 6:
+        case 7:
           this.pasoActual++;
           break;
       }
@@ -102,19 +109,30 @@
       //Se cambia el estado del editor para su edicion
       this.editor.seleccionado = estado;
       this.run.visible = estado;
+      if(estado == true){
+        this.editor.limpiar();
+      }
     },
 
     correrCodigo: function(){
       this.editor.hideError();//Se ocultan errores del editor
       this.editor.glow(false);//Se elimina el brillo
       switch(this.pasoActual){//Se valida la accion a tomar respecto al paso actual
+        /*Pasos introductorios*/
         case 3://Paso dude.mostrar()
         case 4://Paso dude.mostrar(dude.prop())
+        case 5://Paso dude.mostrar(dude.consejo())
           var correcto = false;
           this.correrLineas();
           if(this.dude.msjBandera == true){//En caso de haber mostrado el msj de prueba correctamente
             if(this.pasoActual == 4){
               if(this.dude.propBandera == true){
+                correcto = true;
+              }else{
+                this.editor.glow(true);
+              }
+            }else if(this.pasoActual == 5){
+              if(this.dude.consBandera == true){
                 correcto = true;
               }else{
                 this.editor.glow(true);

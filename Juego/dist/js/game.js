@@ -175,11 +175,6 @@ Editor.prototype.validaTexto = function() {
   }  
 };
 
-Editor.prototype.seleccionar = function() {
-
-	this.seleccionado = true;
-};
-
 Editor.prototype.getText = function() {
   var textoRetorno = "";
   for(var i=0;i<this.textos.length;i++){//Se recorren las lineas del editor
@@ -406,6 +401,16 @@ Editor.prototype.glow = function(estado,e) {
   }  
 };
 
+Editor.prototype.limpiar = function() {
+  for(var i=1;i<this.created_lines;i++){
+    this.textos[i].destroy();
+  }
+  this.textos[0].setText(' ');
+  this.current_line=0;
+  this.created_lines=1;
+  this.updatePipe();
+};
+
 Editor.prototype.destruir = function() {
   this.cajaTexto.destroy();
   this.texto.destroy();
@@ -425,6 +430,7 @@ var Entidad = function(game, x, y, key) {
   this.posy = 0;//Posicion relativa de y en el tablero
   this.propiedades = [{nombre:"Posicion X",prop:"posx",val:this.posx},
                 {nombre:"Posicion Y",prop:"posy",val:this.posy}];
+  this.consejos = ["consejo 1","consejo 2","consejo 3","consejo 4","consejo 5"];
 };
 
 Entidad.prototype = Object.create(Phaser.Sprite.prototype);
@@ -456,6 +462,7 @@ Entidad.prototype.ocultar = function(e) {
   e.game.add.tween(e.txtMostrar).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
   e.msjBandera = false;
   e.propBandera = false;
+  e.consBandera = false;
 };
 
 Entidad.prototype.prop = function() {
@@ -465,6 +472,12 @@ Entidad.prototype.prop = function() {
   }
   this.propBandera = true;
   return retorno;
+};
+
+Entidad.prototype.consejo = function() {
+  var random = Math.floor(Math.random() * this.consejos.length);
+  this.consBandera = true;
+  return this.consejos[random];
 };
 
 module.exports = Entidad;
@@ -2685,14 +2698,18 @@ module.exports = Menu;
           this.habilitaEditor(true);
           break;
         case 4:
-          this.txtIns.setText('Muy bien, ahora\nveamos que puede\ndecirnos sobre el.\nIntenta con\ndude.mostrar(dude.prop())');
+          this.txtIns.setText('Muy bien, ahora\nveamos que puede\ndecirnos sobre el.\nIntenta con\ndude.mostrar(dude.prop())\nesto mostrara las\npropiedades que podemos\nmanipular sobre el\npersonaje');
           this.habilitaEditor(true);
           break;
         case 5:
+          this.txtIns.setText('Genial, ahora intenta\nobtener consejos de la\nsiguiente manera.\ndude.mostrar(dude.consejo())');
+          this.habilitaEditor(true);
           break;
         case 6:
+          this.txtIns.setText('Perfecto, recuerda que\npuedes hacer uso de\nlos consejos en cualquer\nmomento que desees\ny siempre se mostraran\nde forma aleatoria');
           break;
         case 7:
+          this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 8:
           break;
@@ -2705,9 +2722,12 @@ module.exports = Menu;
 
     pasoSiguiente: function(){
       switch(this.pasoActual){
+        /*Pasos de texto (Tan solo generan siguiente)*/
         case 0:
         case 1:
         case 2:
+        case 6:
+        case 7:
           this.pasoActual++;
           break;
       }
@@ -2722,19 +2742,30 @@ module.exports = Menu;
       //Se cambia el estado del editor para su edicion
       this.editor.seleccionado = estado;
       this.run.visible = estado;
+      if(estado == true){
+        this.editor.limpiar();
+      }
     },
 
     correrCodigo: function(){
       this.editor.hideError();//Se ocultan errores del editor
       this.editor.glow(false);//Se elimina el brillo
       switch(this.pasoActual){//Se valida la accion a tomar respecto al paso actual
+        /*Pasos introductorios*/
         case 3://Paso dude.mostrar()
         case 4://Paso dude.mostrar(dude.prop())
+        case 5://Paso dude.mostrar(dude.consejo())
           var correcto = false;
           this.correrLineas();
           if(this.dude.msjBandera == true){//En caso de haber mostrado el msj de prueba correctamente
             if(this.pasoActual == 4){
               if(this.dude.propBandera == true){
+                correcto = true;
+              }else{
+                this.editor.glow(true);
+              }
+            }else if(this.pasoActual == 5){
+              if(this.dude.consBandera == true){
                 correcto = true;
               }else{
                 this.editor.glow(true);
