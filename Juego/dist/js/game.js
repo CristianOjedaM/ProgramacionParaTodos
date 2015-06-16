@@ -22,7 +22,7 @@ window.onload = function () {
 
   game.state.start('boot');
 };
-},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/nivel1":9,"./states/nivel1_1":10,"./states/nivel2":11,"./states/nivel3":12,"./states/nivel4":13,"./states/nivel5":14,"./states/nivel6":15,"./states/play":16,"./states/preload":17}],2:[function(require,module,exports){
+},{"./states/boot":7,"./states/gameover":8,"./states/menu":9,"./states/nivel1":10,"./states/nivel1_1":11,"./states/nivel2":12,"./states/nivel3":13,"./states/nivel4":14,"./states/nivel5":15,"./states/nivel6":16,"./states/play":17,"./states/preload":18}],2:[function(require,module,exports){
 'use strict';
 
 var Editor = function(game, x, y ,width , lines, parent){
@@ -386,6 +386,26 @@ Editor.prototype.keyUp = function(data) {
   }
 };
 
+Editor.prototype.glow = function(estado,e) {
+  switch(estado){
+    case true:
+      this.glowTween = this.game.add.tween(this.cajaTexto).to({alpha:1.5}, 500, Phaser.Easing.Linear.None, true, 0, 500, true);
+      setTimeout(this.glow,3000,false,this);
+      break;
+    case false:
+      if(e){
+        e.glowTween.stop();
+        e.game.add.tween(e.cajaTexto).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
+      }else{
+        if(this.glowTween){
+          this.glowTween.stop();
+          this.game.add.tween(this.cajaTexto).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
+        }
+      }
+      break;
+  }  
+};
+
 Editor.prototype.destruir = function() {
   this.cajaTexto.destroy();
   this.texto.destroy();
@@ -395,6 +415,61 @@ Editor.prototype.destruir = function() {
 
 module.exports = Editor;
 },{}],3:[function(require,module,exports){
+'use strict';
+
+var Entidad = function(game, x, y, key) {
+  Phaser.Sprite.call(this, game, x, y, key, 0);
+
+  /*Definicion de propiedades*/
+  this.posx = 0;//Posicion relativa de x en el tablero
+  this.posy = 0;//Posicion relativa de y en el tablero
+  this.propiedades = [{nombre:"Posicion X",prop:"posx",val:this.posx},
+                {nombre:"Posicion Y",prop:"posy",val:this.posy}];
+};
+
+Entidad.prototype = Object.create(Phaser.Sprite.prototype);
+Entidad.prototype.constructor = Entidad;
+
+Entidad.prototype.update = function() {
+};
+
+Entidad.prototype.mostrar = function(msj) {
+  if(!this.txtMostrar){//Se realiza la cracion del mensaje
+    this.txtMostrar = this.game.add.text(this.x + this.width,this.y,msj,{ font: '12px consolas', fill: '#fff', align:'left'});
+    this.txtMostrar.anchor.setTo(0,0);
+    this.txtMostrar.wordWrap = true;
+    this.txtMostrar.wordWrapWidth = 120;
+    this.txtMostrar.alpha = 0;
+  }else{
+    this.txtMostrar.setText(msj);//Se establece el texto del mensaje
+  }
+  if(!msj){//Texto por defecto
+    this.txtMostrar.setText("Hola");
+  }
+  this.msjBandera = true;
+  this.game.add.tween(this.txtMostrar).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);//Animacion para mostrar mensaje
+  setTimeout(this.ocultar,5000,this);//Se realiza el llamado de metodo para ocultar mensaje en 5 segundos
+};
+
+Entidad.prototype.ocultar = function(e) {
+  //Animacion para ocutar mensaje
+  e.game.add.tween(e.txtMostrar).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
+  e.msjBandera = false;
+  e.propBandera = false;
+};
+
+Entidad.prototype.prop = function() {
+  var retorno = "";
+  for(var i=0;i<this.propiedades.length;i++){
+    retorno += this.propiedades[i].nombre + ": " + this.propiedades[i].prop + "\n";
+  }
+  this.propBandera = true;
+  return retorno;
+};
+
+module.exports = Entidad;
+
+},{}],4:[function(require,module,exports){
 
   'use strict';
 
@@ -484,8 +559,10 @@ module.exports = Editor;
   }; 
  
   module.exports = Pause;
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
+
+var Entidad = require('../prefabs/entidad');
 
 var Tablero = function(game, x, y ,xCuadros , yCuadros, parent){
   Phaser.Group.call(this, game, parent);  
@@ -523,7 +600,7 @@ Tablero.prototype.dibujarCuadro = function(x,y,dimension) {
 
 Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
   if(obj != ''){
-    var obj = this.game.add.sprite(this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
+    var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
     this.add(obj);
   }else{
     sprite.x = this.x+(i*this.dimension);
@@ -538,7 +615,7 @@ Tablero.prototype.destruir = function() {
 };
 
 module.exports = Tablero;
-},{}],5:[function(require,module,exports){
+},{"../prefabs/entidad":3}],6:[function(require,module,exports){
 'use strict';
 
 var TextBox = function(game, x, y, width, heigth, defaultTxt) {
@@ -661,7 +738,7 @@ TextBox.prototype.destruir = function() {
 
 module.exports = TextBox;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 'use strict';
 
@@ -680,7 +757,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -708,7 +785,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 'use strict';
 function Menu() {}
@@ -732,7 +809,7 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -1048,7 +1125,7 @@ module.exports = Menu;
   };
   
   module.exports = Nivel1;
-},{"../prefabs/pause":3}],10:[function(require,module,exports){
+},{"../prefabs/pause":4}],11:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -1419,7 +1496,7 @@ module.exports = Menu;
   module.exports = Nivel1_1;
 
   
-},{"../prefabs/pause":3}],11:[function(require,module,exports){
+},{"../prefabs/pause":4}],12:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -1914,7 +1991,7 @@ module.exports = Menu;
   };
   
   module.exports = Nivel2;
-},{"../prefabs/pause":3,"../prefabs/textBox":5}],12:[function(require,module,exports){
+},{"../prefabs/pause":4,"../prefabs/textBox":6}],13:[function(require,module,exports){
 
   'use strict';
  var Pausa = require('../prefabs/pause');
@@ -2480,7 +2557,7 @@ module.exports = Menu;
   };
 
   module.exports = Nivel3;
-},{"../prefabs/pause":3}],13:[function(require,module,exports){
+},{"../prefabs/pause":4}],14:[function(require,module,exports){
  'use strict';
  var Pausa = require('../prefabs/pause');
 
@@ -2490,7 +2567,7 @@ module.exports = Menu;
     vel:50,//Velocidad de inicio para movimiento de items    
   	create: function() {
       //Habilitacion de fisicas
-      this.game.physics.startSystem(Phaser.Physics.ARCADE);
+      this.game.physics.startSystem(Phaser.Physics.ARCADE);      
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
@@ -2498,37 +2575,30 @@ module.exports = Menu;
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
-      this.items.physicsBodyType = Phaser.Physics.P2JS;
+      this.items.inputEnabled = true;
       
       this.crearCarro();
   	},
 
   	update: function(){
-       this.items.forEach(function(item) {
-        //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){
-          item.body.velocity.y = 0;//Se retira el movimiento vertical
-          item.body.x = mouseX
-          item.body.y = mouseY;
-        }
-
+       this.items.forEach(function(item) {        
         //Se verifica que los items no hayan superado los limites del escenario
-        if((item.body.x+item.body.height) > 800){
+        if((item.body.x) > 800){
           item.kill();
         }
       });         
   	},
 
     crearCarro: function(){
-      var carro_1 = this.items.create(-100,455,'Carro');
+      var carro_1 = this.items.create(-100,455,'Carro',0);
       carro_1.body.velocity.x = this.vel;
-       var carro_2 = this.items.create(-100,395,'Carro');
-      carro_1.body.velocity.x = this.vel;
+       var carro_2 = this.items.create(-150,395,'Carro',0);
+      carro_2.body.velocity.x = this.vel;
     }
   };
 
   module.exports = Nivel4;
-},{"../prefabs/pause":3}],14:[function(require,module,exports){
+},{"../prefabs/pause":4}],15:[function(require,module,exports){
 
   'use strict';
   var Editor = require('../prefabs/editor');
@@ -2547,7 +2617,7 @@ module.exports = Menu;
   };
 
   module.exports = Nivel5;
-},{"../prefabs/editor":2,"../prefabs/tablero":4}],15:[function(require,module,exports){
+},{"../prefabs/editor":2,"../prefabs/tablero":5}],16:[function(require,module,exports){
 
   'use strict';
   var Editor = require('../prefabs/editor');
@@ -2569,15 +2639,16 @@ module.exports = Menu;
       this.game.add.existing(this.tablero);
       //Se agregan los sprotes dentro del tablero de juego
       this.dude = this.tablero.setObjCuadro(0,0,'dude');
-      this.dude.posx = 0;
-      this.dude.posy = 0;
       //Se registrar los eventos de los botones 
       this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
       this.crearFunc.inputEnabled = true;
       this.crearFunc.events.onInputDown.add(this.crearFuncion, this);
+      this.crearFunc.visible = false;
+
       this.run = this.game.add.sprite(500, 350,'btnContinuar');
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCodigo, this);
+      this.run.visible = false;
 
       this.btnContinuar = this.game.add.sprite(165, 520,'btnContinuar');
       this.btnContinuar.anchor.setTo(0.5,0.5);
@@ -2591,7 +2662,7 @@ module.exports = Menu;
       this.cuadroIns.bounds = new PIXI.Rectangle(40, 300, 250, 200);
       this.cuadroIns.drawRect(40, 300, 250, 200);
 
-      this.txtIns = this.game.add.bitmapText(50 , 310, 'font', '', 24);
+      this.txtIns = this.game.add.bitmapText(45 , 310, 'font', '', 18);
       this.txtIns.wordWrap = true;
       this.txtIns.wordWrapWidth = 250;
       this.txtIns.tint = 0xFFFFFF;
@@ -2601,16 +2672,21 @@ module.exports = Menu;
     instrucciones: function(paso){
       switch(paso){//Se define la instruccion a mostrar
         case 0:
-          this.txtIns.setText('Hola, por medio del\neditor de código\ndebemos ayudar al\npersonaje a cumplir \nuna serie de tareas ');
+          this.txtIns.setText('Hola, por medio del\neditor de codigo\ndebemos ayudar al\npersonaje a cumplir \nuna serie de tareas ');
           break;
         case 1:
-          this.txtIns.setText('mmm');
+          this.txtIns.setText('Para poder ayudarlo\ndebemos conocer sus\npropiedades, las \ncuales permitiran\nsu manipulacion');
           break;
         case 2:
+          this.txtIns.setText('Ademas de las \npropiedades, el\npersonaje cuenta con\nuna serie de metodos\nque haran todo\naun mas facil');
           break;
         case 3:
+          this.txtIns.setText('Para que hable\nse puede hacer uso\nde dude.mostrar(),\nintentalo');
+          this.habilitaEditor(true);
           break;
         case 4:
+          this.txtIns.setText('Muy bien, ahora\nveamos que puede\ndecirnos sobre el.\nIntenta con\ndude.mostrar(dude.prop())');
+          this.habilitaEditor(true);
           break;
         case 5:
           break;
@@ -2630,6 +2706,8 @@ module.exports = Menu;
     pasoSiguiente: function(){
       switch(this.pasoActual){
         case 0:
+        case 1:
+        case 2:
           this.pasoActual++;
           break;
       }
@@ -2640,29 +2718,80 @@ module.exports = Menu;
       
     },
 
-    correrCodigo: function(){
-      setTimeout(this.correrLinea,750,0,this);
+    habilitaEditor: function(estado){
+      //Se cambia el estado del editor para su edicion
+      this.editor.seleccionado = estado;
+      this.run.visible = estado;
     },
 
-    correrLinea:function(i,e){
-      try {
+    correrCodigo: function(){
+      this.editor.hideError();//Se ocultan errores del editor
+      this.editor.glow(false);//Se elimina el brillo
+      switch(this.pasoActual){//Se valida la accion a tomar respecto al paso actual
+        case 3://Paso dude.mostrar()
+        case 4://Paso dude.mostrar(dude.prop())
+          var correcto = false;
+          this.correrLineas();
+          if(this.dude.msjBandera == true){//En caso de haber mostrado el msj de prueba correctamente
+            if(this.pasoActual == 4){
+              if(this.dude.propBandera == true){
+                correcto = true;
+              }else{
+                this.editor.glow(true);
+              }
+            }else{
+              correcto = true;
+            }
+          }else{
+            this.editor.glow(true);
+          }
+          if(correcto){
+            this.editor.seleccionado = false;//Se inhabilita el editor de codigo
+            this.pasoActual++;
+            this.instrucciones(this.pasoActual);
+            this.habilitaEditor(false);
+          }
+          break;
+        default:
+          setTimeout(this.correrLineaPasoPaso,750,0,this);
+          break;  
+      }
+      
+    },
+
+    correrLineas: function(){
+      var i_temp = 0;
+      try{
+        for(var i=0;i<this.editor.created_lines;i++){
+          i_temp = i;
+          var instruccion = this.editor.getTextLine(i);
+          var F=new Function ("dude",instruccion);
+          F(this.dude);
+        }
+      }catch(err){
+        this.editor.showError(err.name,i_temp);
+      }
+    },
+
+    correrLineaPasoPaso:function(i,e){
+      try{
         if(i < e.editor.created_lines){
-          var instruccion = e.editor.getTextLine(i);        
-          var F=new Function ("dude",instruccion);        
-          F(e.dude);        
+          var instruccion = e.editor.getTextLine(i);
+          var F=new Function ("dude",instruccion);
+          F(e.dude);
           e.tablero.setObjCuadro(e.dude.posx, e.dude.posy, '', e.dude);
           i++;
-          setTimeout(e.correrLinea,750,i,e);
+          setTimeout(e.correrLineaPasoPaso,750,i,e);
         }
         e.editor.hideError();
-      }catch(err) {
+      }catch(err){
         e.editor.showError(err.name,i);        
       }
     }
   };
 
   module.exports = Nivel6;
-},{"../prefabs/editor":2,"../prefabs/tablero":4}],16:[function(require,module,exports){
+},{"../prefabs/editor":2,"../prefabs/tablero":5}],17:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -2717,7 +2846,7 @@ module.exports = Menu;
   };
   
   module.exports = Play;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
 'use strict';
 function Preload() {

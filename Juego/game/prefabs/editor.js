@@ -361,6 +361,26 @@ Editor.prototype.keyUp = function(data) {
   }
 };
 
+Editor.prototype.glow = function(estado,e) {
+  switch(estado){
+    case true:
+      this.glowTween = this.game.add.tween(this.cajaTexto).to({alpha:1.5}, 500, Phaser.Easing.Linear.None, true, 0, 500, true);
+      setTimeout(this.glow,3000,false,this);
+      break;
+    case false:
+      if(e){
+        e.glowTween.stop();
+        e.game.add.tween(e.cajaTexto).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
+      }else{
+        if(this.glowTween){
+          this.glowTween.stop();
+          this.game.add.tween(this.cajaTexto).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
+        }
+      }
+      break;
+  }  
+};
+
 Editor.prototype.destruir = function() {
   this.cajaTexto.destroy();
   this.texto.destroy();

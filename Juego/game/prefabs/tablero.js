@@ -1,5 +1,7 @@
 'use strict';
 
+var Entidad = require('../prefabs/entidad');
+
 var Tablero = function(game, x, y ,xCuadros , yCuadros, parent){
   Phaser.Group.call(this, game, parent);  
 
@@ -36,7 +38,7 @@ Tablero.prototype.dibujarCuadro = function(x,y,dimension) {
 
 Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
   if(obj != ''){
-    var obj = this.game.add.sprite(this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
+    var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
     this.add(obj);
   }else{
     sprite.x = this.x+(i*this.dimension);
