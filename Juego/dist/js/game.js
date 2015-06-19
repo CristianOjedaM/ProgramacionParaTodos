@@ -2712,6 +2712,7 @@ module.exports = Menu;
           this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 8:
+          this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 9:
           break;
@@ -2721,17 +2722,21 @@ module.exports = Menu;
     },
 
     pasoSiguiente: function(){
-      switch(this.pasoActual){
-        /*Pasos de texto (Tan solo generan siguiente)*/
-        case 0:
-        case 1:
-        case 2:
-        case 6:
-        case 7:
-          this.pasoActual++;
-          break;
+      if(!this.editor.seleccionado){
+        switch(this.pasoActual){
+          /*Pasos de texto (Tan solo generan siguiente)*/
+          case 0:
+          case 1:
+          case 2:
+          case 6:
+          case 7:
+            this.pasoActual++;
+            break;
+        }
+        this.instrucciones(this.pasoActual);
+      }else{
+        this.editor.glow(true);
       }
-      this.instrucciones(this.pasoActual);
     },
 
     crearFuncion: function(){
@@ -2786,8 +2791,7 @@ module.exports = Menu;
         default:
           setTimeout(this.correrLineaPasoPaso,750,0,this);
           break;  
-      }
-      
+      }      
     },
 
     correrLineas: function(){
