@@ -42,6 +42,8 @@
       var CItems = this.items;
       Situacion[this.intSituacion].acciones.forEach(function(item) {
           CItems.create(430,yitem,'accion_small');
+          CItems.anchor.setTo(0.5,0);
+          CItems.texto = this.game.add.text(CItems.x, CItems.y,item , { font: '12px calibri', fill: '#000', align:'center'});
           yitem+=40;
       });
 
@@ -50,6 +52,8 @@
       var CItems = this.items;
       Situacion[this.intSituacion].condiciones.forEach(function(item) {
           CItems.create(570,yitem,'condicion');
+          CItems.anchor.setTo(0.5,0);
+          CItems.texto = this.game.add.text(CItems.x, CItems.y,item , { font: '12px calibri', fill: '#000', align:'center'});
           yitem+=40;
       });
     }
