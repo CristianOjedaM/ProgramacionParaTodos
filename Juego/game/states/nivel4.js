@@ -44,6 +44,14 @@
           CItems.create(430,yitem,'accion_small');
           yitem+=40;
       });
+
+      //creamos las condiciones de la situación
+      yitem = 340;
+      var CItems = this.items;
+      Situacion[this.intSituacion].condiciones.forEach(function(item) {
+          CItems.create(570,yitem,'condicion');
+          yitem+=40;
+      });
     }
 
   };
