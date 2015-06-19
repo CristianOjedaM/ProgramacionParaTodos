@@ -40,20 +40,20 @@
       //creamos las acciones de la situación
       var yitem = 340;
       var CItems = this.items;
+      var game = this.game;
       Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
           var item = CItems.create(430,yitem,'accion_small');
           item.anchor.setTo(0.5,0);
-          item.texto = this.game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
           yitem+=40;
       });
 
       //creamos las condiciones de la situación
       yitem = 340;
-      var CItems = this.items;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
           var item = CItems.create(570,yitem,'condicion');
           item.anchor.setTo(0.5,0);
-          item.texto = this.game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
           yitem+=40;
       });
     }
