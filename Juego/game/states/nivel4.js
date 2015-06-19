@@ -40,6 +40,8 @@
         if(item.movimiento == true){          
           item.body.x = mouseX
           item.body.y = mouseY;
+          item.texto.x = item.x + item.body.width/2;
+          item.texto.y = item.y + item.body.height/2;
         }       
       });
   	},
@@ -83,7 +85,7 @@
     releaseItem:function(item){
       if(item.movimiento){
         item.movimiento = false;
-        if(item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.y + 38) && item.body.x <= (this.slot.body.y + 270) ){
+        if(item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           var itemEncajado = this.items.create( (slot.body.y + 38),(slot.body.y + 40),'accion_large');
           itemEncajado.texto = item.texto;          
           item.kill();
