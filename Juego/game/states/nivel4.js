@@ -17,7 +17,7 @@
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      var slot = this.items.create(500,50,'slot');
+      var slot = this.items.create(500,50,'slotIF');
 
   	},
 
