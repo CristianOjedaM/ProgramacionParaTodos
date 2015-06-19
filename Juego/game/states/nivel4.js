@@ -55,8 +55,8 @@
           item.texto = game.game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
-          item.events.onInputDown.add(this.clickItem, this);
-          item.events.onInputUp.add(this.releaseItem, this);
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
           yitem+=40;
       });
 
