@@ -45,6 +45,7 @@
           var item = CItems.create(430,yitem,'accion_small');
           item.anchor.setTo(0.5,0);
           item.texto = game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto.anchor.setTo(0.5,0);
           yitem+=40;
       });
 
@@ -54,6 +55,7 @@
           var item = CItems.create(570,yitem,'condicion');
           item.anchor.setTo(0.5,0);
           item.texto = game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto.anchor.setTo(0.5,0);
           yitem+=40;
       });
     }
