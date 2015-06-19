@@ -39,8 +39,9 @@
     crearSituacion:function(){
       //creamos las acciones de la situación
       var yitem = 340;
+      var CItems = this.items;
       Situacion[this.intSituacion].acciones.forEach(function(item) {
-          this.items.create(430,yitem,'accion_small');
+          CItems.create(430,yitem,'accion_small');
           yitem+=40;
       });
     }
