@@ -17,24 +17,14 @@
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      this.crearCarro();
+      var slot = this.items.create(500,50,'slot');
+
   	},
 
   	update: function(){
-       this.items.forEach(function(item) {        
-        //Se verifica que los items no hayan superado los limites del escenario
-        if((item.body.x) > 800){
-          item.kill();
-        }
-      });         
+              
   	},
 
-    crearCarro: function(){
-      var carro_1 = this.items.create(-100,455,'Carro',0);
-      carro_1.body.velocity.x = this.vel;
-       var carro_2 = this.items.create(-150,395,'Carro',0);
-      carro_2.body.velocity.x = this.vel;
-    }
   };
 
   module.exports = Nivel4;

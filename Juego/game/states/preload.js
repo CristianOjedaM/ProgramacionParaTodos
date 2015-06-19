@@ -60,8 +60,10 @@ Preload.prototype = {
 
     /*Imagenes nivel 4*/
     this.load.image('tile_nivel4','assets/images/Nivel 4/tile.jpg');
-    this.load.spritesheet('Carro','assets/images/Nivel 4/carro.png',100,50);
-    
+    this.load.image('slotIF','assets/images/Nivel 4/slot.png');
+    this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
+    this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
+    this.load.image('condicion','assets/images/Nivel 4/condicion.png');
     /*Niveles editor*/
     this.load.image('dude','assets/images/marciano.png');    
 
