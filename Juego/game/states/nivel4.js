@@ -10,7 +10,7 @@
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 
       //Grupo de items
       this.items = this.game.add.group();
