@@ -26,7 +26,7 @@
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      slot = this.items.create(430,70,'slotIF');
+      this.slot = this.items.create(430,70,'slotIF');
 
       this.crearSituacion();
 
@@ -81,11 +81,10 @@
     releaseItem:function(item){
       if(item.movimiento){
         item.movimiento = false;
-        if(item.body.y >= (slot.body.y + 40) && item.body.y <= (slot.body.y + 104) && item.body.x >= (slot.body.y + 38) && item.body.x <= (slot.body.y + 270) ){
+        if(item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.y + 38) && item.body.x <= (this.slot.body.y + 270) ){
           var itemEncajado = this.items.create( (slot.body.y + 38),(slot.body.y + 40),'accion_large');
           itemEncajado.texto = item.texto;          
           item.kill();
-
         }
       }
     },
