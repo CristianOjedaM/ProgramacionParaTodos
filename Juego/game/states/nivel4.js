@@ -47,11 +47,12 @@
       //creamos las acciones de la situación
       var yitem = 340;
       var CItems = this.items;
-      var game = this.game;
+      var game = this;
+
       Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
           var item = CItems.create(495,yitem,'accion_small');
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(this.clickItem, this);
@@ -64,11 +65,11 @@
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
           var item = CItems.create(625,yitem,'condicion');
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
-          item.events.onInputDown.add(this.clickItem, this);
-          item.events.onInputUp.add(this.releaseItem, this);
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
           yitem+=40;
       });
     },
