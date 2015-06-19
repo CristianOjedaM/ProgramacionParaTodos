@@ -40,7 +40,7 @@
       //creamos las acciones de la situación
       var yitem = 340;
       Situacion[this.intSituacion].acciones.forEach(function(item) {
-          this.item.create(430,yitem,'accion_small');
+          this.items.create(430,yitem,'accion_small');
           yitem+=40;
       });
     }
