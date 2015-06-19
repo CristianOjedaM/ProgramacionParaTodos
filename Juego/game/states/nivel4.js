@@ -33,10 +33,11 @@
   	},
 
   	update: function(){
+      var mouseX = this.game.input.x;
+      var mouseY = this.game.input.y;
       this.items.forEach(function(item) {
         //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){
-          item.body.velocity.y = 0;//Se retira el movimiento vertical
+        if(item.movimiento == true){          
           item.body.x = mouseX
           item.body.y = mouseY;
         }       
