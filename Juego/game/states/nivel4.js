@@ -26,14 +26,21 @@
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      var slot = this.items.create(430,70,'slotIF');
+      slot = this.items.create(430,70,'slotIF');
 
       this.crearSituacion();
 
   	},
 
   	update: function(){
-              
+      this.items.forEach(function(item) {
+        //Se verifican los items para realizar su movimiento en caso de click
+        if(item.movimiento == true){
+          item.body.velocity.y = 0;//Se retira el movimiento vertical
+          item.body.x = mouseX
+          item.body.y = mouseY;
+        }       
+      });
   	},
 
     crearSituacion:function(){
@@ -42,23 +49,46 @@
       var CItems = this.items;
       var game = this.game;
       Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
-          var item = CItems.create(430,yitem,'accion_small');
-          item.anchor.setTo(0.5,0);
+          var item = CItems.create(495,yitem,'accion_small');
+          item.anchor.setTo(0.5,0.5);
           item.texto = game.add.text(item.x, item.y,acciontext , { font: '12px calibri', fill: '#000', align:'center'});
-          item.texto.anchor.setTo(0.5,0);
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(this.clickItem, this);
+          item.events.onInputUp.add(this.releaseItem, this);
           yitem+=40;
       });
 
       //creamos las condiciones de la situación
       yitem = 340;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
-          var item = CItems.create(570,yitem,'condicion');
-          item.anchor.setTo(0.5,0);
+          var item = CItems.create(625,yitem,'condicion');
+          item.anchor.setTo(0.5,0.5);
           item.texto = game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
-          item.texto.anchor.setTo(0.5,0);
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(this.clickItem, this);
+          item.events.onInputUp.add(this.releaseItem, this);
           yitem+=40;
       });
-    }
+    },
+
+    clickItem : function(item){
+      this.itemSelec = true;
+      item.movimiento = true;
+    },
+
+    releaseItem:function(item){
+      if(item.movimiento){
+        item.movimiento = false;
+        if(item.body.y >= (slot.body.y + 40) && item.body.y <= (slot.body.y + 104) && item.body.x >= (slot.body.y + 38) && item.body.x <= (slot.body.y + 270) ){
+          var itemEncajado = this.items.create( (slot.body.y + 38),(slot.body.y + 40),'accion_large');
+          itemEncajado.texto = item.texto;          
+          item.kill();
+
+        }
+      }
+    },
 
   };
 
