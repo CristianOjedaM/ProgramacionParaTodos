@@ -81,9 +81,9 @@
 
     clickItem : function(item){
       this.itemSelec = true;
-      item.movimiento = true;
-      this.itemX = item.body.x;
-      this.itemY = item.body.y;
+      this.itemX = item.x;
+      this.itemY = item.y;
+      item.movimiento = true;      
     },
 
     releaseItem:function(item){
@@ -98,8 +98,8 @@
           itemEncajado.texto.y = itemEncajado.y;          
           item.kill();
         }else{
-          item.body.x = this.itemX
-          item.body.y = this.itemY;
+          item.x = this.itemX
+          item.y = this.itemY;
           item.texto.x = item.x ;
           item.texto.y = item.y ;
         }
