@@ -86,8 +86,10 @@
       if(item.movimiento){
         item.movimiento = false;
         if(item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
-          var itemEncajado = this.items.create( (this.slot.body.y + 38),(this.slot.body.y + 40),'accion_large');
-          itemEncajado.texto = item.texto;          
+          var itemEncajado = this.items.create( (this.slot.body.x + 38),(this.slot.body.y + 40),'accion_large');
+          itemEncajado.texto = item.texto;
+          itemEncajado.texto.x = itemEncajado.x;
+          itemEncajado.texto.y = itemEncajado.y;          
           item.kill();
         }
       }
