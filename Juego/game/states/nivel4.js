@@ -14,6 +14,8 @@
   Nivel4.prototype = {
     vel:50,//Velocidad de inicio para movimiento de items    
     intSituacion:0,
+    itemX: 0,
+    itemY: 0,
   	create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
@@ -80,6 +82,8 @@
     clickItem : function(item){
       this.itemSelec = true;
       item.movimiento = true;
+      itemX = item.body.x;
+      itemY = item.body.y;
     },
 
     releaseItem:function(item){
@@ -87,10 +91,16 @@
         item.movimiento = false;
         if(item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           var itemEncajado = this.items.create( (this.slot.body.x + 38),(this.slot.body.y + 40),'accion_large');
+          itemEncajado.anchor.setTo(0.5,0.5);
           itemEncajado.texto = item.texto;
           itemEncajado.texto.x = itemEncajado.x;
           itemEncajado.texto.y = itemEncajado.y;          
           item.kill();
+        }else{
+          item.body.x = itemX
+          item.body.y = itemY;
+          item.texto.x = item.x ;
+          item.texto.y = item.y ;
         }
       }
     },
