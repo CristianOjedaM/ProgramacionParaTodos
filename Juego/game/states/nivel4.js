@@ -50,7 +50,7 @@
 
     crearSituacion:function(){
       //creamos las acciones de la situación
-      var yitem = 340;
+      var yitem = 350;
       var CItems = this.items;
       var game = this;
 
@@ -66,9 +66,9 @@
       });
 
       //creamos las condiciones de la situación
-      yitem = 340;
+      yitem = 350;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
-          var item = CItems.create(625,yitem,'condicion');
+          var item = CItems.create(630,yitem,'condicion');
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '12px calibri', fill: '#000', align:'center'});
           item.texto.anchor.setTo(0.5,0.5);
@@ -82,23 +82,24 @@
     clickItem : function(item){
       this.itemSelec = true;
       item.movimiento = true;
-      itemX = item.body.x;
-      itemY = item.body.y;
+      this.itemX = item.body.x;
+      this.itemY = item.body.y;
     },
 
     releaseItem:function(item){
       if(item.movimiento){
         item.movimiento = false;
         if(item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
-          var itemEncajado = this.items.create( (this.slot.body.x + 38),(this.slot.body.y + 40),'accion_large');
+          var itemEncajado = this.items.create( (this.slot.body.x + 153),(this.slot.body.y + 71),'accion_large');
           itemEncajado.anchor.setTo(0.5,0.5);
           itemEncajado.texto = item.texto;
+          itemEncajado.texto.fontSize = 20;
           itemEncajado.texto.x = itemEncajado.x;
           itemEncajado.texto.y = itemEncajado.y;          
           item.kill();
         }else{
-          item.body.x = itemX
-          item.body.y = itemY;
+          item.body.x = this.itemX
+          item.body.y = this.itemY;
           item.texto.x = item.x ;
           item.texto.y = item.y ;
         }
