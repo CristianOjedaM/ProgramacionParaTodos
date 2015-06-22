@@ -40,9 +40,9 @@ Tablero.prototype.dibujarCuadro = function(x,y,dimension) {
   this.add(cuadro);
 };
 
-Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
+Tablero.prototype.setObjCuadro = function(i, j, obj, sprite, frame){
   if(obj != ''){
-    var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
+    var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj,frame);
     this.add(obj);
   }else{
     if(i != 0){

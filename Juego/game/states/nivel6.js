@@ -46,7 +46,7 @@
       this.tablero = new Tablero(this.game,20,30,5,5);
       this.game.add.existing(this.tablero);
       //Se agregan los sprotes dentro del tablero de juego
-      this.dude = this.tablero.setObjCuadro(0,0,'dude');
+      this.dude = this.tablero.setObjCuadro(0,0,'dude',15);
       //Se registrar los eventos de los botones 
       this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
       this.crearFunc.inputEnabled = true;
@@ -132,6 +132,16 @@
           this.tablero.setObjCuadro(0, 0, '', this.dude);
           this.txtIns.setText('Por ello, tu primera misión es encontrar\nla manera de facilitar el movimiento del\npersonaje a lo largo del tablero');
           break;
+        case 12:
+          this.txtIns.setText('Las funciones son un conjunto de\ninstrucciones para realizar una tarea en\nespecífico. Diseñaremos una que permita mover\nmultiples casillas al personaje');
+          break;
+        case 13:
+          this.txtIns.setText('Para declarar la función empieza escribiendo\nfunction\nseguido por el nombre de la función\nseguido por (), en estos\nparentesis se ubicarán los parametros');
+          this.habilitaEditor(true);
+          break;
+        case 14:
+          this.txtIns.setText('Ya que es un conjunto de instrucciones\nes necesario definir cual es su punto de \ninicio; después del parentesis utiliza\nun corchete de apertura para definir\nel inicio');
+          break;
       }
       this.codigoActivo = true;
     },
@@ -146,12 +156,24 @@
           case 6:
           case 7:
           case 10:
+          case 11:
+          case 12:
+          case 13:
             this.pasoActual++;
             break;
         }
         this.instrucciones(this.pasoActual);
       }else{
-        this.editor.glow(true);
+        switch(this.pasoActual){
+        /*Pasos de instruccion durante codificacion*/
+          case 13:
+            this.pasoActual++;
+            this.instrucciones(this.pasoActual);
+            break;
+          default:
+            this.editor.glow(true);
+            break;
+        }
       }
     },
 
@@ -228,16 +250,16 @@
       var difX = Math.abs(this.dude.posx - this.dude.propiedades[0].val);
       var difY = Math.abs(this.dude.posy - this.dude.propiedades[0].val);
       
-      if(difX > 1 || difY > 1){
+      if(difX > 1 || difY > 1){//Se valida intento de desplazamiento de mas de una casilla
         this.dude.mostrar("No puedo moverme por tantas casillas al tiempo :(");
         this.dude.posx = this.dude.propiedades[0].val;//Valor temporal de la propiedad posx
         this.dude.posy = this.dude.propiedades[1].val;//Valor temporal de la propiedad posy
         return false;
-      }else if(this.dude.posx < 0){
+      }else if(this.dude.posx < 0 || this.dude.posx > 4){//Se valida limites de tablero en X
         this.dude.mostrar("No puedo desplazarme afuera del tablero :(");
         this.dude.posx = this.dude.propiedades[0].val;//Valor temporal de la propiedad posx
         return false;
-      }else if(this.dude.posy < 0){
+      }else if(this.dude.posy < 0 || this.dude.posy > 4){//Se valida limites de tablero en Y
         this.dude.mostrar("No puedo desplazarme afuera del tablero :(");
         this.dude.posy = this.dude.propiedades[1].val;//Valor temporal de la propiedad posy
         return false;

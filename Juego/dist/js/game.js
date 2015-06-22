@@ -640,9 +640,9 @@ Tablero.prototype.dibujarCuadro = function(x,y,dimension) {
   this.add(cuadro);
 };
 
-Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
+Tablero.prototype.setObjCuadro = function(i, j, obj, sprite, frame){
   if(obj != ''){
-    var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
+    var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj,frame);
     this.add(obj);
   }else{
     if(i != 0){
@@ -2675,9 +2675,19 @@ module.exports = Menu;
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      this.slot = this.items.create(430,70,'slotIF');
+      //Se crea slot de estructura if
+      this.slot = this.items.create(430,40,'slotIF');
 
       this.crearSituacion();
+
+      //Se crea marco de la situacion
+      this.game.add.sprite(100,40,'fondosituacion');
+
+      //Se agrega boton de ejecucion
+      this.run = this.game.add.sprite(320, 355,'btnEjecutar4');
+      this.run.anchor.setTo(0.5,0.5);
+      this.run.inputEnabled = true;
+      this.run.events.onInputDown.add(this.correrCondicion, this);
 
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -2821,7 +2831,7 @@ module.exports = Menu;
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 144),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.texto.x = itemEncajado.x;
@@ -2834,7 +2844,6 @@ module.exports = Menu;
               if(itemslot1.slotC){
                 var textoAnt = itemslot1.texto;
                 itemslot1.texto = item.texto;
-                itemslot1.texto.fontSize = 20;
                 itemslot1.texto.x = itemslot1.x;
                 itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
@@ -2878,6 +2887,10 @@ module.exports = Menu;
           this.flagpause = false;          
         }
       }
+    },
+
+    correrCondicion: function(){
+
     },
 
   };
@@ -2951,7 +2964,7 @@ module.exports = Menu;
       this.tablero = new Tablero(this.game,20,30,5,5);
       this.game.add.existing(this.tablero);
       //Se agregan los sprotes dentro del tablero de juego
-      this.dude = this.tablero.setObjCuadro(0,0,'dude');
+      this.dude = this.tablero.setObjCuadro(0,0,'dude',15);
       //Se registrar los eventos de los botones 
       this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
       this.crearFunc.inputEnabled = true;
@@ -3037,6 +3050,16 @@ module.exports = Menu;
           this.tablero.setObjCuadro(0, 0, '', this.dude);
           this.txtIns.setText('Por ello, tu primera misión es encontrar\nla manera de facilitar el movimiento del\npersonaje a lo largo del tablero');
           break;
+        case 12:
+          this.txtIns.setText('Las funciones son un conjunto de\ninstrucciones para realizar una tarea en\nespecífico. Diseñaremos una que permita mover\nmultiples casillas al personaje');
+          break;
+        case 13:
+          this.txtIns.setText('Para declarar la función empieza escribiendo\nfunction\nseguido por el nombre de la función\nseguido por (), en estos\nparentesis se ubicarán los parametros');
+          this.habilitaEditor(true);
+          break;
+        case 14:
+          this.txtIns.setText('Ya que es un conjunto de instrucciones\nes necesario definir cual es su punto de \ninicio; después del parentesis utiliza\nun corchete de apertura para definir\nel inicio');
+          break;
       }
       this.codigoActivo = true;
     },
@@ -3051,12 +3074,24 @@ module.exports = Menu;
           case 6:
           case 7:
           case 10:
+          case 11:
+          case 12:
+          case 13:
             this.pasoActual++;
             break;
         }
         this.instrucciones(this.pasoActual);
       }else{
-        this.editor.glow(true);
+        switch(this.pasoActual){
+        /*Pasos de instruccion durante codificacion*/
+          case 13:
+            this.pasoActual++;
+            this.instrucciones(this.pasoActual);
+            break;
+          default:
+            this.editor.glow(true);
+            break;
+        }
       }
     },
 
@@ -3133,16 +3168,16 @@ module.exports = Menu;
       var difX = Math.abs(this.dude.posx - this.dude.propiedades[0].val);
       var difY = Math.abs(this.dude.posy - this.dude.propiedades[0].val);
       
-      if(difX > 1 || difY > 1){
+      if(difX > 1 || difY > 1){//Se valida intento de desplazamiento de mas de una casilla
         this.dude.mostrar("No puedo moverme por tantas casillas al tiempo :(");
         this.dude.posx = this.dude.propiedades[0].val;//Valor temporal de la propiedad posx
         this.dude.posy = this.dude.propiedades[1].val;//Valor temporal de la propiedad posy
         return false;
-      }else if(this.dude.posx < 0){
+      }else if(this.dude.posx < 0 || this.dude.posx > 4){//Se valida limites de tablero en X
         this.dude.mostrar("No puedo desplazarme afuera del tablero :(");
         this.dude.posx = this.dude.propiedades[0].val;//Valor temporal de la propiedad posx
         return false;
-      }else if(this.dude.posy < 0){
+      }else if(this.dude.posy < 0 || this.dude.posy > 4){//Se valida limites de tablero en Y
         this.dude.mostrar("No puedo desplazarme afuera del tablero :(");
         this.dude.posy = this.dude.propiedades[1].val;//Valor temporal de la propiedad posy
         return false;
@@ -3353,7 +3388,7 @@ Preload.prototype = {
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
-    this.load.image('dude','assets/images/marciano.png');
+    this.load.spritesheet('dude','assets/images/personaje_50.png',50,50);
     this.load.image('btnSiguiente6','assets/images/Nivel 6/btnSiguiente.png');
     this.load.image('btnEjecutar6','assets/images/Nivel 6/btnEjecutar.png');
     this.load.image('fondoEditor','assets/images/Nivel 6/fondoEditor.png');

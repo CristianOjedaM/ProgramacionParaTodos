@@ -72,7 +72,7 @@ Preload.prototype = {
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
-    this.load.image('dude','assets/images/marciano.png');
+    this.load.spritesheet('dude','assets/images/personaje_50.png',50,50);
     this.load.image('btnSiguiente6','assets/images/Nivel 6/btnSiguiente.png');
     this.load.image('btnEjecutar6','assets/images/Nivel 6/btnEjecutar.png');
     this.load.image('fondoEditor','assets/images/Nivel 6/fondoEditor.png');
