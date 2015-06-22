@@ -79,9 +79,12 @@
           this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 8:
-          this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
+          this.txtIns.setText('Recuerdas la propiedad para\nposicion en X u horizontal\ndel personaje?\n\nIntenta cambiar su posicion\nen X sumandole 1 a la posicion\nactual\n\ndude.posx++');
+          this.habilitaEditor(true);
           break;
         case 9:
+          this.txtIns.setText('Bien, ahora intenta modificar\nla posicion en Y o vertical\ndel personaje\n');
+          this.habilitaEditor(true);
           break;
         case 10:
           break;
@@ -149,16 +152,38 @@
             this.editor.glow(true);
           }
           if(correcto){
-            this.editor.seleccionado = false;//Se inhabilita el editor de codigo
-            this.pasoActual++;
-            this.instrucciones(this.pasoActual);
-            this.habilitaEditor(false);
+            this.codCorrecto();
+          }
+          break;
+        /*Pasos movimiento de personaje*/
+        case 8:
+        case 9:
+          setTimeout(this.correrLineaPasoPaso,750,0,this);
+          if(this.pasoActual == 8){
+            if(this.dude.xBandera == true){//Se comprueba que se haya realizado el movimiento en X
+              this.codCorrecto();
+            }else{
+              this.editor.glow(true);
+            }
+          }else{
+            if(this.dude.yBandera == true){//Se comprueba que se haya realizado el movimiento en Y
+              this.codCorrecto();
+            }else{
+              this.editor.glow(true);
+            }
           }
           break;
         default:
           setTimeout(this.correrLineaPasoPaso,750,0,this);
           break;  
       }      
+    },
+
+    codCorrecto: function(){
+      this.editor.seleccionado = false;//Se inhabilita el editor de codigo
+      this.pasoActual++;
+      this.instrucciones(this.pasoActual);
+      this.habilitaEditor(false);
     },
 
     correrLineas: function(){

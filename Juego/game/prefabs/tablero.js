@@ -41,6 +41,12 @@ Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
     var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
     this.add(obj);
   }else{
+    if(i != 0){
+      sprite.xBandera = true;
+    }
+    if(j != 0){
+      sprite.yBandera = true;
+    }
     sprite.x = this.x+(i*this.dimension);
     sprite.y = this.y+(j*this.dimension);
     console.log(this.y);

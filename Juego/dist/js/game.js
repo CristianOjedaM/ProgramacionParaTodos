@@ -616,6 +616,12 @@ Tablero.prototype.setObjCuadro = function(i, j, obj, sprite){
     var obj = new Entidad(this.game,this.x+(i*this.dimension),this.y+(j*this.dimension),obj);
     this.add(obj);
   }else{
+    if(i != 0){
+      sprite.xBandera = true;
+    }
+    if(j != 0){
+      sprite.yBandera = true;
+    }
     sprite.x = this.x+(i*this.dimension);
     sprite.y = this.y+(j*this.dimension);
     console.log(this.y);
@@ -2573,41 +2579,176 @@ module.exports = Menu;
 },{"../prefabs/pause":4}],14:[function(require,module,exports){
  'use strict';
  var Pausa = require('../prefabs/pause');
-
+ var Situacion = 
+  [{
+    "condiciones": ['estampida.pasando() == true','estampida.pasando() == false','estampida.pasando()<=true'],
+    "acciones" :  ['cruzar();','saltar();','esperar();','hablar();','disparar();']
+  },
+  {
+    "condiciones": ['obstaculo.distancia => 50','obstaculo.distancia <= 50','obstaculo.distancia == 51'],
+    "acciones" :  ['saltar();','esperar();','correr();','nadar();','arrastrar();']
+  }];
 
   function Nivel4() {}
   Nivel4.prototype = {
     vel:50,//Velocidad de inicio para movimiento de items    
+    intSituacion:0,
+    itemX: 0,
+    itemY: 0,
+    slotCondicion:false,
+    slotAccion_1:false,
+    slotAccion_2:false,
   	create: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'Fondo4');
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      this.crearCarro();
+      this.slot = this.items.create(430,70,'slotIF');
+
+      this.crearSituacion();
+
   	},
 
   	update: function(){
-       this.items.forEach(function(item) {        
-        //Se verifica que los items no hayan superado los limites del escenario
-        if((item.body.x) > 800){
-          item.kill();
-        }
-      });         
+      var mouseX = this.game.input.x;
+      var mouseY = this.game.input.y;
+      this.items.forEach(function(item) {
+        //Se verifican los items para realizar su movimiento en caso de click
+        if(item.movimiento == true){          
+          item.body.x = mouseX
+          item.body.y = mouseY;
+          item.texto.x = item.x ;
+          item.texto.y = item.y ;
+        }       
+      });
   	},
 
-    crearCarro: function(){
-      var carro_1 = this.items.create(-100,455,'Carro',0);
-      carro_1.body.velocity.x = this.vel;
-       var carro_2 = this.items.create(-150,395,'Carro',0);
-      carro_2.body.velocity.x = this.vel;
-    }
+    crearSituacion:function(){
+      //creamos las acciones de la situación
+      var yitem = 350;
+      var CItems = this.items;
+      var game = this;
+
+      Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
+          var item = CItems.create(495,yitem,'accion_small');
+          item.tipo = 0;
+          item.anchor.setTo(0.5,0.5);
+          item.texto = game.game.add.text(item.x, item.y,acciontext , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
+          yitem+=40;
+      });
+
+      //creamos las condiciones de la situación
+      yitem = 350;
+      Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
+          var item = CItems.create(650,yitem,'condicion');          
+          item.tipo = 1;
+          item.anchor.setTo(0.5,0.5);
+          item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
+          yitem+=40;
+      });
+    },
+
+    clickItem : function(item){
+      this.itemSelec = true;
+      this.itemX = item.x;
+      this.itemY = item.y;
+      item.movimiento = true;      
+    },
+
+    releaseItem:function(item){
+      if(item.movimiento){
+        item.movimiento = false;
+        //Se define cuadro imaginario para las acciones
+        if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
+          if(!this.slotAccion_1){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.texto.fontSize = 20;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slot1 = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot1) {
+              if(itemslot1.slot1){
+                var textoAnt = itemslot1.texto;
+                itemslot1.texto = item.texto;
+                itemslot1.texto.fontSize = 20;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotAccion_1 = true;
+        }else if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 147) && item.body.y <= (this.slot.body.y + 213) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){ //slot accion 2
+          if(!this.slotAccion_2){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 179),'accion_large');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.texto.fontSize = 20;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slot2 = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot2) {
+              if(itemslot2.slot2){
+                var textoAnt = itemslot2.texto;
+                itemslot2.texto = item.texto;
+                itemslot2.texto.fontSize = 20;
+                itemslot2.texto.x = itemslot2.x;
+                itemslot2.texto.y = itemslot2.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotAccion_2 = true;
+        }else{
+          item.x = this.itemX
+          item.y = this.itemY;
+          item.texto.x = item.x;
+          item.texto.y = item.y;
+        }
+      }
+    },
+
   };
 
   module.exports = Nivel4;
@@ -2712,9 +2853,12 @@ module.exports = Menu;
           this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 8:
-          this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
+          this.txtIns.setText('Recuerdas la propiedad para\nposicion en X u horizontal\ndel personaje?\n\nIntenta cambiar su posicion\nen X sumandole 1 a la posicion\nactual\n\ndude.posx++');
+          this.habilitaEditor(true);
           break;
         case 9:
+          this.txtIns.setText('Bien, ahora intenta modificar\nla posicion en Y o vertical\ndel personaje\n');
+          this.habilitaEditor(true);
           break;
         case 10:
           break;
@@ -2782,16 +2926,38 @@ module.exports = Menu;
             this.editor.glow(true);
           }
           if(correcto){
-            this.editor.seleccionado = false;//Se inhabilita el editor de codigo
-            this.pasoActual++;
-            this.instrucciones(this.pasoActual);
-            this.habilitaEditor(false);
+            this.codCorrecto();
+          }
+          break;
+        /*Pasos movimiento de personaje*/
+        case 8:
+        case 9:
+          setTimeout(this.correrLineaPasoPaso,750,0,this);
+          if(this.pasoActual == 8){
+            if(this.dude.xBandera == true){//Se comprueba que se haya realizado el movimiento en X
+              this.codCorrecto();
+            }else{
+              this.editor.glow(true);
+            }
+          }else{
+            if(this.dude.yBandera == true){//Se comprueba que se haya realizado el movimiento en Y
+              this.codCorrecto();
+            }else{
+              this.editor.glow(true);
+            }
           }
           break;
         default:
           setTimeout(this.correrLineaPasoPaso,750,0,this);
           break;  
       }      
+    },
+
+    codCorrecto: function(){
+      this.editor.seleccionado = false;//Se inhabilita el editor de codigo
+      this.pasoActual++;
+      this.instrucciones(this.pasoActual);
+      this.habilitaEditor(false);
     },
 
     correrLineas: function(){
@@ -2942,10 +3108,12 @@ Preload.prototype = {
     this.load.image('introN3', 'assets/images/Nivel 3/intro.jpg');
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
-    /*Imagenes nivel 3*/
-    this.load.image('Fondo4','assets/images/Nivel 4/fondo.jpg');
-    this.load.spritesheet('Carro','assets/images/Nivel 4/carro.png',100,50);
-    
+    /*Imagenes nivel 4*/
+    this.load.image('tile_nivel4','assets/images/Nivel 4/tile.jpg');
+    this.load.image('slotIF','assets/images/Nivel 4/slot.png');
+    this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
+    this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
+    this.load.image('condicion','assets/images/Nivel 4/condicion.png');
     /*Niveles editor*/
     this.load.image('dude','assets/images/marciano.png');    
 
