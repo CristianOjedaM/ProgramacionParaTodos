@@ -2710,7 +2710,7 @@ module.exports = Menu;
         }else if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 147) && item.body.y <= (this.slot.body.y + 213) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){ //slot accion 2
           if(!this.slotAccion_2){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 179),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 179),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.texto.fontSize = 20;
@@ -2774,6 +2774,7 @@ module.exports = Menu;
 },{"../prefabs/editor":2,"../prefabs/tablero":5}],16:[function(require,module,exports){
 
   'use strict';
+  var Pausa = require('../prefabs/pause');
   var Editor = require('../prefabs/editor');
   var Tablero = require('../prefabs/tablero');
 
@@ -2782,8 +2783,33 @@ module.exports = Menu;
 
     /*Definicion de propiedades*/
     pasoActual: 0,
+    flagpause: false,
+    init:function(){
+      this.pasoActual = 0; 
+      this.flagpause= false;     
+    },
 
-  	create: function() {
+    create: function() {
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN6');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 531;
+      var x2 = 680;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){                 
+          this.empezar();        
+      }
+    }, 
+
+  	empezar: function() {
+
+      //fondo
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 	  	//Se incluye el editor de texto
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
@@ -2821,6 +2847,16 @@ module.exports = Menu;
       this.txtIns.wordWrapWidth = 250;
       this.txtIns.tint = 0xFFFFFF;
       this.instrucciones(this.pasoActual);
+
+      //Se agrega el boton de pausa
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
+      this.btnPausa.fixedToCamera = true;
+
+       //Se incluye el panel de pausa al nivel
+      this.pnlPausa = new Pausa(this.game);
+      this.game.add.existing(this.pnlPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);
   	},
 
     instrucciones: function(paso){
@@ -2988,11 +3024,32 @@ module.exports = Menu;
       }catch(err){
         e.editor.showError(err.name,i);        
       }
-    }
+    },
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;          
+        }
+      }
+    },
   };
 
   module.exports = Nivel6;
-},{"../prefabs/editor":2,"../prefabs/tablero":5}],17:[function(require,module,exports){
+},{"../prefabs/editor":2,"../prefabs/pause":4,"../prefabs/tablero":5}],17:[function(require,module,exports){
 
   'use strict';
   function Play() {}
@@ -3114,8 +3171,13 @@ Preload.prototype = {
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
     this.load.image('condicion','assets/images/Nivel 4/condicion.png');
+
+
+    /*Imagenes nivel 6*/
     /*Niveles editor*/
-    this.load.image('dude','assets/images/marciano.png');    
+    this.load.image('dude','assets/images/marciano.png');  
+    this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
+  
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
