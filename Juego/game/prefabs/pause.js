@@ -75,7 +75,7 @@
               game.game.state.start(game.game.state.current);
             }
           }
-      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > 210 && game.y < 255 ){
+      }else if(game.x > (this.game.width/2) -30 && game.x < (this.game.width/2) + 15 && game.y > y1 && game.y < y2 ){
           //Opcion Inicio
            if(this.game.paused){
             this.game.paused = false;
@@ -83,6 +83,26 @@
             this.game.state.clearCurrentState();
             game.game.state.start("play");
           }
+      }else if(game.x > (this.game.width/2) + 60 && game.x < (this.game.width/2) + 105 && game.y > y1 && game.y < y2 ){
+          //Opcion ayuda
+           if(this.game.paused){
+            var frame  = 0;
+              switch(game.game.state.current){
+                case 'nivel1':
+                  frame = 0;
+                break;
+                case 'nivel1_1':
+                  frame = 1;
+                break;
+                case 'nivel2':
+                  frame = 2;
+                break;
+                case 'nivel3':
+                  frame = 3;
+                break;
+              }
+              this.game.add.sprite(0, 0,'ayudaGeneral',frame);
+           }
       }
   }; 
  

@@ -19,7 +19,41 @@
     slotCondicion:false,
     slotAccion_1:false,
     slotAccion_2:false,
-  	create: function() {
+    flagpause:false,
+    intro:true,
+
+    init:function(){
+      this.vel=50;//Velocidad de inicio para movimiento de items    
+      this.intSituacion=0;
+      this.itemX= 0;
+      this.itemY= 0;
+      this.slotCondicion=false;
+      this.slotAccion_1=false;
+      this.slotAccion_2=false;
+      this.flagpause = false;
+      this.intro = true; 
+    },
+
+    create: function(){
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN3');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 115;
+      var x2 = 264;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.intro){          
+          this.empezar();
+        }
+      }
+    }, 
+
+  	empezar: function() {
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
 	    this.game.world.setBounds(0, 0, 800, 600);
@@ -35,20 +69,34 @@
 
       this.crearSituacion();
 
+      //Se agrega el boton de pausa
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
+      this.btnPausa.fixedToCamera = true;
+
+       //Se incluye el panel de pausa al nivel
+      this.pnlPausa = new Pausa(this.game);
+      this.game.add.existing(this.pnlPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
+      this.intro = false;
+
   	},
 
   	update: function(){
-      var mouseX = this.game.input.x;
-      var mouseY = this.game.input.y;
-      this.items.forEach(function(item) {
-        //Se verifican los items para realizar su movimiento en caso de click
-        if(item.movimiento == true){          
-          item.body.x = mouseX
-          item.body.y = mouseY;
-          item.texto.x = item.x ;
-          item.texto.y = item.y ;
-        }       
-      });
+      if(!this.intro){
+        var mouseX = this.game.input.x;
+        var mouseY = this.game.input.y;
+        this.items.forEach(function(item) {
+          //Se verifican los items para realizar su movimiento en caso de click
+          if(item.movimiento == true){          
+            item.body.x = mouseX
+            item.body.y = mouseY;
+            item.texto.x = item.x ;
+            item.texto.y = item.y ;
+          }       
+        });
+      }
   	},
 
     crearSituacion:function(){
@@ -166,6 +214,28 @@
           item.y = this.itemY;
           item.texto.x = item.x;
           item.texto.y = item.y;
+        }
+      }
+    },
+
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;          
         }
       }
     },
