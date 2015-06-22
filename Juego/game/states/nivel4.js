@@ -72,7 +72,7 @@
       //creamos las condiciones de la situación
       yitem = 350;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
-          var item = CItems.create(640,yitem,'condicion');          
+          var item = CItems.create(650,yitem,'condicion');          
           item.tipo = 1;
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '14px calibri', fill: '#fff', align:'center'});
@@ -113,6 +113,8 @@
                 var textoAnt = itemslot1.texto;
                 itemslot1.texto = item.texto;
                 itemslot1.texto.fontSize = 20;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
                 item.texto.fontSize = 14;
@@ -126,6 +128,39 @@
           }
           //indicamos que el primer slot se ha ocupado
           this.slotAccion_1 = true;
+        }else if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 147) && item.body.y <= (this.slot.body.y + 213) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){ //slot accion 2
+          if(!this.slotAccion_2){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 104),'accion_large');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.texto.fontSize = 20;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slot2 = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot2) {
+              if(itemslot2.slot2){
+                var textoAnt = itemslot2.texto;
+                itemslot2.texto = item.texto;
+                itemslot2.texto.fontSize = 20;
+                itemslot2.texto.x = itemslot2.x;
+                itemslot2.texto.y = itemslot2.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotAccion_2 = true;
         }else{
           item.x = this.itemX
           item.y = this.itemY;
