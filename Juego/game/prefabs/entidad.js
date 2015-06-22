@@ -1,7 +1,7 @@
 'use strict';
 
-var Entidad = function(game, x, y, key) {
-  Phaser.Sprite.call(this, game, x, y, key, 0);
+var Entidad = function(game, x, y, key,frame) {
+  Phaser.Sprite.call(this, game, x, y, key, frame);
 
   /*Definicion de propiedades*/
   this.posx = 0;//Posicion relativa de x en el tablero

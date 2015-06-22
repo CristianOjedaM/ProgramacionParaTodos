@@ -422,8 +422,8 @@ module.exports = Editor;
 },{}],3:[function(require,module,exports){
 'use strict';
 
-var Entidad = function(game, x, y, key) {
-  Phaser.Sprite.call(this, game, x, y, key, 0);
+var Entidad = function(game, x, y, key,frame) {
+  Phaser.Sprite.call(this, game, x, y, key, frame);
 
   /*Definicion de propiedades*/
   this.posx = 0;//Posicion relativa de x en el tablero
@@ -2610,14 +2610,14 @@ module.exports = Menu;
 },{"../prefabs/pause":4}],14:[function(require,module,exports){
  'use strict';
  var Pausa = require('../prefabs/pause');
- var Situacion = 
+var Situacion = 
   [{
-    "condiciones": ['estampida.pasando() == true','estampida.pasando() == false','estampida.pasando()<=true'],
-    "acciones" :  ['cruzar();','saltar();','esperar();','hablar();','disparar();']
+    "condiciones": [{'texto':'estampida.pasando() == true','respuesta':true},{'texto':'estampida.pasando() >= false','respuesta':false},{'texto':'estampida.pasando() <= true','respuesta':false}],
+    "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
-    "condiciones": ['obstaculo.distancia => 50','obstaculo.distancia <= 50','obstaculo.distancia == 51'],
-    "acciones" :  ['saltar();','esperar();','correr();','nadar();','arrastrar();']
+    "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
+    "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
   }];
 
   function Nivel4() {}
@@ -2673,18 +2673,15 @@ module.exports = Menu;
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
-      this.items.inputEnabled = true;
-      
-      //Se crea slot de estructura if
-      this.slot = this.items.create(430,40,'slotIF');
+      this.items.inputEnabled = true;            
 
       this.crearSituacion();
 
       //Se crea marco de la situacion
-      this.game.add.sprite(100,40,'fondosituacion');
+      this.game.add.sprite(10,40,'fondosituacion');
 
       //Se agrega boton de ejecucion
-      this.run = this.game.add.sprite(320, 355,'btnEjecutar4');
+      this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
       this.run.anchor.setTo(0.5,0.5);
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
@@ -2720,16 +2717,19 @@ module.exports = Menu;
   	},
 
     crearSituacion:function(){
+      //Se crea slot de estructura if
+      this.slot = this.items.create(470,40,'slotIF');
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
       var game = this;
 
       Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
-          var item = CItems.create(495,yitem,'accion_small');
+          var item = CItems.create(535,yitem,'accion_small');
           item.tipo = 0;
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.game.add.text(item.x, item.y,acciontext , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,acciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = acciontext.respuesta;
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(game.clickItem, game);
@@ -2740,10 +2740,11 @@ module.exports = Menu;
       //creamos las condiciones de la situación
       yitem = 350;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
-          var item = CItems.create(650,yitem,'condicion');          
+          var item = CItems.create(690,yitem,'condicion');          
           item.tipo = 1;
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,condiciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = condiciontext.respuesta;
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(game.clickItem, game);
@@ -2769,6 +2770,7 @@ module.exports = Menu;
             var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
             itemEncajado.texto.fontSize = 20;
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
@@ -2779,12 +2781,15 @@ module.exports = Menu;
             this.items.forEach(function(itemslot1) {
               if(itemslot1.slot1){
                 var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
                 itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
                 itemslot1.texto.fontSize = 20;
                 itemslot1.texto.x = itemslot1.x;
                 itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
+                item.respuesta = respuesAnt;
                 item.texto.fontSize = 14;
               }
             });
@@ -2801,6 +2806,7 @@ module.exports = Menu;
             var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 179),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
             itemEncajado.texto.fontSize = 20;
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
@@ -2811,12 +2817,15 @@ module.exports = Menu;
             this.items.forEach(function(itemslot2) {
               if(itemslot2.slot2){
                 var textoAnt = itemslot2.texto;
+                var respuesAnt = itemslot2.respuesta;
                 itemslot2.texto = item.texto;
+                itemslot2.respuesta = item.respuesta;
                 itemslot2.texto.fontSize = 20;
                 itemslot2.texto.x = itemslot2.x;
                 itemslot2.texto.y = itemslot2.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
+                item.respuesta = respuesAnt;
                 item.texto.fontSize = 14;
               }
             });
@@ -2834,6 +2843,7 @@ module.exports = Menu;
             var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slotC = true;          
@@ -2843,11 +2853,14 @@ module.exports = Menu;
             this.items.forEach(function(itemslot1) {
               if(itemslot1.slotC){
                 var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
                 itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
                 itemslot1.texto.x = itemslot1.x;
                 itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
+                item.respuesta = respuesAnt;
                 item.texto.fontSize = 14;
               }
             });
@@ -2890,7 +2903,50 @@ module.exports = Menu;
     },
 
     correrCondicion: function(){
-
+      //se valida que el slot este lleno
+      var condicionCorrecta = true;
+      if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){
+        //Se recorren los items para obtener los que se encuentran en el slot
+        this.items.forEach(function(item) {
+          if(item.slotC){ //slot condicion
+            if(!item.respuesta){
+              condicionCorrecta = false;
+            }
+          }else if(item.slot1){ //slot accion verdadera
+            if(item.respuesta != 'slot1' ){
+              condicionCorrecta = false;
+            }
+          }else if(item.slot2){ //slot accion falsa
+            if(item.respuesta != 'slot2' ){
+              condicionCorrecta = false;
+            }
+          }
+        });
+        //si la condicion es correcta se pasa a la siguiente situacion
+        if(condicionCorrecta){          
+          this.intSituacion++;
+          if(this.intSituacion<2){
+            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+            this.items.forEach(function(item) {            
+              if(item.texto != null){item.texto.kill();}
+              item.kill();
+            });
+            alert("Correcto");
+            this.crearSituacion();
+          }else{
+            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+            this.siguiente.inputEnabled = true;
+            this.siguiente.events.onInputDown.add(this.clickListener, this);
+            this.siguiente.fixedToCamera = true; 
+          }
+        }else{
+          alert("Vuelve a intentarlo");
+        }        
+      }
+    },
+    clickListener: function(){
+       this.game.state.clearCurrentState();
+      this.game.state.start("play");
     },
 
   };
@@ -2964,7 +3020,7 @@ module.exports = Menu;
       this.tablero = new Tablero(this.game,20,30,5,5);
       this.game.add.existing(this.tablero);
       //Se agregan los sprotes dentro del tablero de juego
-      this.dude = this.tablero.setObjCuadro(0,0,'dude',15);
+      this.dude = this.tablero.setObjCuadro(0,0,'dude','',15);
       //Se registrar los eventos de los botones 
       this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
       this.crearFunc.inputEnabled = true;
@@ -3060,6 +3116,9 @@ module.exports = Menu;
         case 14:
           this.txtIns.setText('Ya que es un conjunto de instrucciones\nes necesario definir cual es su punto de \ninicio; después del parentesis utiliza\nun corchete de apertura para definir\nel inicio');
           break;
+        case 15:
+          this.txtIns.setText('Deberias tener algo parecido a\nfunction mover(){\nno te alarmes si genera error, aun falta\nmucho por hacer');
+          break;
       }
       this.codigoActivo = true;
     },
@@ -3085,6 +3144,7 @@ module.exports = Menu;
         switch(this.pasoActual){
         /*Pasos de instruccion durante codificacion*/
           case 13:
+          case 14:
             this.pasoActual++;
             this.instrucciones(this.pasoActual);
             break;
@@ -3339,7 +3399,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
     this.load.spritesheet('nivel4', 'assets/images/Menu/nivel1.jpg',800,100);
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
-    this.load.spritesheet('nivel6', 'assets/images/Menu/nivel3.jpg',800,100);
+    this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
     this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);
 
     /*Botones y generales*/
@@ -3384,17 +3444,22 @@ Preload.prototype = {
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
     this.load.image('condicion','assets/images/Nivel 4/condicion.png');
+    this.load.image('btnEjecutar4','assets/images/Nivel 4/btnEjecutar.png');
+    this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
+    this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
 
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
-    this.load.spritesheet('dude','assets/images/personaje_50.png',50,50);
+    this.load.spritesheet('dude','assets/images/personaje_50.png',35,50);
     this.load.image('btnSiguiente6','assets/images/Nivel 6/btnSiguiente.png');
     this.load.image('btnEjecutar6','assets/images/Nivel 6/btnEjecutar.png');
     this.load.image('fondoEditor','assets/images/Nivel 6/fondoEditor.png');
     this.load.image('fondoPasos','assets/images/Nivel 6/fondoPasos.png');
     this.load.image('fondoTablero','assets/images/Nivel 6/fondoTablero.png');
-  
+    this.load.image('globo1','assets/images/Nivel 6/globo1.png');
+    this.load.image('globo2','assets/images/Nivel 6/globo2.png');
+    this.load.image('globo3','assets/images/Nivel 6/globo3.png');  
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');

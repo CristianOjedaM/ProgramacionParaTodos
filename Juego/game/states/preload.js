@@ -20,7 +20,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
     this.load.spritesheet('nivel4', 'assets/images/Menu/nivel1.jpg',800,100);
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
-    this.load.spritesheet('nivel6', 'assets/images/Menu/nivel3.jpg',800,100);
+    this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
     this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);
 
     /*Botones y generales*/
@@ -72,13 +72,15 @@ Preload.prototype = {
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
-    this.load.spritesheet('dude','assets/images/personaje_50.png',50,50);
+    this.load.spritesheet('dude','assets/images/personaje_50.png',35,50);
     this.load.image('btnSiguiente6','assets/images/Nivel 6/btnSiguiente.png');
     this.load.image('btnEjecutar6','assets/images/Nivel 6/btnEjecutar.png');
     this.load.image('fondoEditor','assets/images/Nivel 6/fondoEditor.png');
     this.load.image('fondoPasos','assets/images/Nivel 6/fondoPasos.png');
     this.load.image('fondoTablero','assets/images/Nivel 6/fondoTablero.png');
-  
+    this.load.image('globo1','assets/images/Nivel 6/globo1.png');
+    this.load.image('globo2','assets/images/Nivel 6/globo2.png');
+    this.load.image('globo3','assets/images/Nivel 6/globo3.png');  
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');

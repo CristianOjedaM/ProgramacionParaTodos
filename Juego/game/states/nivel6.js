@@ -46,7 +46,7 @@
       this.tablero = new Tablero(this.game,20,30,5,5);
       this.game.add.existing(this.tablero);
       //Se agregan los sprotes dentro del tablero de juego
-      this.dude = this.tablero.setObjCuadro(0,0,'dude',15);
+      this.dude = this.tablero.setObjCuadro(0,0,'dude','',15);
       //Se registrar los eventos de los botones 
       this.crearFunc = this.game.add.sprite(340, 350,'btnContinuar');
       this.crearFunc.inputEnabled = true;
@@ -142,6 +142,9 @@
         case 14:
           this.txtIns.setText('Ya que es un conjunto de instrucciones\nes necesario definir cual es su punto de \ninicio; después del parentesis utiliza\nun corchete de apertura para definir\nel inicio');
           break;
+        case 15:
+          this.txtIns.setText('Deberias tener algo parecido a\nfunction mover(){\nno te alarmes si genera error, aun falta\nmucho por hacer');
+          break;
       }
       this.codigoActivo = true;
     },
@@ -167,6 +170,7 @@
         switch(this.pasoActual){
         /*Pasos de instruccion durante codificacion*/
           case 13:
+          case 14:
             this.pasoActual++;
             this.instrucciones(this.pasoActual);
             break;
