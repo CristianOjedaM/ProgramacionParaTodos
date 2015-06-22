@@ -172,7 +172,6 @@
             item.y = this.itemY;
             item.texto.x = item.x;
             item.texto.y = item.y;
-
           }
           //indicamos que el primer slot se ha ocupado
           this.slotAccion_1 = true;
@@ -209,6 +208,37 @@
           }
           //indicamos que el primer slot se ha ocupado
           this.slotAccion_2 = true;
+        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
+          if(!this.slotCondicion){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 144),(this.slot.body.y + 23),'condicion');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slotC = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot1) {
+              if(itemslot1.slotC){
+                var textoAnt = itemslot1.texto;
+                itemslot1.texto = item.texto;
+                itemslot1.texto.fontSize = 20;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotCondicion = true;
         }else{
           item.x = this.itemX
           item.y = this.itemY;
