@@ -72,10 +72,10 @@
       //creamos las condiciones de la situación
       yitem = 350;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
-          var item = CItems.create(630,yitem,'condicion');          
+          var item = CItems.create(640,yitem,'condicion');          
           item.tipo = 1;
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '10px calibri', fill: '#fff', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '14px calibri', fill: '#fff', align:'center'});
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(game.clickItem, game);
@@ -115,7 +115,7 @@
                 itemslot1.texto.fontSize = 20;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
-                itemslot1.texto.fontSize = 14;
+                item.texto.fontSize = 14;
               }
             });
             item.x = this.itemX;
