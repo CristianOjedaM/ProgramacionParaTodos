@@ -85,13 +85,11 @@
           }
       }else if(game.x > (this.game.width/2) + 60 && game.x < (this.game.width/2) + 105 && game.y > y1 && game.y < y2 ){
           //Opcion ayuda
-          var Ymensaje= 0;
            if(this.game.paused){
             var frame  = 0;
               switch(game.game.state.current){
                 case 'nivel1':
                   frame = 0;
-                  Ymensaje = 1320;
                 break;
                 case 'nivel1_1':
                   frame = 1;
@@ -103,7 +101,8 @@
                   frame = 3;
                 break;
               }
-              this.mensajeGeneral  = this.game.add.sprite(0, Ymensaje,'ayudaGeneral',frame);
+              this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',frame);
+              this.mensajeGeneral.fixedToCamera = true;
            }
       }else if( this.game.paused == true && this.mensajeGeneral != null && this.mensajeGeneral.visible == true && game.x > (this.game.width - 81) && game.x < (this.game.width - 36) && game.y > 10 && game.y < 55 ){
           this.mensajeGeneral.destroy();
