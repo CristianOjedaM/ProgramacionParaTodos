@@ -8,8 +8,30 @@
 
     /*Definicion de propiedades*/
     pasoActual: 0,
+    flagpause: false,
+    init:function(){
+      this.pasoActual = 0; 
+      this.flagpause= false;     
+    },
 
-  	create: function() {
+    create: function() {
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN6');
+      this.game.input.onDown.add(this.iniciarJuego,this);
+    },
+
+    iniciarJuego : function(game){
+      var x1 = 115;
+      var x2 = 264;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){                 
+          this.empezar();        
+      }
+    }, 
+
+  	empezar: function() {
 	  	//Se incluye el editor de texto
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
@@ -47,6 +69,16 @@
       this.txtIns.wordWrapWidth = 250;
       this.txtIns.tint = 0xFFFFFF;
       this.instrucciones(this.pasoActual);
+
+      //Se agrega el boton de pausa
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
+      this.btnPausa.fixedToCamera = true;
+
+       //Se incluye el panel de pausa al nivel
+      this.pnlPausa = new Pausa(this.game);
+      this.game.add.existing(this.pnlPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);
   	},
 
     instrucciones: function(paso){
@@ -214,7 +246,28 @@
       }catch(err){
         e.editor.showError(err.name,i);        
       }
-    }
+    },
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;          
+        }
+      }
+    },
   };
 
   module.exports = Nivel6;

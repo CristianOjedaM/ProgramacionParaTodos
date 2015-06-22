@@ -64,8 +64,13 @@ Preload.prototype = {
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
     this.load.image('condicion','assets/images/Nivel 4/condicion.png');
+
+
+    /*Imagenes nivel 6*/
     /*Niveles editor*/
-    this.load.image('dude','assets/images/marciano.png');    
+    this.load.image('dude','assets/images/marciano.png');  
+    this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
+  
 
     /*Audios de juego*/
     this.load.audio('error_sound', 'assets/audio/generales/error.wav');
