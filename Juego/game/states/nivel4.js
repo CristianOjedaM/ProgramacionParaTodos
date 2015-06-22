@@ -117,8 +117,8 @@
                 item.texto = textoAnt;
                 itemslot1.texto.fontSize = 14;
               }
-            }
-            item.x = this.itemX
+            });
+            item.x = this.itemX;
             item.y = this.itemY;
             item.texto.x = item.x;
             item.texto.y = item.y;
