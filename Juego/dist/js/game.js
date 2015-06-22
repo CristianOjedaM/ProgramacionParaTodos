@@ -2807,9 +2807,8 @@ module.exports = Menu;
     }, 
 
   	empezar: function() {
-
-      //fondo
-      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel6');
 	  	//Se incluye el editor de texto
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
@@ -3175,6 +3174,7 @@ Preload.prototype = {
 
     /*Imagenes nivel 6*/
     /*Niveles editor*/
+    this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
     this.load.image('dude','assets/images/marciano.png');  
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
   
