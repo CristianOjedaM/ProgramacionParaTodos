@@ -101,8 +101,10 @@
                   frame = 3;
                 break;
               }
-              this.game.add.sprite(0, 0,'ayudaGeneral',frame);
+              this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',frame);
            }
+      }else if( this.game.paused == true && this.mensajeGeneral != null && this.mensajeGeneral.visible == true && game.x > (this.game.width - 81) && game.x < (this.game.width - 36) && game.y > 10 && game.y < 55 ){
+          this.mensajeGeneral.destroy();
       }
   }; 
  
