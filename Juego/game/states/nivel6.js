@@ -33,6 +33,9 @@
     }, 
 
   	empezar: function() {
+
+      //fondo
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 	  	//Se incluye el editor de texto
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
