@@ -25,6 +25,8 @@ Entidad.prototype.mostrar = function(msj) {
     this.txtMostrar.wordWrapWidth = 120;
     this.txtMostrar.alpha = 0;
   }else{
+    this.txtMostrar.x = this.x + this.width;
+    this.txtMostrar.y = this.y;
     this.txtMostrar.setText(msj);//Se establece el texto del mensaje
   }
   if(!msj){//Texto por defecto

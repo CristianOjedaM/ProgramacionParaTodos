@@ -9,7 +9,9 @@
 
     /*Definicion de propiedades*/
     pasoActual: 0,
+    codigoActivo: true,
     flagpause: false,
+
     init:function(){
       this.pasoActual = 0; 
       this.flagpause= false;     
@@ -36,11 +38,12 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel6');
 	  	//Se incluye el editor de texto
+      this.game.add.sprite(320,25,'fondoEditor');
       this.editor = new Editor(this.game,170,20,400,20);
       this.game.add.existing(this.editor);
       this.editor.seleccionado = false;//Se inhabilita el editor de codigo
       //S incluye el tablero juego
-      this.tablero = new Tablero(this.game,20,20,5,5);
+      this.tablero = new Tablero(this.game,20,30,5,5);
       this.game.add.existing(this.tablero);
       //Se agregan los sprotes dentro del tablero de juego
       this.dude = this.tablero.setObjCuadro(0,0,'dude');
@@ -50,24 +53,22 @@
       this.crearFunc.events.onInputDown.add(this.crearFuncion, this);
       this.crearFunc.visible = false;
 
-      this.run = this.game.add.sprite(500, 350,'btnContinuar');
+      this.run = this.game.add.sprite(470, 325,'btnEjecutar6');
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCodigo, this);
       this.run.visible = false;
 
-      this.btnContinuar = this.game.add.sprite(165, 520,'btnContinuar');
+      //Se da inicio al nivel con el las instrucciones de juego
+      this.cuadroIns = this.game.add.sprite(this.game.world.centerX,370,'fondoPasos');
+      this.cuadroIns.anchor.setTo(0.5,0);
+
+      this.btnContinuar = this.game.add.sprite(this.game.world.centerX, 475,'btnSiguiente6');
       this.btnContinuar.anchor.setTo(0.5,0.5);
       this.btnContinuar.inputEnabled = true;
       this.btnContinuar.events.onInputDown.add(this.pasoSiguiente, this);
 
-      //Se da inicio al nivel con el las instrucciones de juego
-      this.cuadroIns = this.game.add.graphics( 0, 0 );
-      this.cuadroIns.beginFill(0x272822, 1);
-      this.cuadroIns.lineStyle(2, 0xffffff);
-      this.cuadroIns.bounds = new PIXI.Rectangle(40, 300, 250, 200);
-      this.cuadroIns.drawRect(40, 300, 250, 200);
-
-      this.txtIns = this.game.add.bitmapText(45 , 310, 'font', '', 18);
+      this.txtIns = this.game.add.bitmapText(this.game.world.centerX , 415, 'font', '', 18);
+      this.txtIns.anchor.setTo(0.5,0.5);
       this.txtIns.wordWrap = true;
       this.txtIns.wordWrapWidth = 250;
       this.txtIns.tint = 0xFFFFFF;
@@ -87,43 +88,52 @@
     instrucciones: function(paso){
       switch(paso){//Se define la instruccion a mostrar
         case 0:
-          this.txtIns.setText('Hola, por medio del\neditor de codigo\ndebemos ayudar al\npersonaje a cumplir \nuna serie de tareas ');
+          this.txtIns.setText('Hola, por medio del editor de código debemos\nayudar al personaje a cumplir una\nserie de tareas ');
           break;
         case 1:
-          this.txtIns.setText('Para poder ayudarlo\ndebemos conocer sus\npropiedades, las \ncuales permitiran\nsu manipulacion');
+          this.txtIns.setText('Para poder ayudarlo debemos conocer sus\npropiedades, las cuales permitirán\nsu manipulación');
           break;
         case 2:
-          this.txtIns.setText('Ademas de las \npropiedades, el\npersonaje cuenta con\nuna serie de metodos\nque haran todo\naun mas facil');
+          this.txtIns.setText('Además de las propiedades, el personaje\ncuenta con una serie de métodos que\nharán todo aún mas fácil');
           break;
         case 3:
-          this.txtIns.setText('Para que hable\nse puede hacer uso\nde dude.mostrar(),\nintentalo');
+          this.txtIns.setText('Para que hable se puede hacer uso\nde dude.mostrar(),\ninténtalo');
           this.habilitaEditor(true);
           break;
         case 4:
-          this.txtIns.setText('Muy bien, ahora\nveamos que puede\ndecirnos sobre el.\nIntenta con\ndude.mostrar(dude.prop())\nesto mostrara las\npropiedades que podemos\nmanipular sobre el\npersonaje');
+          this.txtIns.setText('Muy bien, ahora veamos que puede decirnos\nsobre el. Intenta con\ndude.mostrar(dude.prop())\nesto mostrará las propiedades que podemos\nmanipular sobre el personaje');
           this.habilitaEditor(true);
           break;
         case 5:
-          this.txtIns.setText('Genial, ahora intenta\nobtener consejos de la\nsiguiente manera.\ndude.mostrar(dude.consejo())');
+          this.txtIns.setText('Genial, ahora intenta obtener consejos de\nla siguiente manera.\ndude.mostrar(dude.consejo())');
           this.habilitaEditor(true);
           break;
         case 6:
-          this.txtIns.setText('Perfecto, recuerda que\npuedes hacer uso de\nlos consejos en cualquer\nmomento que desees\ny siempre se mostraran\nde forma aleatoria');
+          this.txtIns.setText('Perfecto, recuerda que puedes hacer uso\nde los consejos en cualquer momento que\ndesees y siempre se mostrarán de forma\naleatoria');
           break;
         case 7:
-          this.txtIns.setText('Como ya sabes todo lo\nque necesitas saber\nsobre el personaje\n\nEmpecemos!');
+          this.txtIns.setText('Como ya sabes todo lo que necesitas saber\nsobre el personaje\n\nEmpecemos!');
           break;
         case 8:
-          this.txtIns.setText('Recuerdas la propiedad para\nposicion en X u horizontal\ndel personaje?\n\nIntenta cambiar su posicion\nen X sumandole 1 a la posicion\nactual\n\ndude.posx++');
+          this.txtIns.setText('Recuerdas la propiedad para posición en X\nu horizontal del personaje?\nIntenta cambiar su posicion en X sumando 1\na la posición actual\ndude.posx++');
           this.habilitaEditor(true);
           break;
         case 9:
-          this.txtIns.setText('Bien, ahora intenta modificar\nla posicion en Y o vertical\ndel personaje\n');
+          this.txtIns.setText('Bien, ahora intenta modificar la posición\nen Y o vertical del personaje');
           this.habilitaEditor(true);
           break;
         case 10:
+          this.txtIns.setText('Correcto, recuerda que el personaje tiene\npiernas cortas y solo puede desplazarse\nun cuadro a la vez');
+          this.habilitaEditor(false);
+          break;
+        case 11:
+          this.dude.posx = 0;
+          this.dude.posy = 0;
+          this.tablero.setObjCuadro(0, 0, '', this.dude);
+          this.txtIns.setText('Por ello, tu primera misión es encontrar\nla manera de facilitar el movimiento del\npersonaje a lo largo del tablero');
           break;
       }
+      this.codigoActivo = true;
     },
 
     pasoSiguiente: function(){
@@ -135,6 +145,7 @@
           case 2:
           case 6:
           case 7:
+          case 10:
             this.pasoActual++;
             break;
         }
@@ -158,60 +169,52 @@
     },
 
     correrCodigo: function(){
-      this.editor.hideError();//Se ocultan errores del editor
-      this.editor.glow(false);//Se elimina el brillo
-      switch(this.pasoActual){//Se valida la accion a tomar respecto al paso actual
-        /*Pasos introductorios*/
-        case 3://Paso dude.mostrar()
-        case 4://Paso dude.mostrar(dude.prop())
-        case 5://Paso dude.mostrar(dude.consejo())
-          var correcto = false;
-          this.correrLineas();
-          if(this.dude.msjBandera == true){//En caso de haber mostrado el msj de prueba correctamente
-            if(this.pasoActual == 4){
-              if(this.dude.propBandera == true){
-                correcto = true;
+      if(this.codigoActivo){
+        this.codigoActivo = false;
+        this.editor.hideError();//Se ocultan errores del editor
+        this.editor.glow(false);//Se elimina el brillo
+        switch(this.pasoActual){//Se valida la accion a tomar respecto al paso actual
+          /*Pasos introductorios*/
+          case 3://Paso dude.mostrar()
+          case 4://Paso dude.mostrar(dude.prop())
+          case 5://Paso dude.mostrar(dude.consejo())
+            var correcto = false;
+            this.correrLineas();
+            if(this.dude.msjBandera == true){//En caso de haber mostrado el msj de prueba correctamente
+              if(this.pasoActual == 4){
+                if(this.dude.propBandera == true){
+                  correcto = true;
+                }else{
+                  this.editor.glow(true);
+                }
+              }else if(this.pasoActual == 5){
+                if(this.dude.consBandera == true){
+                  correcto = true;
+                }else{
+                  this.editor.glow(true);
+                }
               }else{
-                this.editor.glow(true);
-              }
-            }else if(this.pasoActual == 5){
-              if(this.dude.consBandera == true){
                 correcto = true;
-              }else{
-                this.editor.glow(true);
               }
-            }else{
-              correcto = true;
-            }
-          }else{
-            this.editor.glow(true);
-          }
-          if(correcto){
-            this.codCorrecto();
-          }
-          break;
-        /*Pasos movimiento de personaje*/
-        case 8:
-        case 9:
-          setTimeout(this.correrLineaPasoPaso,750,0,this);
-          if(this.pasoActual == 8){
-            if(this.dude.xBandera == true){//Se comprueba que se haya realizado el movimiento en X
-              this.codCorrecto();
             }else{
               this.editor.glow(true);
             }
-          }else{
-            if(this.dude.yBandera == true){//Se comprueba que se haya realizado el movimiento en Y
+            if(correcto){
               this.codCorrecto();
             }else{
-              this.editor.glow(true);
+              this.codigoActivo = true;
             }
-          }
-          break;
-        default:
-          setTimeout(this.correrLineaPasoPaso,750,0,this);
-          break;  
-      }      
+            break;
+          /*Pasos movimiento de personaje*/
+          case 8://Paso dude.posx++
+          case 9://Paso dude.posy++
+            setTimeout(this.correrLineaPasoPaso,750,0,this,this.pasoActual);
+            break;
+          default:
+            setTimeout(this.correrLineaPasoPaso,750,0,this);
+            break;
+        }
+      }
     },
 
     codCorrecto: function(){
@@ -219,6 +222,28 @@
       this.pasoActual++;
       this.instrucciones(this.pasoActual);
       this.habilitaEditor(false);
+    },
+
+    validaciones: function(){
+      var difX = Math.abs(this.dude.posx - this.dude.propiedades[0].val);
+      var difY = Math.abs(this.dude.posy - this.dude.propiedades[0].val);
+      
+      if(difX > 1 || difY > 1){
+        this.dude.mostrar("No puedo moverme por tantas casillas al tiempo :(");
+        this.dude.posx = this.dude.propiedades[0].val;//Valor temporal de la propiedad posx
+        this.dude.posy = this.dude.propiedades[1].val;//Valor temporal de la propiedad posy
+        return false;
+      }else if(this.dude.posx < 0){
+        this.dude.mostrar("No puedo desplazarme afuera del tablero :(");
+        this.dude.posx = this.dude.propiedades[0].val;//Valor temporal de la propiedad posx
+        return false;
+      }else if(this.dude.posy < 0){
+        this.dude.mostrar("No puedo desplazarme afuera del tablero :(");
+        this.dude.posy = this.dude.propiedades[1].val;//Valor temporal de la propiedad posy
+        return false;
+      }else{
+        return true;
+      }
     },
 
     correrLineas: function(){
@@ -235,13 +260,34 @@
       }
     },
 
-    correrLineaPasoPaso:function(i,e){
+    correrLineaPasoPaso:function(i,e,paso){
       try{
         if(i < e.editor.created_lines){
           var instruccion = e.editor.getTextLine(i);
           var F=new Function ("dude",instruccion);
           F(e.dude);
-          e.tablero.setObjCuadro(e.dude.posx, e.dude.posy, '', e.dude);
+          if(e.validaciones() == true){
+            e.tablero.setObjCuadro(e.dude.posx, e.dude.posy, '', e.dude);
+            if(paso){//En caso de requerir validaciones especiales debido al paso actual
+              if(paso == 8){//Paso movimiento inicial en X
+                if(e.dude.xBandera == true){//Se comprueba que se haya realizado el movimiento en X
+                  e.codCorrecto();
+                }else{
+                  e.codigoActivo = true;
+                  e.editor.glow(true);
+                }
+              }else if(paso == 9){//Paso movimiento inicial en Y
+                if(e.dude.yBandera == true){//Se comprueba que se haya realizado el movimiento en Y
+                  e.codCorrecto();
+                }else{
+                  e.codigoActivo = true;
+                  e.editor.glow(true);
+                }
+              }
+            }
+          }else{
+            e.codigoActivo = true;
+          }
           i++;
           setTimeout(e.correrLineaPasoPaso,750,i,e);
         }
@@ -250,6 +296,7 @@
         e.editor.showError(err.name,i);        
       }
     },
+
     pausaJuego: function(game){
       var x1 = (this.game.width - 81);
       var x2 = (this.game.width - 36);

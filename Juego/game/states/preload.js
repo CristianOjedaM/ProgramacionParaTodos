@@ -66,12 +66,15 @@ Preload.prototype = {
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
     this.load.image('condicion','assets/images/Nivel 4/condicion.png');
 
-
-    /*Imagenes nivel 6*/
-    /*Niveles editor*/
+    /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
-    this.load.image('dude','assets/images/marciano.png');  
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');
+    this.load.image('dude','assets/images/marciano.png');
+    this.load.image('btnSiguiente6','assets/images/Nivel 6/btnSiguiente.png');
+    this.load.image('btnEjecutar6','assets/images/Nivel 6/btnEjecutar.png');
+    this.load.image('fondoEditor','assets/images/Nivel 6/fondoEditor.png');
+    this.load.image('fondoPasos','assets/images/Nivel 6/fondoPasos.png');
+    this.load.image('fondoTablero','assets/images/Nivel 6/fondoTablero.png');
   
 
     /*Audios de juego*/
