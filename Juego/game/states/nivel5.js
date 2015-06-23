@@ -17,12 +17,24 @@
 
   function Nivel5() {}
   Nivel5.prototype = {
+    maxtime: 90,
     flagpause:false,
     intro:true,
     intSituacion:0,
+    itemX: 0,
+    itemY: 0,
+    slotCiclo:false,
+    slotAccion_1:false,
+
     init:function(){
+      this.maxtime= 90; 
+      this.itemX= 0;
+      this.itemY= 0;
       this.flagpause=false;
       this.intro=true;
+      this.intSituacion=0;
+      this.slotCiclo=false;
+      this.slotAccion_1=false;
     },
 
   	create: function() {
@@ -152,21 +164,113 @@
         }
       }
     },
+
     correrCondicion: function(){
 
     },
+
     listenerwhile:function(){
-      if(Situacion[intSituacion].tipo == 'while'){
+      if(Situacion[this.intSituacion].tipo == 'while'){
         this.crearSituacion();
       }else{
         alert('este no es el mejor ciclo recuerda que bla bla bla');
       }
     },
+
     listenerfor:function(){
       if(Situacion[intSituacion].tipo == 'for'){
         this.crearSituacion();
       }else{
         alert('este no es el mejor ciclo recuerda que bla bla bla');
+      }
+    },
+    
+    clickItem : function(item){
+      this.itemX = item.x;
+      this.itemY = item.y;
+      item.movimiento = true;      
+    },
+
+    releaseItem:function(item){
+      if(item.movimiento){
+        item.movimiento = false;
+        //Se define cuadro imaginario para las acciones
+        if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
+          if(!this.slotAccion_1){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
+            itemEncajado.texto.fontSize = 20;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slot1 = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot1) {
+              if(itemslot1.slot1){
+                var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
+                itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
+                itemslot1.texto.fontSize = 20;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.respuesta = respuesAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotAccion_1 = true;
+        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
+          if(!this.slotCiclo){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slotC = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot1) {
+              if(itemslot1.slotC){
+                var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
+                itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.respuesta = respuesAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotCiclo = true;
+        }else{
+          item.x = this.itemX
+          item.y = this.itemY;
+          item.texto.x = item.x;
+          item.texto.y = item.y;
+        }
       }
     },
 
