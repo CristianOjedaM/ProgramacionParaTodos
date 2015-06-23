@@ -119,7 +119,7 @@ var Situacion =
           item.tipo = 0;
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,acciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
-          item.respuesta = condiciontext.respuesta;
+          item.respuesta = acciontext.respuesta;
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(game.clickItem, game);
