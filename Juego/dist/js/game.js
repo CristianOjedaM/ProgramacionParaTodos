@@ -219,8 +219,8 @@ Editor.prototype.showError = function(error,linea) {
     case "ReferenceError":
       this.txtError.setText('Ups, tal vez el objeto nombrado en la linea ' + (linea+1) + ' no exista');
       break;
-    case "TypeError":
-
+    default:
+      this.txtError.setText('Ups, '+error+' en la linea ' + (linea+1));
       break;
   }  
   this.game.add.tween(this.errorGroup).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
@@ -441,19 +441,19 @@ Entidad.prototype.update = function() {
 
 Entidad.prototype.mostrar = function(msj) {
   if(!this.txtMostrar){//Se realiza la cracion del mensaje
-    this.txtFondo = this.game.add.sprite(this.x + (this.width * 3),this.y + 20,'globo1');
-    this.txtFondo.anchor.setTo(0.5,0.5);
-    this.txtMostrar = this.game.add.text(this.txtFondo.x,this.txtFondo.y,msj,{ font: '12px consolas', fill: '#000', align:'left'});
-    this.txtMostrar.anchor.setTo(0.5,0.5);
+    this.txtFondo = this.game.add.sprite(this.x + (this.width * 3)+10,this.y + 20,'globo1');
+    this.txtFondo.anchor.setTo(0.5,0);
+    this.txtMostrar = this.game.add.text(this.txtFondo.x,this.txtFondo.y + 8,msj,{ font: '12px consolas', fill: '#000', align:'left'});
+    this.txtMostrar.anchor.setTo(0.5,0);
     this.txtMostrar.wordWrap = true;
-    this.txtMostrar.wordWrapWidth = 120;
+    this.txtMostrar.wordWrapWidth = 110;
     this.txtMostrar.alpha = 0;
     this.txtFondo.alpha = 0;
   }else{
-    this.txtFondo.x = this.x + (this.width * 3);
-    this.txtFondo.y = this.y + 20;
+    this.txtFondo.x = this.x + (this.width * 3)+10;
+    this.txtFondo.y = this.y + 40;
     this.txtMostrar.x = this.txtFondo.x;
-    this.txtMostrar.y = this.txtFondo.y
+    this.txtMostrar.y = this.txtFondo.y + 15;
     this.txtMostrar.setText(msj);//Se establece el texto del mensaje
   }
   if(!msj){//Texto por defecto
@@ -462,6 +462,8 @@ Entidad.prototype.mostrar = function(msj) {
   console.log('Heigth: '+this.txtMostrar.height);
   if(this.txtMostrar.height < 40){//En caso de contar con una linea
     this.txtFondo.loadTexture('globo1');
+    this.txtFondo.y = this.y + 20;
+    this.txtMostrar.y = this.txtFondo.y + 8;
   }else if(this.txtMostrar.height < 87){//En caso de contar con dos hasta 4 lineas
     this.txtFondo.loadTexture('globo2');
   }else{//En caso de contrar con mas de 4 lineas
@@ -902,6 +904,8 @@ module.exports = Menu;
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN1');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(60, 150, 'font', 'Bienvenido, a lo largo\nde este nivel aprenderás\ncuales son los tipo de\ndato básicos en \nJavascript; estos tipos\nson realmente utiles,\nnos permitirán definir\nel tipo de información\nmanejada y la cual se\nquiere almacenar y\nmanipular (números,\ntextos, etc.)\n\nVamos!', 24);
     },
 
     iniciarJuego : function(game){
@@ -1618,6 +1622,8 @@ module.exports = Menu;
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN2');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(470, 140, 'font', 'Ahora que ya conoces\nlos diferentes tipos de\ndato, es hora de aplicar\nesos conocimientos; en\neste nivel identificarás\ny aprenderás a declarar\ndiferentes variables de\nacuerdo a su necesidad\nademás descubrirás la\nimportancia de las\nvariables para el manejo\nde datos\n\nAdelante!', 24);
     },
 
     iniciarJuego : function(game){
@@ -3028,13 +3034,40 @@ var Situacion =
 
   'use strict';
   var Pausa = require('../prefabs/pause');
+  var textBox = require('../prefabs/textBox');
+  var Situacion = 
+    [{
+      "tipo"  : 'for',
+      "ciclo": [{'texto':'var i = 0; i >= []; i++','respuesta':true},{'texto':'var i = 0; i >= []; i--','respuesta':false},{'texto':'var i = []; i <= 0; i--','respuesta':false}],
+      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
+    },
+    {
+      "tipo"  : 'while',
+      "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
+      "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
+    }];
+
+
   function Nivel5() {}
   Nivel5.prototype = {
+    maxtime: 90,
     flagpause:false,
     intro:true,
+    intSituacion:0,
+    itemX: 0,
+    itemY: 0,
+    slotCiclo:false,
+    slotAccion_1:false,
+
     init:function(){
+      this.maxtime= 90; 
+      this.itemX= 0;
+      this.itemY= 0;
       this.flagpause=false;
       this.intro=true;
+      this.intSituacion=0;
+      this.slotCiclo=false;
+      this.slotAccion_1=false;
     },
 
   	create: function() {
@@ -3077,6 +3110,16 @@ var Situacion =
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
 
+      //boton ciclo while
+      this.btnwhile = this.game.add.sprite(546, 100,'btnwhile');
+      this.btnwhile.inputEnabled = true;
+      this.btnwhile.events.onInputDown.add(this.listenerwhile, this);
+
+      //boton ciclo for
+      this.btnfor = this.game.add.sprite(546, 222,'btnfor');
+      this.btnfor.inputEnabled = true;
+      this.btnfor.events.onInputDown.add(this.listenerfor, this);
+
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
       this.btnPausa.frame = 1;
@@ -3092,8 +3135,55 @@ var Situacion =
 
     update:function(){
       if(!this.intro){
-
+        var mouseX = this.game.input.x;
+        var mouseY = this.game.input.y;
+        this.items.forEach(function(item) {
+          //Se verifican los items para realizar su movimiento en caso de click
+          if(item.movimiento == true){          
+            item.body.x = mouseX
+            item.body.y = mouseY;
+            item.texto.x = item.x ;
+            item.texto.y = item.y ;
+          }       
+        });
       }
+    },
+
+    crearSituacion:function(){
+      //Se crea slot de estructura if
+      this.slot = this.items.create(470,40,'slotIF');
+      //creamos las acciones de la situación
+      var yitem = 350;
+      var CItems = this.items;
+      var game = this;
+
+      Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
+          var item = CItems.create(535,yitem,'accion_small');
+          item.tipo = 0;
+          item.anchor.setTo(0.5,0.5);
+          item.texto = game.game.add.text(item.x, item.y,acciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = acciontext.respuesta;
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
+          yitem+=40;
+      });
+
+      //creamos las condiciones de la situación
+      yitem = 350;
+      Situacion[this.intSituacion].ciclo.forEach(function(condiciontext) {
+          var item = CItems.create(690,yitem,'condicion');          
+          item.tipo = 1;
+          item.anchor.setTo(0.5,0.5);
+          item.texto = game.game.add.text(item.x, item.y,condiciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = condiciontext.respuesta;
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
+          yitem+=40;
+      });
     },
 
     pausaJuego: function(game){
@@ -3118,11 +3208,126 @@ var Situacion =
       }
     },
 
+    correrCondicion: function(){
+
+    },
+
+    listenerwhile:function(){
+      if(Situacion[this.intSituacion].tipo == 'while'){
+        this.crearSituacion();
+        this.btnwhile.visible = false;
+        this.btnfor.visible = false;
+      }else{
+        alert('este no es el mejor ciclo recuerda que bla bla bla');
+      }
+    },
+
+    listenerfor:function(){
+      if(Situacion[this.intSituacion].tipo == 'for'){
+        this.crearSituacion();
+        this.btnwhile.visible = false;
+        this.btnfor.visible = false;
+      }else{
+        alert('este no es el mejor ciclo recuerda que bla bla bla');
+      }
+    },
+    
+    clickItem : function(item){
+      this.itemX = item.x;
+      this.itemY = item.y;
+      item.movimiento = true;      
+    },
+
+    releaseItem:function(item){
+      if(item.movimiento){
+        item.movimiento = false;
+        //Se define cuadro imaginario para las acciones
+        if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
+          if(!this.slotAccion_1){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
+            itemEncajado.texto.fontSize = 20;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slot1 = true;          
+            item.kill();
+            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,15,15,"0");
+            this.items.add(this.cajaTexto);
+          }else{
+
+            this.items.forEach(function(itemslot1) {
+              if(itemslot1.slot1){
+                var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
+                itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
+                itemslot1.texto.fontSize = 20;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.respuesta = respuesAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotAccion_1 = true;
+        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
+          if(!this.slotCiclo){
+            //Creamos el item el cual encaja en el slot de la accion          
+            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
+            itemEncajado.anchor.setTo(0.5,0.5);
+            itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
+            itemEncajado.texto.x = itemEncajado.x;
+            itemEncajado.texto.y = itemEncajado.y;
+            itemEncajado.slotC = true;          
+            item.kill();
+          }else{
+
+            this.items.forEach(function(itemslot1) {
+              if(itemslot1.slotC){
+                var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
+                itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
+                itemslot1.texto.x = itemslot1.x;
+                itemslot1.texto.y = itemslot1.y;
+                //actualizamos el item arrastrado con el texto del item en el slot
+                item.texto = textoAnt;
+                item.respuesta = respuesAnt;
+                item.texto.fontSize = 14;
+              }
+            });
+            item.x = this.itemX;
+            item.y = this.itemY;
+            item.texto.x = item.x;
+            item.texto.y = item.y;
+          }
+          //indicamos que el primer slot se ha ocupado
+          this.slotCiclo = true;
+        }else{
+          item.x = this.itemX
+          item.y = this.itemY;
+          item.texto.x = item.x;
+          item.texto.y = item.y;
+        }
+      }
+    },
+
 
   };
 
   module.exports = Nivel5;
-},{"../prefabs/pause":4}],16:[function(require,module,exports){
+},{"../prefabs/pause":4,"../prefabs/textBox":6}],16:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -3147,6 +3352,8 @@ var Situacion =
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN6');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(470, 160, 'font', 'Hola, ha sido un largo\ncamino y ha llegado la\nhora de un reto de\nverdad, en este nivel\ntendras la oportunidad\naprender del uso de\nfunciones por medio de\nla práctica.\nPara completar el nivel\ntendras que escribir\ncodigo Javascript\ny completar cada reto.\n\nEstas listo?!', 24);
     },
 
     iniciarJuego : function(game){
@@ -3599,6 +3806,11 @@ Preload.prototype = {
     this.load.image('btnEjecutar4','assets/images/Nivel 4/btnEjecutar.png');
     this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
     this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
+
+     /*Imagenes nivel 5*/
+    this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
+    this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');    
+
 
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');

@@ -25,6 +25,8 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN1');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(60, 150, 'font', 'Bienvenido, a lo largo\nde este nivel aprenderás\ncuales son los tipo de\ndato básicos en \nJavascript; estos tipos\nson realmente utiles,\nnos permitirán definir\nel tipo de información\nmanejada y la cual se\nquiere almacenar y\nmanipular (números,\ntextos, etc.)\n\nVamos!', 24);
     },
 
     iniciarJuego : function(game){

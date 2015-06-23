@@ -19,19 +19,19 @@ Entidad.prototype.update = function() {
 
 Entidad.prototype.mostrar = function(msj) {
   if(!this.txtMostrar){//Se realiza la cracion del mensaje
-    this.txtFondo = this.game.add.sprite(this.x + (this.width * 3),this.y + 20,'globo1');
-    this.txtFondo.anchor.setTo(0.5,0.5);
-    this.txtMostrar = this.game.add.text(this.txtFondo.x,this.txtFondo.y,msj,{ font: '12px consolas', fill: '#000', align:'left'});
-    this.txtMostrar.anchor.setTo(0.5,0.5);
+    this.txtFondo = this.game.add.sprite(this.x + (this.width * 3)+10,this.y + 20,'globo1');
+    this.txtFondo.anchor.setTo(0.5,0);
+    this.txtMostrar = this.game.add.text(this.txtFondo.x,this.txtFondo.y + 8,msj,{ font: '12px consolas', fill: '#000', align:'left'});
+    this.txtMostrar.anchor.setTo(0.5,0);
     this.txtMostrar.wordWrap = true;
-    this.txtMostrar.wordWrapWidth = 120;
+    this.txtMostrar.wordWrapWidth = 110;
     this.txtMostrar.alpha = 0;
     this.txtFondo.alpha = 0;
   }else{
-    this.txtFondo.x = this.x + (this.width * 3);
-    this.txtFondo.y = this.y + 20;
+    this.txtFondo.x = this.x + (this.width * 3)+10;
+    this.txtFondo.y = this.y + 40;
     this.txtMostrar.x = this.txtFondo.x;
-    this.txtMostrar.y = this.txtFondo.y
+    this.txtMostrar.y = this.txtFondo.y + 15;
     this.txtMostrar.setText(msj);//Se establece el texto del mensaje
   }
   if(!msj){//Texto por defecto
@@ -40,6 +40,8 @@ Entidad.prototype.mostrar = function(msj) {
   console.log('Heigth: '+this.txtMostrar.height);
   if(this.txtMostrar.height < 40){//En caso de contar con una linea
     this.txtFondo.loadTexture('globo1');
+    this.txtFondo.y = this.y + 20;
+    this.txtMostrar.y = this.txtFondo.y + 8;
   }else if(this.txtMostrar.height < 87){//En caso de contar con dos hasta 4 lineas
     this.txtFondo.loadTexture('globo2');
   }else{//En caso de contrar con mas de 4 lineas

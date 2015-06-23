@@ -22,6 +22,8 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN6');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(470, 160, 'font', 'Hola, ha sido un largo\ncamino y ha llegado la\nhora de un reto de\nverdad, en este nivel\ntendras la oportunidad\naprender del uso de\nfunciones por medio de\nla práctica.\nPara completar el nivel\ntendras que escribir\ncodigo Javascript\ny completar cada reto.\n\nEstas listo?!', 24);
     },
 
     iniciarJuego : function(game){

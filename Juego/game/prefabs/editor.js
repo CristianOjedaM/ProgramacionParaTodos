@@ -194,8 +194,8 @@ Editor.prototype.showError = function(error,linea) {
     case "ReferenceError":
       this.txtError.setText('Ups, tal vez el objeto nombrado en la linea ' + (linea+1) + ' no exista');
       break;
-    case "TypeError":
-
+    default:
+      this.txtError.setText('Ups, '+error+' en la linea ' + (linea+1));
       break;
   }  
   this.game.add.tween(this.errorGroup).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);
