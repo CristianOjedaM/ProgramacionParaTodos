@@ -50,6 +50,8 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN3');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(55, 150, 'font', 'Ahora que ya conoces\nlos diferentes tipos de\ndato, es hora de aplicar\nesos conocimientos; en\neste nivel identificarás\ny aprenderás a declarar\ndiferentes variables de\nacuerdo a su necesidad\nademás descubrirás la\nimportancia de las\nvariables para el manejo\nde datos\n\nAdelante!', 24);
     },
 
     iniciarJuego : function(game){

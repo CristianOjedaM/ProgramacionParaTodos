@@ -2115,6 +2115,8 @@ module.exports = Menu;
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN3');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(55, 150, 'font', 'Ahora que ya conoces\nlos diferentes tipos de\ndato, es hora de aplicar\nesos conocimientos; en\neste nivel identificarás\ny aprenderás a declarar\ndiferentes variables de\nacuerdo a su necesidad\nademás descubrirás la\nimportancia de las\nvariables para el manejo\nde datos\n\nAdelante!', 24);
     },
 
     iniciarJuego : function(game){
@@ -2633,17 +2635,19 @@ module.exports = Menu;
 var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
-    "condiciones": [{'texto':'estampida.pasando() == true','respuesta':true},{'texto':'estampida.pasando() >= false','respuesta':false},{'texto':'estampida.pasando() <= true','respuesta':false}],
+    "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+    "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
     "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
+    "instrucciones": ' Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
   }];
 
   function Nivel4() {}
   Nivel4.prototype = {
-    maxtime: 120,//Velocidad de inicio para movimiento de items    
+    maxtime: 90,
     intSituacion:0,
     itemX: 0,
     itemY: 0,
@@ -2652,9 +2656,11 @@ var Situacion =
     slotAccion_2:false,
     flagpause:false,
     intro:true,
+    score:0,
+    intentosxsitua:0,
 
     init:function(){
-      this.maxtime= 120;//Velocidad de inicio para movimiento de items    
+      this.maxtime= 90; 
       this.intSituacion=0;
       this.itemX= 0;
       this.itemY= 0;
@@ -2663,6 +2669,8 @@ var Situacion =
       this.slotAccion_2=false;
       this.flagpause = false;
       this.intro = true; 
+      this.score = 0;
+      this.intentosxsitua = 0;
     },
 
     create: function(){
@@ -2699,12 +2707,22 @@ var Situacion =
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
+      //Se crea marco de la situacion
+      this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
+      this.pasos.anchor.setTo(0.5,0.5);
+      this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
+      this.pasos.texto.anchor.setTo(0.5,0.5);
+
       //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
       this.cuadroTime.anchor.setTo(0.5, 0.5);
       //Se setea el texto para el cronometro
       this.timer = this.game.add.bitmapText(230, 40 ,'font', '00:00', 32);
       this.timer.anchor.setTo(0.5,0.5);
+
+      //Se crear text para el score
+      this.scoretext = this.game.add.bitmapText(230, 40 ,'font', 'Puntaje: 0', 32);
+      this.scoretext.anchor.setTo(0.5,0.5);
 
       //Grupo de items
       this.items = this.game.add.group();
@@ -2750,10 +2768,23 @@ var Situacion =
   	},
 
     crearSituacion:function(){
+      //Se restablece el tiempo
+      this.maxtime= 90; 
+      this.intentosxsitua = 0;
       //Se crea slot de estructura if
-      this.slot = this.items.create(470,40,'slotIF');
+      this.slot = this.items.create(479,40,'slotIF');
+      var textif = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+      textif.anchor.setTo(0,0.5);
+      textif.fontWeight = 'bold';
+
+      //Se establece los pasos de la situacion
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
+
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      textCierr.anchor.setTo(0,0.5);
+      textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
-      var yitem = 350;
+      var yitem = 340;
       var CItems = this.items;
       var game = this;
 
@@ -2771,7 +2802,7 @@ var Situacion =
       });
 
       //creamos las condiciones de la situación
-      yitem = 350;
+      yitem = 340;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
           var item = CItems.create(690,yitem,'condicion');          
           item.tipo = 1;
@@ -2800,7 +2831,7 @@ var Situacion =
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 82),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -2836,7 +2867,7 @@ var Situacion =
         }else if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 147) && item.body.y <= (this.slot.body.y + 213) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){ //slot accion 2
           if(!this.slotAccion_2){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 179),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 144),(this.slot.body.y + 180),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -2873,7 +2904,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3010,6 +3041,8 @@ var Situacion =
               item.kill();
             });
             alert("Correcto");
+            this.score += (50 - (this.intentosxsitua*5));
+            this.scoretext.setText(this.score);
             this.crearSituacion();
           }else{
             this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
@@ -3021,6 +3054,7 @@ var Situacion =
           alert("Vuelve a intentarlo");
         }        
       }
+      this.intentosxsitua++;      
     },
     clickListener: function(){
        this.game.state.clearCurrentState();
@@ -3253,9 +3287,7 @@ var Situacion =
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slot1 = true;          
-            item.kill();
-            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,15,15,"0");
-            this.items.add(this.cajaTexto);
+            item.kill();            
           }else{
 
             this.items.forEach(function(itemslot1) {
@@ -3283,7 +3315,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 20),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3291,6 +3323,9 @@ var Situacion =
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slotC = true;          
             item.kill();
+            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,20,15,"0");
+            this.cajaTexto.texto.fontSize = 16;
+            this.items.add(this.cajaTexto);
           }else{
 
             this.items.forEach(function(itemslot1) {
@@ -3798,7 +3833,7 @@ Preload.prototype = {
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
     /*Imagenes nivel 4*/
-    this.load.image('tile_nivel4','assets/images/Nivel 4/tile.jpg');
+    this.load.image('tile_nivel4','assets/images/Nivel 4/tile.png');
     this.load.image('slotIF','assets/images/Nivel 4/slot.png');
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
