@@ -63,13 +63,16 @@ var Situacion =
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
       this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      this.tiempo.start();
+      this.tiempo.start();      
+
+      //Se crea marco de la situacion
+      this.game.add.sprite(10,40,'fondosituacion');
 
       //Imagen de fondo para el tiempo
-      this.cuadroTime = this.game.add.sprite(230, 10,'time');
-      this.cuadroTime.anchor.setTo(0.5, 0);
+      this.cuadroTime = this.game.add.sprite(230, 40,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0.5);
       //Se setea el texto para el cronometro
-      this.timer = this.game.add.bitmapText(230, 10 ,'font', '00:00', 32);
+      this.timer = this.game.add.bitmapText(230, 40 ,'font', '00:00', 32);
       this.timer.anchor.setTo(0.5,0.5);
 
       //Grupo de items
@@ -78,9 +81,6 @@ var Situacion =
       this.items.inputEnabled = true;            
 
       this.crearSituacion();
-
-      //Se crea marco de la situacion
-      this.game.add.sprite(10,40,'fondosituacion');
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
@@ -324,9 +324,6 @@ var Situacion =
 
         //Detener metodo de update
         this.tiempo.stop();
-        //Eliminar items restantes en el campo
-        this.items.destroy();
-        this.btnPausa.kill();
       }
 
       var minutos = 0;
