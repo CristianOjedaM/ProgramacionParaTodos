@@ -1,13 +1,13 @@
  'use strict';
  var Pausa = require('../prefabs/pause');
- var Situacion = 
+var Situacion = 
   [{
-    "condiciones": ['estampida.pasando() == true','estampida.pasando() == false','estampida.pasando()<=true'],
-    "acciones" :  ['cruzar();','saltar();','esperar();','hablar();','disparar();']
+    "condiciones": [{'texto':'estampida.pasando() == true','respuesta':true},{'texto':'estampida.pasando() >= false','respuesta':false},{'texto':'estampida.pasando() <= true','respuesta':false}],
+    "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
-    "condiciones": ['obstaculo.distancia => 50','obstaculo.distancia <= 50','obstaculo.distancia == 51'],
-    "acciones" :  ['saltar();','esperar();','correr();','nadar();','arrastrar();']
+    "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
+    "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
   }];
 
   function Nivel4() {}
@@ -63,10 +63,7 @@
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
-      this.items.inputEnabled = true;
-      
-      //Se crea slot de estructura if
-      this.slot = this.items.create(470,40,'slotIF');
+      this.items.inputEnabled = true;            
 
       this.crearSituacion();
 
@@ -110,6 +107,8 @@
   	},
 
     crearSituacion:function(){
+      //Se crea slot de estructura if
+      this.slot = this.items.create(470,40,'slotIF');
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
@@ -119,7 +118,8 @@
           var item = CItems.create(535,yitem,'accion_small');
           item.tipo = 0;
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.game.add.text(item.x, item.y,acciontext , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,acciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = condiciontext.respuesta;
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(game.clickItem, game);
@@ -133,7 +133,8 @@
           var item = CItems.create(690,yitem,'condicion');          
           item.tipo = 1;
           item.anchor.setTo(0.5,0.5);
-          item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.texto = game.game.add.text(item.x, item.y,condiciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = condiciontext.respuesta;
           item.texto.anchor.setTo(0.5,0.5);
           item.inputEnabled = true;
           item.events.onInputDown.add(game.clickItem, game);
@@ -159,6 +160,7 @@
             var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
             itemEncajado.texto.fontSize = 20;
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
@@ -170,6 +172,7 @@
               if(itemslot1.slot1){
                 var textoAnt = itemslot1.texto;
                 itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
                 itemslot1.texto.fontSize = 20;
                 itemslot1.texto.x = itemslot1.x;
                 itemslot1.texto.y = itemslot1.y;
@@ -191,6 +194,7 @@
             var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 179),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
             itemEncajado.texto.fontSize = 20;
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
@@ -202,6 +206,7 @@
               if(itemslot2.slot2){
                 var textoAnt = itemslot2.texto;
                 itemslot2.texto = item.texto;
+                itemslot2.respuesta = item.respuesta;
                 itemslot2.texto.fontSize = 20;
                 itemslot2.texto.x = itemslot2.x;
                 itemslot2.texto.y = itemslot2.y;
@@ -224,6 +229,7 @@
             var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
+            itemEncajado.respuesta = item.respuesta;
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slotC = true;          
@@ -280,7 +286,40 @@
     },
 
     correrCondicion: function(){
-
+      //se valida que el slot este lleno
+      var condicionCorrecta = false;
+      if(slotCondicion && slotAccion_1 && slotAccion_2){
+        //Se recorren los items para obtener los que se encuentran en el slot
+        this.items.forEach(function(item) {
+          if(item.slotC){ //slot condicion
+            if(item.respuesta){
+              condicionCorrecta = true;
+            }else{
+              condicionCorrecta = false;
+            }
+          }else if(item.slot1){ //slot accion verdadera
+            if(item.respuesta == 'slot1' ){
+              condicionCorrecta = true;
+            }else{
+              condicionCorrecta = false;
+            }
+          }else if(item.slot2){ //slot accion falsa
+            if(item.respuesta == 'slot2' ){
+              condicionCorrecta = true;
+            }else{
+              condicionCorrecta = false;
+            }
+          }
+        });
+        //si la condicion es correcta se pasa a la siguiente situacion
+        if(condicionCorrecta){
+          this.items.forEach(function(item) {
+            item.kill();
+          });
+          intSituacion++;
+          this.crearSituacion();
+        }        
+      }
     },
 
   };
