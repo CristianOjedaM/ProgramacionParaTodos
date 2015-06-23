@@ -320,12 +320,23 @@ var Situacion =
             item.kill();
           });
           this.intSituacion++;
-          alert("Correcto");
-          this.crearSituacion();
+          if(this.intSituacion<2){
+            alert("Correcto");
+            this.crearSituacion();
+          }else{
+            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+            this.siguiente.inputEnabled = true;
+            this.siguiente.events.onInputDown.add(this.clickListener, this);
+            this.siguiente.fixedToCamera = true; 
+          }
         }else{
           alert("Vuelve a intentarlo");
         }        
       }
+    },
+    clickListener: function(){
+       this.game.state.clearCurrentState();
+      this.game.state.start("play");
     },
 
   };
