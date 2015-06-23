@@ -172,6 +172,8 @@
     listenerwhile:function(){
       if(Situacion[this.intSituacion].tipo == 'while'){
         this.crearSituacion();
+        this.btnwhile.visible = false;
+        this.btnfor.visible = false;
       }else{
         alert('este no es el mejor ciclo recuerda que bla bla bla');
       }
@@ -180,6 +182,8 @@
     listenerfor:function(){
       if(Situacion[this.intSituacion].tipo == 'for'){
         this.crearSituacion();
+        this.btnwhile.visible = false;
+        this.btnfor.visible = false;
       }else{
         alert('este no es el mejor ciclo recuerda que bla bla bla');
       }
