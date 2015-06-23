@@ -66,15 +66,15 @@
       this.items.inputEnabled = true;
       
       //Se crea slot de estructura if
-      this.slot = this.items.create(430,40,'slotIF');
+      this.slot = this.items.create(470,40,'slotIF');
 
       this.crearSituacion();
 
       //Se crea marco de la situacion
-      this.game.add.sprite(100,40,'fondosituacion');
+      this.game.add.sprite(10,40,'fondosituacion');
 
       //Se agrega boton de ejecucion
-      this.run = this.game.add.sprite(320, 355,'btnEjecutar4');
+      this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
       this.run.anchor.setTo(0.5,0.5);
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
