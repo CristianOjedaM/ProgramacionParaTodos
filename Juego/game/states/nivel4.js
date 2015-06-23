@@ -2,7 +2,7 @@
 var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
-    "condiciones": [{'texto':'estampida.pasando() == true','respuesta':true},{'texto':'estampida.pasando() >= false','respuesta':false},{'texto':'estampida.pasando() <= true','respuesta':false}],
+    "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
     "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
@@ -12,7 +12,7 @@ var Situacion =
 
   function Nivel4() {}
   Nivel4.prototype = {
-    maxtime: 120,//Velocidad de inicio para movimiento de items    
+    maxtime: 90,
     intSituacion:0,
     itemX: 0,
     itemY: 0,
@@ -23,7 +23,7 @@ var Situacion =
     intro:true,
 
     init:function(){
-      this.maxtime= 120;//Velocidad de inicio para movimiento de items    
+      this.maxtime= 90; 
       this.intSituacion=0;
       this.itemX= 0;
       this.itemY= 0;
@@ -120,7 +120,7 @@ var Situacion =
 
     crearSituacion:function(){
       //Se crea slot de estructura if
-      this.slot = this.items.create(470,40,'slotIF');
+      this.slot = this.items.create(479,40,'slotIF');
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
@@ -169,7 +169,7 @@ var Situacion =
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 82),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -205,7 +205,7 @@ var Situacion =
         }else if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 147) && item.body.y <= (this.slot.body.y + 213) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){ //slot accion 2
           if(!this.slotAccion_2){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 179),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 180),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
