@@ -207,7 +207,7 @@ var Situacion =
             this.items.forEach(function(itemslot2) {
               if(itemslot2.slot2){
                 var textoAnt = itemslot2.texto;
-                var respuesAnt = itemslot1.respuesta;
+                var respuesAnt = itemslot2.respuesta;
                 itemslot2.texto = item.texto;
                 itemslot2.respuesta = item.respuesta;
                 itemslot2.texto.fontSize = 20;
