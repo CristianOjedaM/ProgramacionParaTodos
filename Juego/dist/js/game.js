@@ -441,27 +441,42 @@ Entidad.prototype.update = function() {
 
 Entidad.prototype.mostrar = function(msj) {
   if(!this.txtMostrar){//Se realiza la cracion del mensaje
-    this.txtMostrar = this.game.add.text(this.x + this.width,this.y,msj,{ font: '12px consolas', fill: '#fff', align:'left'});
-    this.txtMostrar.anchor.setTo(0,0);
+    this.txtFondo = this.game.add.sprite(this.x + (this.width * 3),this.y + 20,'globo1');
+    this.txtFondo.anchor.setTo(0.5,0.5);
+    this.txtMostrar = this.game.add.text(this.txtFondo.x,this.txtFondo.y,msj,{ font: '12px consolas', fill: '#000', align:'left'});
+    this.txtMostrar.anchor.setTo(0.5,0.5);
     this.txtMostrar.wordWrap = true;
     this.txtMostrar.wordWrapWidth = 120;
     this.txtMostrar.alpha = 0;
+    this.txtFondo.alpha = 0;
   }else{
-    this.txtMostrar.x = this.x + this.width;
-    this.txtMostrar.y = this.y;
+    this.txtFondo.x = this.x + (this.width * 3);
+    this.txtFondo.y = this.y + 20;
+    this.txtMostrar.x = this.txtFondo.x;
+    this.txtMostrar.y = this.txtFondo.y
     this.txtMostrar.setText(msj);//Se establece el texto del mensaje
   }
   if(!msj){//Texto por defecto
     this.txtMostrar.setText("Hola");
   }
+  console.log('Heigth: '+this.txtMostrar.height);
+  if(this.txtMostrar.height < 40){//En caso de contar con una linea
+    this.txtFondo.loadTexture('globo1');
+  }else if(this.txtMostrar.height < 87){//En caso de contar con dos hasta 4 lineas
+    this.txtFondo.loadTexture('globo2');
+  }else{//En caso de contrar con mas de 4 lineas
+    this.txtFondo.loadTexture('globo3');
+  }
   this.msjBandera = true;
   this.game.add.tween(this.txtMostrar).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);//Animacion para mostrar mensaje
+  this.game.add.tween(this.txtFondo).to({alpha:1}, 350, Phaser.Easing.Linear.None, true);//Animacion para mostrar mensaje
   setTimeout(this.ocultar,5000,this);//Se realiza el llamado de metodo para ocultar mensaje en 5 segundos
 };
 
 Entidad.prototype.ocultar = function(e) {
   //Animacion para ocutar mensaje
   e.game.add.tween(e.txtMostrar).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
+  e.game.add.tween(e.txtFondo).to({alpha:0}, 350, Phaser.Easing.Linear.None, true);
   e.msjBandera = false;
   e.propBandera = false;
   e.consBandera = false;
@@ -2609,7 +2624,7 @@ module.exports = Menu;
   module.exports = Nivel3;
 },{"../prefabs/pause":4}],14:[function(require,module,exports){
  'use strict';
- var Pausa = require('../prefabs/pause');
+var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
     "condiciones": [{'texto':'estampida.pasando() == true','respuesta':true},{'texto':'estampida.pasando() >= false','respuesta':false},{'texto':'estampida.pasando() <= true','respuesta':false}],
@@ -2622,7 +2637,7 @@ var Situacion =
 
   function Nivel4() {}
   Nivel4.prototype = {
-    vel:50,//Velocidad de inicio para movimiento de items    
+    maxtime: 120,//Velocidad de inicio para movimiento de items    
     intSituacion:0,
     itemX: 0,
     itemY: 0,
@@ -2633,7 +2648,7 @@ var Situacion =
     intro:true,
 
     init:function(){
-      this.vel=50;//Velocidad de inicio para movimiento de items    
+      this.maxtime= 120;//Velocidad de inicio para movimiento de items    
       this.intSituacion=0;
       this.itemX= 0;
       this.itemY= 0;
@@ -2670,15 +2685,27 @@ var Situacion =
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 
+      //Se define el contador de controlde nivel
+      this.tiempo = this.game.time.create(false);
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
+      this.tiempo.start();      
+
+      //Se crea marco de la situacion
+      this.game.add.sprite(10,40,'fondosituacion');
+
+      //Imagen de fondo para el tiempo
+      this.cuadroTime = this.game.add.sprite(230, 40,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0.5);
+      //Se setea el texto para el cronometro
+      this.timer = this.game.add.bitmapText(230, 40 ,'font', '00:00', 32);
+      this.timer.anchor.setTo(0.5,0.5);
+
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
       this.items.inputEnabled = true;            
 
       this.crearSituacion();
-
-      //Se crea marco de la situacion
-      this.game.add.sprite(10,40,'fondosituacion');
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
@@ -2902,6 +2929,51 @@ var Situacion =
       }
     },
 
+    updateTimer: function() {
+      //Se comprueba que el tiempo de juego haya terminado
+      if(this.maxtime == 0){
+        this.intSituacion++;
+        if(this.intSituacion<2){
+          this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+          this.items.forEach(function(item) {            
+            if(item.texto != null){item.texto.kill();}
+            item.kill();
+          });          
+          this.crearSituacion();
+        }else{
+          this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+          this.siguiente.inputEnabled = true;
+          this.siguiente.events.onInputDown.add(this.clickListener, this);
+          this.siguiente.fixedToCamera = true; 
+        }
+
+        //Detener metodo de update
+        this.tiempo.stop();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.maxtime/60 > 0){
+        minutos = Math.floor(this.maxtime/60);
+        segundos = this.maxtime%60;
+      }else{
+        minutos = 0;
+        segundos = this.maxtime; 
+      }
+      
+      this.maxtime--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.timer.setText(minutos + ':' +segundos);
+    },
+
     correrCondicion: function(){
       //se valida que el slot este lleno
       var condicionCorrecta = true;
@@ -2955,23 +3027,102 @@ var Situacion =
 },{"../prefabs/pause":4}],15:[function(require,module,exports){
 
   'use strict';
-  var Editor = require('../prefabs/editor');
-  var Tablero = require('../prefabs/tablero');
-
+  var Pausa = require('../prefabs/pause');
   function Nivel5() {}
   Nivel5.prototype = {
+    flagpause:false,
+    intro:true,
+    init:function(){
+      this.flagpause=false;
+      this.intro=true;
+    },
 
   	create: function() {
-	  	//Se incluye el panel de pausa al nivel
-      this.editor = new Editor(this.game,170,20,400,20);
-      this.game.add.existing(this.editor);
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'introN3');
+      this.game.input.onDown.add(this.iniciarJuego,this);
   	},
+
+    iniciarJuego : function(game){
+      var x1 = 115;
+      var x2 = 264;
+      var y1 = 480;
+      var y2 = 550;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.intro){          
+          this.empezar();
+        }
+      }
+    }, 
+
+    empezar:function () {
+       //Habilitacion de fisicas
+      this.game.physics.startSystem(Phaser.Physics.ARCADE);      
+      this.game.world.setBounds(0, 0, 800, 600);
+      //Fondo de juego
+      this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
+
+      //Grupo de items
+      this.items = this.game.add.group();
+      this.items.enableBody = true;
+      this.items.inputEnabled = true;
+
+      //Se crea marco de la situacion
+      this.game.add.sprite(10,40,'fondosituacion');
+
+      //Se agrega boton de ejecucion
+      this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
+      this.run.anchor.setTo(0.5,0.5);
+      this.run.inputEnabled = true;
+      this.run.events.onInputDown.add(this.correrCondicion, this);
+
+      //Se agrega el boton de pausa
+      this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
+      this.btnPausa.frame = 1;
+      this.btnPausa.fixedToCamera = true;
+
+       //Se incluye el panel de pausa al nivel
+      this.pnlPausa = new Pausa(this.game);
+      this.game.add.existing(this.pnlPausa);
+      this.game.input.onDown.add(this.pausaJuego,this);
+      //Se indica que sale del intro
+      this.intro = false;
+    },
+
+    update:function(){
+      if(!this.intro){
+
+      }
+    },
+
+    pausaJuego: function(game){
+      var x1 = (this.game.width - 81);
+      var x2 = (this.game.width - 36);
+      var y1 = 10;
+      var y2 = 55;
+      if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
+        if(this.game.paused == false){
+          //Se muestra panel de pausa
+          if(this.flagpause==false){
+            this.pnlPausa.show();   
+            this.flagpause = true;
+          }
+            
+        }else{
+          //Se esconde el panel de pausa
+          this.game.paused = false;
+          this.pnlPausa.hide();
+          this.flagpause = false;          
+        }
+      }
+    },
 
 
   };
 
   module.exports = Nivel5;
-},{"../prefabs/editor":2,"../prefabs/tablero":5}],16:[function(require,module,exports){
+},{"../prefabs/pause":4}],16:[function(require,module,exports){
 
   'use strict';
   var Pausa = require('../prefabs/pause');
@@ -3328,19 +3479,19 @@ var Situacion =
   Play.prototype = {
     create: function() {
       this.btns = this.game.add.group();
-      this.crearBoton(0,0,'nivel1',200,30);
-      this.crearBoton(0,100,'nivel2',320,130);
-      this.crearBoton(0,200,'nivel3',220,230);
-      this.crearBoton(0,300,'nivel4',200,330);
-      this.crearBoton(0,400,'nivel5',320,430);
-      this.crearBoton(0,500,'nivel6',220,530);
+      this.crearBoton(0,0,'nivel1',195,50,'Hola, aquí aprenderás sobre\nlos tipos de dato básicos de\njavascript. Intentalo!');
+      this.crearBoton(0,100,'nivel2',305,150,'Sumérgete en un juego lleno\nde diversión mientras aprendes\na manipular variables. Vamos!');
+      this.crearBoton(0,200,'nivel3',205,250,'Prueba tu agilidad y lógica por\nmedio del uso de operadores\nlógicos. Empecemos!');
+      this.crearBoton(0,300,'nivel4',200,350,'');
+      this.crearBoton(0,400,'nivel5',305,450,'');
+      this.crearBoton(0,500,'nivel6',205,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
     },
 
     update: function() {
 
     },
 
-    crearBoton: function(x,y,llave,txt_x,txt_y){
+    crearBoton: function(x,y,llave,txt_x,txt_y,txt){
       var boton = this.game.add.sprite(x, y,llave,0);
       boton.nivel = llave;
       var anim = boton.animations.add('over', [0,1,2,3,4,5,6], 10, false);
@@ -3348,8 +3499,9 @@ var Situacion =
         if(boton.texto){
           boton.texto.revive();
         }else{
-          boton.texto = this.game.add.bitmapText(txt_x, txt_y, 'font', 'Algun texto', 24);
+          boton.texto = this.game.add.bitmapText(txt_x, txt_y, 'font', txt, 20);
         }
+        boton.texto.anchor.setTo(0,0.5);
       }, this);
       boton.inputEnabled = true;
       boton.events.onInputDown.add(this.clickListener, this);

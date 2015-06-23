@@ -4,19 +4,19 @@
   Play.prototype = {
     create: function() {
       this.btns = this.game.add.group();
-      this.crearBoton(0,0,'nivel1',200,30);
-      this.crearBoton(0,100,'nivel2',320,130);
-      this.crearBoton(0,200,'nivel3',220,230);
-      this.crearBoton(0,300,'nivel4',200,330);
-      this.crearBoton(0,400,'nivel5',320,430);
-      this.crearBoton(0,500,'nivel6',220,530);
+      this.crearBoton(0,0,'nivel1',195,50,'Hola, aquí aprenderás sobre\nlos tipos de dato básicos de\njavascript. Intentalo!');
+      this.crearBoton(0,100,'nivel2',305,150,'Sumérgete en un juego lleno\nde diversión mientras aprendes\na manipular variables. Vamos!');
+      this.crearBoton(0,200,'nivel3',205,250,'Prueba tu agilidad y lógica por\nmedio del uso de operadores\nlógicos. Empecemos!');
+      this.crearBoton(0,300,'nivel4',200,350,'');
+      this.crearBoton(0,400,'nivel5',305,450,'');
+      this.crearBoton(0,500,'nivel6',205,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
     },
 
     update: function() {
 
     },
 
-    crearBoton: function(x,y,llave,txt_x,txt_y){
+    crearBoton: function(x,y,llave,txt_x,txt_y,txt){
       var boton = this.game.add.sprite(x, y,llave,0);
       boton.nivel = llave;
       var anim = boton.animations.add('over', [0,1,2,3,4,5,6], 10, false);
@@ -24,8 +24,9 @@
         if(boton.texto){
           boton.texto.revive();
         }else{
-          boton.texto = this.game.add.bitmapText(txt_x, txt_y, 'font', 'Algun texto', 24);
+          boton.texto = this.game.add.bitmapText(txt_x, txt_y, 'font', txt, 20);
         }
+        boton.texto.anchor.setTo(0,0.5);
       }, this);
       boton.inputEnabled = true;
       boton.events.onInputDown.add(this.clickListener, this);
