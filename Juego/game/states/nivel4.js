@@ -288,7 +288,7 @@ var Situacion =
     correrCondicion: function(){
       //se valida que el slot este lleno
       var condicionCorrecta = false;
-      if(slotCondicion && slotAccion_1 && slotAccion_2){
+      if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){
         //Se recorren los items para obtener los que se encuentran en el slot
         this.items.forEach(function(item) {
           if(item.slotC){ //slot condicion
@@ -313,10 +313,11 @@ var Situacion =
         });
         //si la condicion es correcta se pasa a la siguiente situacion
         if(condicionCorrecta){
+          this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
           this.items.forEach(function(item) {
             item.kill();
           });
-          intSituacion++;
+          this.intSituacion++;
           this.crearSituacion();
         }        
       }
