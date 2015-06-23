@@ -102,7 +102,17 @@
 
     update:function(){
       if(!this.intro){
-
+        var mouseX = this.game.input.x;
+        var mouseY = this.game.input.y;
+        this.items.forEach(function(item) {
+          //Se verifican los items para realizar su movimiento en caso de click
+          if(item.movimiento == true){          
+            item.body.x = mouseX
+            item.body.y = mouseY;
+            item.texto.x = item.x ;
+            item.texto.y = item.y ;
+          }       
+        });
       }
     },
 
