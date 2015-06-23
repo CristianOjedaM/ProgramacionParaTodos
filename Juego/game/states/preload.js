@@ -65,6 +65,9 @@ Preload.prototype = {
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
     this.load.image('condicion','assets/images/Nivel 4/condicion.png');
+    this.load.image('btnEjecutar4','assets/images/Nivel 4/btnEjecutar.png');
+    this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
+    this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
 
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
