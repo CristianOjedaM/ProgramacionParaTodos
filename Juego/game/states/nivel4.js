@@ -116,7 +116,7 @@
       var game = this;
 
       Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
-          var item = CItems.create(495,yitem,'accion_small');
+          var item = CItems.create(535,yitem,'accion_small');
           item.tipo = 0;
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,acciontext , { font: '14px calibri', fill: '#fff', align:'center'});
@@ -130,7 +130,7 @@
       //creamos las condiciones de la situación
       yitem = 350;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
-          var item = CItems.create(650,yitem,'condicion');          
+          var item = CItems.create(690,yitem,'condicion');          
           item.tipo = 1;
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,condiciontext , { font: '14px calibri', fill: '#fff', align:'center'});
