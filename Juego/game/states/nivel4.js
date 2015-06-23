@@ -171,6 +171,7 @@ var Situacion =
             this.items.forEach(function(itemslot1) {
               if(itemslot1.slot1){
                 var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
                 itemslot1.texto = item.texto;
                 itemslot1.respuesta = item.respuesta;
                 itemslot1.texto.fontSize = 20;
@@ -178,6 +179,7 @@ var Situacion =
                 itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
+                item.respuesta = respuesAnt;
                 item.texto.fontSize = 14;
               }
             });
@@ -205,6 +207,7 @@ var Situacion =
             this.items.forEach(function(itemslot2) {
               if(itemslot2.slot2){
                 var textoAnt = itemslot2.texto;
+                var respuesAnt = itemslot1.respuesta;
                 itemslot2.texto = item.texto;
                 itemslot2.respuesta = item.respuesta;
                 itemslot2.texto.fontSize = 20;
@@ -212,6 +215,7 @@ var Situacion =
                 itemslot2.texto.y = itemslot2.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
+                item.respuesta = respuesAnt;
                 item.texto.fontSize = 14;
               }
             });
@@ -239,11 +243,14 @@ var Situacion =
             this.items.forEach(function(itemslot1) {
               if(itemslot1.slotC){
                 var textoAnt = itemslot1.texto;
+                var respuesAnt = itemslot1.respuesta;
                 itemslot1.texto = item.texto;
+                itemslot1.respuesta = item.respuesta;
                 itemslot1.texto.x = itemslot1.x;
                 itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
                 item.texto = textoAnt;
+                item.respuesta = respuesAnt;
                 item.texto.fontSize = 14;
               }
             });
@@ -315,10 +322,14 @@ var Situacion =
         if(condicionCorrecta){
           this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
           this.items.forEach(function(item) {
+            item.texto.kill();
             item.kill();
           });
           this.intSituacion++;
+          alert("Correcto");
           this.crearSituacion();
+        }else{
+          alert("Vuelve a intentarlo");
         }        
       }
     },
