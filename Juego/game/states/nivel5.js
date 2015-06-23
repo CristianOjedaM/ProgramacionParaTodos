@@ -220,9 +220,7 @@
             itemEncajado.texto.x = itemEncajado.x;
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slot1 = true;          
-            item.kill();
-            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,15,15,"0");
-            this.items.add(this.cajaTexto);
+            item.kill();            
           }else{
 
             this.items.forEach(function(itemslot1) {
@@ -250,7 +248,7 @@
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 20),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -258,6 +256,9 @@
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slotC = true;          
             item.kill();
+            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,20,15,"0");
+            this.cajaTexto.texto.fontSize = 16;
+            this.items.add(this.cajaTexto);
           }else{
 
             this.items.forEach(function(itemslot1) {
