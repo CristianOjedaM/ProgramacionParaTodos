@@ -65,9 +65,19 @@
       this.items.enableBody = true;
       this.items.inputEnabled = true;
       
-      this.slot = this.items.create(430,70,'slotIF');
+      //Se crea slot de estructura if
+      this.slot = this.items.create(430,40,'slotIF');
 
       this.crearSituacion();
+
+      //Se crea marco de la situacion
+      this.game.add.sprite(100,40,'fondosituacion');
+
+      //Se agrega boton de ejecucion
+      this.run = this.game.add.sprite(320, 355,'btnEjecutar4');
+      this.run.anchor.setTo(0.5,0.5);
+      this.run.inputEnabled = true;
+      this.run.events.onInputDown.add(this.correrCondicion, this);
 
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
@@ -211,7 +221,7 @@
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 144),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.texto.x = itemEncajado.x;
@@ -224,7 +234,6 @@
               if(itemslot1.slotC){
                 var textoAnt = itemslot1.texto;
                 itemslot1.texto = item.texto;
-                itemslot1.texto.fontSize = 20;
                 itemslot1.texto.x = itemslot1.x;
                 itemslot1.texto.y = itemslot1.y;
                 //actualizamos el item arrastrado con el texto del item en el slot
@@ -268,6 +277,10 @@
           this.flagpause = false;          
         }
       }
+    },
+
+    correrCondicion: function(){
+
     },
 
   };
