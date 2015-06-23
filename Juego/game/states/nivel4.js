@@ -294,26 +294,20 @@ var Situacion =
 
     correrCondicion: function(){
       //se valida que el slot este lleno
-      var condicionCorrecta = false;
+      var condicionCorrecta = true;
       if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){
         //Se recorren los items para obtener los que se encuentran en el slot
         this.items.forEach(function(item) {
           if(item.slotC){ //slot condicion
-            if(item.respuesta){
-              condicionCorrecta = true;
-            }else{
+            if(!item.respuesta){
               condicionCorrecta = false;
             }
           }else if(item.slot1){ //slot accion verdadera
-            if(item.respuesta == 'slot1' ){
-              condicionCorrecta = true;
-            }else{
+            if(!item.respuesta == 'slot1' ){
               condicionCorrecta = false;
             }
           }else if(item.slot2){ //slot accion falsa
-            if(item.respuesta == 'slot2' ){
-              condicionCorrecta = true;
-            }else{
+            if(!item.respuesta == 'slot2' ){
               condicionCorrecta = false;
             }
           }
