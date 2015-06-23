@@ -121,6 +121,7 @@ var Situacion =
     crearSituacion:function(){
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
+      this.game.add.text((this.slot.x +25),(this.slot.y + 23),'if(                         ){',{font: '20px calibri bold', fill: '#fff', align:'center'});
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
@@ -169,7 +170,7 @@ var Situacion =
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 82),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 82),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -205,7 +206,7 @@ var Situacion =
         }else if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 147) && item.body.y <= (this.slot.body.y + 213) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){ //slot accion 2
           if(!this.slotAccion_2){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 152),(this.slot.body.y + 180),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 144),(this.slot.body.y + 180),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -242,7 +243,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
