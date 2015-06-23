@@ -1,7 +1,7 @@
 
   'use strict';
   var Pausa = require('../prefabs/pause');
-
+  var textBox = require('../prefabs/textBox');
   var Situacion = 
     [{
       "tipo"  : 'for',
@@ -221,6 +221,8 @@
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slot1 = true;          
             item.kill();
+            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,15,15,"0");
+            this.items.add(this.cajaTexto);
           }else{
 
             this.items.forEach(function(itemslot1) {
