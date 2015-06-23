@@ -2,10 +2,12 @@
 var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
+    "instrucciones": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed justo arcu, tempor non tristique aliquam, congue eget sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 
     "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
     "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
+    "instrucciones": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed justo arcu, tempor non tristique aliquam, congue eget sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
   }];
@@ -68,6 +70,12 @@ var Situacion =
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
+      //Se crea marco de la situacion
+      this.pasos  =this.game.add.sprite(230,480,'fondoPasos4');
+      this.pasos.anchor.setTo(0.5,0.5);
+      this.pasos.texto = game.game.add.text(this.pasos.x,this.pasos.y,'', { font: '20px calibri', fill: '#fff', align:'center'});
+      this.pasos.texto.anchor.setTo(0.5,0.5);
+
       //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
       this.cuadroTime.anchor.setTo(0.5, 0.5);
@@ -121,11 +129,14 @@ var Situacion =
     crearSituacion:function(){
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
-      var textif = this.game.add.text((this.slot.x +30),(this.slot.y + 23),'if (                                ){',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textif = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
       textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
 
-      var textCierr = this.game.add.text((this.slot.x +30),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      //Se establece los pasos de la situacion
+      this.pasos.texto.text = Situacion[this.intSituacion].instrucciones;
+
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación

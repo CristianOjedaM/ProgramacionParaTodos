@@ -60,7 +60,7 @@ Preload.prototype = {
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
     /*Imagenes nivel 4*/
-    this.load.image('tile_nivel4','assets/images/Nivel 4/tile.jpg');
+    this.load.image('tile_nivel4','assets/images/Nivel 4/tile.png');
     this.load.image('slotIF','assets/images/Nivel 4/slot.png');
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
     this.load.image('accion_small','assets/images/Nivel 4/accion_small.png');
