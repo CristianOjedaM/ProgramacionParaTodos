@@ -303,11 +303,11 @@ var Situacion =
               condicionCorrecta = false;
             }
           }else if(item.slot1){ //slot accion verdadera
-            if(!item.respuesta == 'slot1' ){
+            if(item.respuesta != 'slot1' ){
               condicionCorrecta = false;
             }
           }else if(item.slot2){ //slot accion falsa
-            if(!item.respuesta == 'slot2' ){
+            if(item.respuesta != 'slot2' ){
               condicionCorrecta = false;
             }
           }
