@@ -321,8 +321,8 @@ var Situacion =
         //si la condicion es correcta se pasa a la siguiente situacion
         if(condicionCorrecta){
           this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-          this.items.forEach(function(item) {
-            item.texto.kill();
+          this.items.forEach(function(item) {            
+            if(item.texto != null){item.texto.kill();}
             item.kill();
           });
           this.intSituacion++;
