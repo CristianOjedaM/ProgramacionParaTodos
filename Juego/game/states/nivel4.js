@@ -122,8 +122,12 @@ var Situacion =
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
       var textif = this.game.add.text((this.slot.x +30),(this.slot.y + 23),'if (                                ){',{font: '24px calibri', fill: '#fff', align:'center'});
-      textif.anchor.setTo(0.5,0);
+      textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
+
+      var textCierr = this.game.add.text((this.slot.x +30),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      textCierr.anchor.setTo(0,0.5);
+      textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
