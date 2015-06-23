@@ -1,5 +1,5 @@
  'use strict';
- var Pausa = require('../prefabs/pause');
+var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
     "condiciones": [{'texto':'estampida.pasando() == true','respuesta':true},{'texto':'estampida.pasando() >= false','respuesta':false},{'texto':'estampida.pasando() <= true','respuesta':false}],
@@ -12,7 +12,7 @@ var Situacion =
 
   function Nivel4() {}
   Nivel4.prototype = {
-    vel:50,//Velocidad de inicio para movimiento de items    
+    maxtime: 120,//Velocidad de inicio para movimiento de items    
     intSituacion:0,
     itemX: 0,
     itemY: 0,
@@ -23,7 +23,7 @@ var Situacion =
     intro:true,
 
     init:function(){
-      this.vel=50;//Velocidad de inicio para movimiento de items    
+      this.maxtime= 120;//Velocidad de inicio para movimiento de items    
       this.intSituacion=0;
       this.itemX= 0;
       this.itemY= 0;
@@ -59,6 +59,11 @@ var Situacion =
 	    this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
+
+      //Se define el contador de controlde nivel
+      this.tiempo = this.game.time.create(false);
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
+      this.tiempo.start();
 
       //Grupo de items
       this.items = this.game.add.group();
@@ -290,6 +295,54 @@ var Situacion =
           this.flagpause = false;          
         }
       }
+    },
+
+    updateTimer: function() {
+      //Se comprueba que el tiempo de juego haya terminado
+      if(this.maxtime == 0){
+        this.intSituacion++;
+        if(this.intSituacion<2){
+          this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+          this.items.forEach(function(item) {            
+            if(item.texto != null){item.texto.kill();}
+            item.kill();
+          });          
+          this.crearSituacion();
+        }else{
+          this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+          this.siguiente.inputEnabled = true;
+          this.siguiente.events.onInputDown.add(this.clickListener, this);
+          this.siguiente.fixedToCamera = true; 
+        }
+
+        //Detener metodo de update
+        this.tiempo.stop();
+        //Eliminar items restantes en el campo
+        this.items.destroy();
+        this.btnPausa.kill();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.maxtime/60 > 0){
+        minutos = Math.floor(this.maxtime/60);
+        segundos = this.maxtime%60;
+      }else{
+        minutos = 0;
+        segundos = this.maxtime; 
+      }
+      
+      this.maxtime--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.timer.setText(minutos + ':' +segundos);
     },
 
     correrCondicion: function(){
