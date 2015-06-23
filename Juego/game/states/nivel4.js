@@ -65,6 +65,13 @@ var Situacion =
       this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
       this.tiempo.start();
 
+      //Imagen de fondo para el tiempo
+      this.cuadroTime = this.game.add.sprite(230, 10,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0);
+      //Se setea el texto para el cronometro
+      this.timer = this.game.add.bitmapText(230, 10 ,'font', '00:00', 32);
+      this.timer.anchor.setTo(0.5,0.5);
+
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
