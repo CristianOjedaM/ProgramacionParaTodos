@@ -178,7 +178,7 @@
     },
 
     listenerfor:function(){
-      if(Situacion[intSituacion].tipo == 'for'){
+      if(Situacion[this.intSituacion].tipo == 'for'){
         this.crearSituacion();
       }else{
         alert('este no es el mejor ciclo recuerda que bla bla bla');
