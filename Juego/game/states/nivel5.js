@@ -1,10 +1,25 @@
 
   'use strict';
   var Pausa = require('../prefabs/pause');
+
+  var Situacion = 
+    [{
+      "tipo"  : 'for',
+      "ciclo": [{'texto':'var i = 0; i >= []; i++','respuesta':true},{'texto':'var i = 0; i >= []; i--','respuesta':false},{'texto':'var i = []; i <= 0; i--','respuesta':false}],
+      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
+    },
+    {
+      "tipo"  : 'while',
+      "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
+      "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
+    }];
+
+
   function Nivel5() {}
   Nivel5.prototype = {
     flagpause:false,
     intro:true,
+    intSituacion:0,
     init:function(){
       this.flagpause=false;
       this.intro=true;
@@ -79,6 +94,43 @@
       }
     },
 
+    crearSituacion:function(){
+      //Se crea slot de estructura if
+      this.slot = this.items.create(470,40,'slotIF');
+      //creamos las acciones de la situación
+      var yitem = 350;
+      var CItems = this.items;
+      var game = this;
+
+      Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
+          var item = CItems.create(535,yitem,'accion_small');
+          item.tipo = 0;
+          item.anchor.setTo(0.5,0.5);
+          item.texto = game.game.add.text(item.x, item.y,acciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = acciontext.respuesta;
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
+          yitem+=40;
+      });
+
+      //creamos las condiciones de la situación
+      yitem = 350;
+      Situacion[this.intSituacion].ciclo.forEach(function(condiciontext) {
+          var item = CItems.create(690,yitem,'condicion');          
+          item.tipo = 1;
+          item.anchor.setTo(0.5,0.5);
+          item.texto = game.game.add.text(item.x, item.y,condiciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
+          item.respuesta = condiciontext.respuesta;
+          item.texto.anchor.setTo(0.5,0.5);
+          item.inputEnabled = true;
+          item.events.onInputDown.add(game.clickItem, game);
+          item.events.onInputUp.add(game.releaseItem, game);
+          yitem+=40;
+      });
+    },
+
     pausaJuego: function(game){
       var x1 = (this.game.width - 81);
       var x2 = (this.game.width - 36);
@@ -104,10 +156,18 @@
 
     },
     listenerwhile:function(){
-
+      if(Situacion[intSituacion].tipo == 'while'){
+        this.crearSituacion();
+      }else{
+        alert('este no es el mejor ciclo recuerda que bla bla bla');
+      }
     },
     listenerfor:function(){
-
+      if(Situacion[intSituacion].tipo == 'for'){
+        this.crearSituacion();
+      }else{
+        alert('este no es el mejor ciclo recuerda que bla bla bla');
+      }
     },
 
 
