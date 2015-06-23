@@ -69,6 +69,11 @@ Preload.prototype = {
     this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
     this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
 
+     /*Imagenes nivel 5*/
+    this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
+    this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');    
+
+
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
     this.load.image('introN6', 'assets/images/Nivel 6/intro.jpg');

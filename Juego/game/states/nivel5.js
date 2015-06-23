@@ -50,6 +50,16 @@
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
 
+      //boton ciclo while
+      this.btnwhile = this.game.add.sprite(546, 100,'btnwhile');
+      this.btnwhile.inputEnabled = true;
+      this.btnwhile.events.onInputDown.add(this.listenerwhile, this);
+
+      //boton ciclo for
+      this.btnfor = this.game.add.sprite(546, 222,'btnfor');
+      this.btnfor.inputEnabled = true;
+      this.btnfor.events.onInputDown.add(this.listenerfor, this);
+
       //Se agrega el boton de pausa
       this.btnPausa = this.game.add.button((this.game.width - 81), 10, 'btnPausa');
       this.btnPausa.frame = 1;
@@ -89,6 +99,15 @@
           this.flagpause = false;          
         }
       }
+    },
+    correrCondicion: function(){
+
+    },
+    listenerwhile:function(){
+
+    },
+    listenerfor:function(){
+
     },
 
 
