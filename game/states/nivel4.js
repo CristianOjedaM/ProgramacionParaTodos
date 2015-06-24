@@ -423,8 +423,7 @@ var Situacion =
             });
             alert("Correcto");
             this.score += (50 - (this.intentosxsitua*5));
-            this.scoretext.setText('Puntaje: ' + this.score);
-            this.crearSituacion();   
+            this.scoretext.setText('Puntaje: ' + this.score);            
             this.intSituacion++;
             //Se determina si es la ultima situacion
             if(this.intSituacion>=2){            
@@ -432,7 +431,9 @@ var Situacion =
               this.siguiente.inputEnabled = true;
               this.siguiente.events.onInputDown.add(this.clickListener, this);
               this.siguiente.fixedToCamera = true; 
-            }                     
+            } else{
+              this.crearSituacion();   
+            }                    
           }, this);
           this.situacion4_1.animations.play('anima');                             
           
