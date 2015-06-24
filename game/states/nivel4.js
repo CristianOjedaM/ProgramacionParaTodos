@@ -416,11 +416,7 @@ var Situacion =
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
             this.situacion4_1.visible = false;            
-            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-            this.items.forEach(function(item) {            
-              if(item.texto != null){item.texto.kill();}
-              item.kill();
-            });            
+            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;                     
             this.score += (50 - (this.intentosxsitua*5));
             this.scoretext.setText('Puntaje: ' + this.score);            
             this.intSituacion++;
@@ -460,12 +456,18 @@ var Situacion =
     },
 
     clickSiguiente: function(){  
-      this.crearSituacion();       
+      this.crearSituacion(); 
+      this.MensajeAyuda.texto.kill();      
       this.MensajeAyuda.kill();
       this.siguiente.kill();
+      this.items.forEach(function(item) {            
+        if(item.texto != null){item.texto.kill();}
+        item.kill();
+      });   
     },
 
     clickIntentar: function(){      
+      this.MensajeAyuda.texto.kill();      
       this.MensajeAyuda.kill();
       this.siguiente.kill();
     },
@@ -475,7 +477,7 @@ var Situacion =
       this.MensajeAyuda = this.game.add.sprite(this.game.width/2, this.game.height/2, 'fondoPausa');      
       this.MensajeAyuda.anchor.setTo(0.5, 0.5);
       if(respuesta){
-        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Muy bien felicitaciones,\ngracias por ayudarme ahora vamos por otro reto',18);
+        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto',18);
         this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
       }else{
         this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else',18);
