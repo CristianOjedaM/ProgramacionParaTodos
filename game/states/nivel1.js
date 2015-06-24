@@ -192,7 +192,7 @@
         if (this.cursors.up.isDown && this.jugador.body.touching.down){
           this.jugador.esSalto = true;
           this.jugador.body.velocity.y = -450;
-          this.jump_sound.play();
+          //this.jump_sound.play();
         }
 
         //Acciones de movimiento para las plataformas de juego

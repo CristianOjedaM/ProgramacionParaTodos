@@ -51,7 +51,7 @@
       this.game.add.tileSprite(0, 0,800,600, 'introN3');
       this.game.input.onDown.add(this.iniciarJuego,this);
 
-      this.game.add.bitmapText(55, 150, 'font', 'Ahora que ya conoces\nlos diferentes tipos de\ndato, es hora de aplicar\nesos conocimientos; en\neste nivel identificarás\ny aprenderás a declarar\ndiferentes variables de\nacuerdo a su necesidad\nademás descubrirás la\nimportancia de las\nvariables para el manejo\nde datos\n\nAdelante!', 24);
+      this.game.add.bitmapText(55, 150, 'font', 'Estas listo para un\nnuevo juego? En este\nnivel no solo deberás\nprobar tu agilidad,\ntambién deberás\ndemostrar tu capacidad\nde lógica manipulando\nvariables, datos y\noperadores Formando\nsentencias acertadas\nde acuerdoa la\nsolitud propuesta\n\nVeamos como lo haces!', 24);
     },
 
     iniciarJuego : function(game){
@@ -75,7 +75,8 @@
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
-      this.tiempo.loop(1000, this.updateTimer, this);//Contadores de juego
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de situacion
+      this.tiempo.loop(1000, this.updateTimerGeneral, this);//Contador de juego
       this.tiempo.start();
 
       //Se definen los audios del nivel
@@ -115,7 +116,7 @@
       }
 
       //Creacion de texto de puntaje
-      this.scoreText = this.game.add.bitmapText(580 , 450, 'font','Puntaje: 0', 24);
+      this.scoreText = this.game.add.bitmapText(580 , 470, 'font','Puntaje: 0', 24);
       this.solicitud();
 
       //Se agrega el boton de pausa
@@ -123,7 +124,16 @@
       this.btnPausa.frame = 1;
       this.btnPausa.fixedToCamera = true;
 
-       //Se incluye el panel de pausa al nivel
+      //Imagen de fondo para el tiempo
+      this.cuadroTime = this.game.add.sprite(((this.game.width)/2), 5,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0);
+      //Se setea el texto para el cronometro
+      this.timer = this.game.add.bitmapText((this.game.width/2), 20, 'font', '00:00', 28);//this.game.add.text(((this.game.width)/2), 15 , '00:00', { font: '32px calibri', fill: '#000',align:'center' });
+
+      this.timer.anchor.setTo(0.5, 0);
+      this.timer.fixedToCamera = true; 
+
+      //Se incluye el panel de pausa al nivel
       this.pnlPausa = new Pausa(this.game);
       this.game.add.existing(this.pnlPausa);
       this.game.input.onDown.add(this.pausaJuego,this);
@@ -166,7 +176,8 @@
         this.estado = 1;
       }else{
         this.solicitudTxt.setText(this.solicitado.toString());
-        this.resp_time = 20;
+        var nTiem = Math.ceil(this.maxtime/30);
+        this.resp_time = nTiem * 5;
       }
 
       this.slots.forEach(function(slot) {
@@ -225,6 +236,41 @@
       this.solicitudTime.setText(minutos + ':' +segundos);
     },
 
+    updateTimerGeneral: function() {
+      //Se comprueba que el tiempo de juego haya terminado
+      if(this.maxtime == 0){
+        this.revolverItems();
+        this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+        this.siguiente.inputEnabled = true;
+        this.siguiente.events.onInputDown.add(this.clickListener, this);
+        this.tiempo.stop();
+        //Se quita el boton de pausa
+        this.btnPausa.kill();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.maxtime/60 > 0){
+        minutos = Math.floor(this.maxtime/60);
+        segundos = this.maxtime%60;
+      }else{
+        minutos = 0;
+        segundos = this.maxtime; 
+      }
+      
+      this.maxtime--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.timer.setText(minutos + ':' +segundos);
+    },
+
     crearItem: function(xItem,yItem){
       var defineTipo = Math.floor(Math.random() * 100);//Numero aleatorio de 1 a 100 para simular un porcentaje de 100
       var tipo = 0;
@@ -267,7 +313,7 @@
     },
 
     clickItem: function(item){
-      if(!item.usado){
+      if(!item.usado && this.maxtime > 0){
 
         console.log(item.i + " - " + item.j);
 
@@ -554,6 +600,7 @@
       }
 
     },
+
     MensajeEquivocacion: function(){       
       var frame = Math.floor(Math.random() * (8 - 0) + 0);
       if(this.errorCount == 5){
@@ -561,7 +608,13 @@
         this.MensajeAyuda = this.game.add.sprite(this.game.world.centerX - 138, this.game.world.centerY - 90,'MensajeAyuda3',frame);
         this.game.paused = true;
       } 
-    }
+    },
+
+    clickListener: function(){
+      this.game.state.clearCurrentState();
+      this.game.state.start("play");
+    },
+
   };
 
   module.exports = Nivel3;
