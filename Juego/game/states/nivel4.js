@@ -71,9 +71,9 @@ var Situacion =
       this.game.add.sprite(10,40,'fondosituacion');
 
       //Se crea marco de la situacion
-      this.pasos  =this.game.add.sprite(230,480,'fondoPasos4');
+      this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
       this.pasos.anchor.setTo(0.5,0.5);
-      this.pasos.texto = game.game.add.text(this.pasos.x,this.pasos.y,'', { font: '20px calibri', fill: '#fff', align:'center'});
+      this.pasos.texto = this.game.add.text(this.pasos.x,this.pasos.y,'', { font: '20px calibri', fill: '#000', align:'center'});
       this.pasos.texto.anchor.setTo(0.5,0.5);
 
       //Imagen de fondo para el tiempo
