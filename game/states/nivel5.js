@@ -7,7 +7,7 @@
       "tipo"  : 'for',
       "iteraciones" : 20,
       "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
-      "ciclo": [{'texto':'var i = 0; i >= [  ]; i++','respuesta':true},{'texto':'var i = 0; i >= [  ]; i--','respuesta':false},{'texto':'var i = 100; i <= [  ]; i--','respuesta':false}],
+      "ciclo": [{'texto':'var i = 0; i >= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
     },
     {
@@ -200,6 +200,7 @@
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
+      if(this.textciclo != null){this.textciclo.kill();}
       
       if(Situacion[this.intSituacion].tipo == 'for'){
         this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
