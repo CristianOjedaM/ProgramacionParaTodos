@@ -3885,7 +3885,7 @@ var Situacion =
       this.crearBoton(0,200,'nivel3',205,250,'Prueba tu agilidad y lógica por\nmedio del uso de operadores\nlógicos. Empecemos!');
       this.crearBoton(0,300,'nivel4',200,350,'');
       this.crearBoton(0,400,'nivel5',305,450,'');
-      this.crearBoton(0,500,'nivel6',205,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
+      this.crearBoton(0,500,'nivel6',308,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
     },
 
     update: function() {
@@ -3950,7 +3950,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel1', 'assets/images/Menu/nivel1.jpg',800,100);
     this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
     this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
-    this.load.spritesheet('nivel4', 'assets/images/Menu/nivel1.jpg',800,100);
+    this.load.spritesheet('nivel4', 'assets/images/Menu/nivel4.jpg',800,100);
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
     this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
     this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);

@@ -9,7 +9,7 @@
       this.crearBoton(0,200,'nivel3',205,250,'Prueba tu agilidad y lógica por\nmedio del uso de operadores\nlógicos. Empecemos!');
       this.crearBoton(0,300,'nivel4',200,350,'');
       this.crearBoton(0,400,'nivel5',305,450,'');
-      this.crearBoton(0,500,'nivel6',205,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
+      this.crearBoton(0,500,'nivel6',308,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
     },
 
     update: function() {
