@@ -260,6 +260,7 @@
 
     correrCondicion: function(){
       var condicionCorrecta = true;
+      var game = this;
       if(this.slotCiclo && this.slotAccion_1){
         if(Situacion[this.intSituacion].tipo == 'while'){
           this.items.forEach(function(item) {
@@ -279,7 +280,7 @@
               if(!item.respuesta){
                 condicionCorrecta = false;
               }else{
-                if(Situacion[this.intSituacion].iteraciones != this.cajaTexto.texto.text){
+                if(Situacion[game.intSituacion].iteraciones != game.cajaTexto.texto.text){
                   condicionCorrecta = false;
                 }
               }
