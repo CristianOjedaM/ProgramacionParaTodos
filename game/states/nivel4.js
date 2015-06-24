@@ -152,6 +152,10 @@ var Situacion =
       textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
 
+      var textelse = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
+      textelse.anchor.setTo(0,0.5);
+      textelse.fontWeight = 'bold';
+
       //Se establece los pasos de la situacion
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
