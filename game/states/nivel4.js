@@ -407,8 +407,8 @@ var Situacion =
           this.intSituacion++;
           //Se ejecuta la animacion
           this.situacion4_1 =  this.game.add.sprite(10,40,'situacion4_1');
-          this.situacion4_1.animations.add('anima');
-          this.situacion4_1.onComplete.add(function() {
+          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
+          anim.onComplete.add(function(){
             if(this.intSituacion<2){
               this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
               this.items.forEach(function(item) {            
@@ -425,11 +425,13 @@ var Situacion =
               this.siguiente.events.onInputDown.add(this.clickListener, this);
               this.siguiente.fixedToCamera = true; 
             }            
-          }, this);          
+          }, this);
+          this.situacion4_1.animations.play('anima');          
         }else{
           //Se ejecuta la animacion          
           this.situacion4_1_Inv =  this.game.add.sprite(10,40,'situacion4_1_Inv');
-          this.situacion4_1_Inv.animations.add('anima');
+          this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
+          this.situacion4_1_Inv.animations.play('anima');   
           alert("Vuelve a intentarlo");
         }
         this.intentosxsitua++;             
