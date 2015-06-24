@@ -191,7 +191,11 @@
     },
 
     correrCondicion: function(){
+      if(Situacion[this.intSituacion].tipo == 'while'){
 
+      }else if(Situacion[this.intSituacion].tipo == 'for'){
+
+      }
     },
 
     listenerwhile:function(){
@@ -272,7 +276,7 @@
             itemEncajado.slotC = true;          
             item.kill();
             //Se crea la caja de texto para ciclo for
-            if(Situacion[this.intSituacion].tipo == 'for'){}
+            if(Situacion[this.intSituacion].tipo == 'for'){
               this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,16,15,"0");
               this.cajaTexto.texto.fontSize = 16;
               this.items.add(this.cajaTexto);
