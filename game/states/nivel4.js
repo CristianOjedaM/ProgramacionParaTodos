@@ -76,7 +76,7 @@ var Situacion =
       this.game.add.sprite(10,40,'fondosituacion');
 
       //Se agrega imagen de la situacion
-      this.game.add.sprite(10,40,'situacion4_1');
+      this.game.add.sprite(24,60,'situacion4_1');
 
       //Se crea marco de la situacion
       this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
@@ -406,7 +406,7 @@ var Situacion =
         if(condicionCorrecta){          
           this.intSituacion++;
           //Se ejecuta la animacion
-          this.situacion4_1 =  this.game.add.sprite(10,40,'situacion4_1');
+          this.situacion4_1 =  this.game.add.sprite(24,60,'situacion4_1');
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
             if(this.intSituacion<2){
@@ -429,7 +429,7 @@ var Situacion =
           this.situacion4_1.animations.play('anima');          
         }else{
           //Se ejecuta la animacion          
-          this.situacion4_1_Inv =  this.game.add.sprite(10,40,'situacion4_1_Inv');
+          this.situacion4_1_Inv =  this.game.add.sprite(24,60,'situacion4_1_Inv');
           this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           this.situacion4_1_Inv.animations.play('anima');   
           alert("Vuelve a intentarlo");
