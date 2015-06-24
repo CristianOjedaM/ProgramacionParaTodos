@@ -3200,16 +3200,16 @@ var Situacion =
     [{
       "tipo"  : 'for',
       "iteraciones" : 30,
-      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 repeticiones \n ayudame a cudrar el ciclo para saltar 30 veces', 
+      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 \nveces sin parar ayudame a formar el \nciclo para romper el record.', 
       "ciclo": [{'texto':'var i = 0; i <= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
-      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
+      "acciones" :  [{'texto':'cruzar();','respuesta': false},{'texto':'saltar();','respuesta':true},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
       "imgsituacion_1" : 'situacion5_1',
       "imgsituacion_2" : 'situacion5_1_Inv'
 
     },
     {
       "tipo"  : 'while',
-      "instrucciones": ' Holi, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+      "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
       "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
       "imgsituacion_1" : 'situacion4_1',
@@ -3246,7 +3246,7 @@ var Situacion =
   	create: function() {
       this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'introN3');
+      this.game.add.tileSprite(0, 0,800,600, 'introN5');
       this.game.input.onDown.add(this.iniciarJuego,this);
   	},
 
@@ -3284,7 +3284,7 @@ var Situacion =
       //Imagen inicial de la sitacion            
       this.situacion = this.game.add.sprite(30,60,'situacion5.1');
       this.situacion.animations.add('jump');
-      this.situacion.animations.play('jump', 10, true);
+      this.situacion.animations.play('jump', 7, true);
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
@@ -4101,7 +4101,7 @@ var Situacion =
       this.crearBoton(0,100,'nivel2',305,150,'Sumérgete en un juego lleno\nde diversión mientras aprendes\na manipular variables. Vamos!');
       this.crearBoton(0,200,'nivel3',205,250,'Prueba tu agilidad y lógica por\nmedio del uso de operadores\nlógicos. Empecemos!');
       this.crearBoton(0,300,'nivel4',310,350,'Preparado?  Conoce, aprende y\nmanipula las estructuras\ncondicionales. Adelante!');
-      this.crearBoton(0,400,'nivel5',305,450,'');
+      this.crearBoton(0,400,'nivel5',205,450,'En esta  ocasión tendrás la\noportunidad de aprender sobre\nestructuras cíclicas. Allá vamos!');
       this.crearBoton(0,500,'nivel6',308,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
     },
 
@@ -4223,7 +4223,9 @@ Preload.prototype = {
     this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_estampida.png',401,273);
     this.load.spritesheet('situacion4_2','assets/images/Nivel 4/anim_salto.png',401,273)
     this.load.spritesheet('situacion4_2_Inv','assets/images/Nivel 4/anim_saltoMal.png',401,273)
-     /*Imagenes nivel 5*/
+
+    /*Imagenes nivel 5*/
+    this.load.image('introN5', 'assets/images/Nivel 5/intro.jpg');
     this.load.image('btnfor','assets/images/Nivel 5/btnfor.png');
     this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.png');
     this.load.image('slotciclo','assets/images/Nivel 5/slot.png');    
