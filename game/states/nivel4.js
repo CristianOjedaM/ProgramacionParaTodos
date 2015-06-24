@@ -89,7 +89,7 @@ var Situacion =
       this.timer.anchor.setTo(0.5,0.5);
 
       //Se crear text para el score
-      this.scoretext = this.game.add.bitmapText(20, 40 ,'font', 'Puntaje: 0', 32);
+      this.scoretext = this.game.add.bitmapText(20, 25 ,'font', 'Puntaje: 0', 24);
       this.scoretext.anchor.setTo(0,0.5);
 
       //Grupo de items

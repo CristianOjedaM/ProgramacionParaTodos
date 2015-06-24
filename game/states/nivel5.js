@@ -119,6 +119,21 @@
     crearSituacion:function(){
       //Se crea slot de estructura if
       this.slot = this.items.create(470,40,'slotIF');
+      var textciclo;
+      if(Situacion[this.intSituacion].tipo == 'for'){
+        textciclo = this.game.add.text((this.slot.x +26),(this.slot.y + 22),'for (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+        textciclo.anchor.setTo(0,0.5);
+        textciclo.fontWeight = 'bold';
+      }else{
+        textciclo = this.game.add.text((this.slot.x +26),(this.slot.y + 20),'while(                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+        textciclo.anchor.setTo(0,0.5);
+        textciclo.fontWeight = 'bold';
+
+      }
+
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      textCierr.anchor.setTo(0,0.5);
+      textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
@@ -248,7 +263,7 @@
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 20),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 23),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
