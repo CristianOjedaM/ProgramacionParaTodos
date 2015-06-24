@@ -407,8 +407,7 @@ var Situacion =
           }
         });
         //si la condicion es correcta se pasa a la siguiente situacion
-        if(condicionCorrecta){          
-          this.intSituacion++;
+        if(condicionCorrecta){ 
           //Se ejecuta la animacion 
           this.situacion.visible = false;
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
@@ -416,25 +415,27 @@ var Situacion =
           this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
-            this.situacion4_1.visible = false;
-            if(this.intSituacion<2){
-              this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-              this.items.forEach(function(item) {            
-                if(item.texto != null){item.texto.kill();}
-                item.kill();
-              });
-              alert("Correcto");
-              this.score += (50 - (this.intentosxsitua*5));
-              this.scoretext.setText('Puntaje: ' + this.score);
-              this.crearSituacion();
-            }else{
+            this.situacion4_1.visible = false;            
+            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+            this.items.forEach(function(item) {            
+              if(item.texto != null){item.texto.kill();}
+              item.kill();
+            });
+            alert("Correcto");
+            this.score += (50 - (this.intentosxsitua*5));
+            this.scoretext.setText('Puntaje: ' + this.score);
+            this.crearSituacion();   
+            this.intSituacion++;
+            //Se determina si es la ultima situacion
+            if(this.intSituacion>=2){            
               this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
               this.siguiente.inputEnabled = true;
               this.siguiente.events.onInputDown.add(this.clickListener, this);
               this.siguiente.fixedToCamera = true; 
-            }            
+            }                     
           }, this);
-          this.situacion4_1.animations.play('anima');          
+          this.situacion4_1.animations.play('anima');                             
+          
         }else{
           //Se ejecuta la animacion 
           this.situacion.visible = false;         
