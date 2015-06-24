@@ -2637,12 +2637,16 @@ var Situacion =
   [{
     "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
     "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
-    "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
+    "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}],
+    "imgsituacion_1" : 'situacion4_1',
+    "imgsituacion_2" : 'situacion4_1_Inv'
   },
   {
     "instrucciones": ' Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
-    "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
+    "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
+    "imgsituacion_1" : 'situacion4_1',
+    "imgsituacion_2" : 'situacion4_1_Inv'
   }];
 
   function Nivel4() {}
@@ -2769,6 +2773,13 @@ var Situacion =
     },
 
     crearSituacion:function(){
+      //Imagen inicial de la sitacion 
+      if(this.situacion4_1!=null){this.situacion4_1.kill();} 
+      if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}       
+      this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
+      this.situacion4_1_Inv.visible = false;  
+      this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+      
       //Se restablece el tiempo
       this.maxtime= 90; 
       this.intentosxsitua = 0;
@@ -3015,7 +3026,7 @@ var Situacion =
     correrCondicion: function(){
       //se valida que el slot este lleno
       var condicionCorrecta = true;
-      if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){
+      if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){       
         //Se recorren los items para obtener los que se encuentran en el slot
         this.items.forEach(function(item) {
           if(item.slotC){ //slot condicion
@@ -3035,24 +3046,39 @@ var Situacion =
         //si la condicion es correcta se pasa a la siguiente situacion
         if(condicionCorrecta){          
           this.intSituacion++;
-          if(this.intSituacion<2){
-            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-            this.items.forEach(function(item) {            
-              if(item.texto != null){item.texto.kill();}
-              item.kill();
-            });
-            alert("Correcto");
-            this.score += (50 - (this.intentosxsitua*5));
-            this.scoretext.setText('Puntaje: ' + this.score);
-            this.crearSituacion();
-          }else{
-            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
-            this.siguiente.inputEnabled = true;
-            this.siguiente.events.onInputDown.add(this.clickListener, this);
-            this.siguiente.fixedToCamera = true; 
-          }
+          //Se ejecuta la animacion 
+          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
+          anim.onComplete.add(function(){
+            if(this.intSituacion<2){
+              this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+              this.items.forEach(function(item) {            
+                if(item.texto != null){item.texto.kill();}
+                item.kill();
+              });
+              alert("Correcto");
+              this.score += (50 - (this.intentosxsitua*5));
+              this.scoretext.setText('Puntaje: ' + this.score);
+              this.crearSituacion();
+            }else{
+              this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+              this.siguiente.inputEnabled = true;
+              this.siguiente.events.onInputDown.add(this.clickListener, this);
+              this.siguiente.fixedToCamera = true; 
+            }            
+          }, this);
+          this.situacion4_1.visible = true;
+          this.situacion4_1_Inv.visible = false;
+          this.situacion4_1.animations.play('anima');          
         }else{
-          alert("Vuelve a intentarlo");
+          //Se ejecuta la animacion          
+          
+          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
+          anim.onComplete.add(function(){
+            alert("Vuelve a intentar");
+          }, this);
+          this.situacion4_1.visible = false;
+          this.situacion4_1_Inv.visible = true;
+          this.situacion4_1_Inv.animations.play('anima');
         }
         this.intentosxsitua++;             
       }       
@@ -3075,7 +3101,7 @@ var Situacion =
       "tipo"  : 'for',
       "iteraciones" : 20,
       "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
-      "ciclo": [{'texto':'var i = 0; i >= [  ]; i++','respuesta':true},{'texto':'var i = 0; i >= [  ]; i--','respuesta':false},{'texto':'var i = 100; i <= [  ]; i--','respuesta':false}],
+      "ciclo": [{'texto':'var i = 0; i >= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
     },
     {
@@ -3268,6 +3294,7 @@ var Situacion =
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
+      if(this.textciclo != null){this.textciclo.kill();}
       
       if(Situacion[this.intSituacion].tipo == 'for'){
         this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
@@ -4000,7 +4027,8 @@ Preload.prototype = {
     this.load.image('btnEjecutar4','assets/images/Nivel 4/btnEjecutar.png');
     this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
     this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
-
+    this.load.spritesheet('situacion4_1','assets/images/Nivel 4/anim_caminar.png',401,273);
+    this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_estampida.png',401,273);
      /*Imagenes nivel 5*/
     this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
     this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');    
