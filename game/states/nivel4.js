@@ -59,10 +59,11 @@ var Situacion =
       }
     }, 
 
-  	empezar: function() {
+    empezar: function() {
+      
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
-	    this.game.world.setBounds(0, 0, 800, 600);
+      this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 
@@ -88,8 +89,8 @@ var Situacion =
       this.timer.anchor.setTo(0.5,0.5);
 
       //Se crear text para el score
-      this.scoretext = this.game.add.bitmapText(230, 40 ,'font', 'Puntaje: 0', 32);
-      this.scoretext.anchor.setTo(0.5,0.5);
+      this.scoretext = this.game.add.bitmapText(20, 40 ,'font', 'Puntaje: 0', 32);
+      this.scoretext.anchor.setTo(0,0.5);
 
       //Grupo de items
       this.items = this.game.add.group();
@@ -116,9 +117,9 @@ var Situacion =
       //Se indica que sale del intro
       this.intro = false;
 
-  	},
+    },
 
-  	update: function(){
+    update: function(){
       if(!this.intro){
         var mouseX = this.game.input.x;
         var mouseY = this.game.input.y;
@@ -132,7 +133,7 @@ var Situacion =
           }       
         });
       }
-  	},
+    },
 
     crearSituacion:function(){
       //Se restablece el tiempo
@@ -409,7 +410,7 @@ var Situacion =
             });
             alert("Correcto");
             this.score += (50 - (this.intentosxsitua*5));
-            this.scoretext.setText(this.score);
+            this.scoretext.setText('Puntaje: ' + this.score);
             this.crearSituacion();
           }else{
             this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
