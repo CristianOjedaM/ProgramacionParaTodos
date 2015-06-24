@@ -6,11 +6,13 @@
     [{
       "tipo"  : 'for',
       "iteraciones" : 20,
+      "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'var i = 0; i >= [  ]; i++','respuesta':true},{'texto':'var i = 0; i >= [  ]; i--','respuesta':false},{'texto':'var i = 100; i <= [  ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
     },
     {
       "tipo"  : 'while',
+      "instrucciones": ' Holi, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
       "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
     }];
@@ -76,7 +78,7 @@
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
       this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      this.tiempo.start();
+      
 
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
@@ -86,6 +88,12 @@
       this.run.anchor.setTo(0.5,0.5);
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
+
+       //Se crea marco de la situacion
+      this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
+      this.pasos.anchor.setTo(0.5,0.5);
+      this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
+      this.pasos.texto.anchor.setTo(0.5,0.5);
 
        //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
@@ -185,6 +193,12 @@
     },
 
     crearSituacion:function(){
+      //Se restablece el tiempo
+      this.maxtime= 90; 
+      this.intentosxsitua = 0;
+      this.tiempo.start();
+      //Se establece los pasos de la situacion
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
       var textciclo;
@@ -198,7 +212,6 @@
         textciclo.fontWeight = 'bold';
 
       }
-
       var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '22px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
