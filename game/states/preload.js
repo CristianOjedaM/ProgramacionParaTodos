@@ -60,6 +60,7 @@ Preload.prototype = {
     this.load.spritesheet('MensajeAyuda3','assets/images/Nivel 3/msjs.png',275,180);
 
     /*Imagenes nivel 4*/
+    this.load.image('introN4', 'assets/images/Nivel 4/intro.jpg');
     this.load.image('tile_nivel4','assets/images/Nivel 4/tile.png');
     this.load.image('slotIF','assets/images/Nivel 4/slot.png');
     this.load.image('accion_large','assets/images/Nivel 4/accion_large.png');
@@ -68,8 +69,10 @@ Preload.prototype = {
     this.load.image('btnEjecutar4','assets/images/Nivel 4/btnEjecutar.png');
     this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
     this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
+    this.load.spritesheet('situacion1','assets/images/Nivel 4/situacion.png',401,273);
     this.load.spritesheet('situacion4_1','assets/images/Nivel 4/anim_caminar.png',401,273);
     this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_estampida.png',401,273);
+    this.load.spritesheet('situacion4_2','assets/images/Nivel 4/anim_salto.png',401,273)
      /*Imagenes nivel 5*/
     this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
     this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');    

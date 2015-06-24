@@ -12,7 +12,7 @@ var Situacion =
     "instrucciones": ' Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
-    "imgsituacion_1" : 'situacion4_1',
+    "imgsituacion_1" : 'situacion4_2',
     "imgsituacion_2" : 'situacion4_1_Inv'
   }];
 
@@ -47,13 +47,13 @@ var Situacion =
     create: function(){
       this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'introN3');
+      this.game.add.tileSprite(0, 0,800,600, 'introN4');
       this.game.input.onDown.add(this.iniciarJuego,this);
     },
 
     iniciarJuego : function(game){
-      var x1 = 115;
-      var x2 = 264;
+      var x1 = 531;
+      var x2 = 680;
       var y1 = 480;
       var y2 = 550;
       if(game.x > x1 && game.x < x2 && game.y > y1 && game.y < y2 ){
@@ -139,13 +139,9 @@ var Situacion =
       }
     },
 
-    crearSituacion:function(){
-      //Imagen inicial de la sitacion 
-      if(this.situacion4_1!=null){this.situacion4_1.kill();} 
-      if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}       
-      this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
-      this.situacion4_1_Inv.visible = false;  
-      this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+    crearSituacion:function(){      
+      //Imagen inicial de la sitacion      
+      this.situacion = this.game.add.sprite(30,60,'situacion1');
       
       //Se restablece el tiempo
       this.maxtime= 90; 
@@ -414,6 +410,10 @@ var Situacion =
         if(condicionCorrecta){          
           this.intSituacion++;
           //Se ejecuta la animacion 
+          this.situacion.visible = false;
+          if(this.situacion4_1!=null){this.situacion4_1.kill();} 
+          if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}
+          this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
             if(this.intSituacion<2){
@@ -433,18 +433,18 @@ var Situacion =
               this.siguiente.fixedToCamera = true; 
             }            
           }, this);
-          this.situacion4_1.visible = true;
-          this.situacion4_1_Inv.visible = false;
           this.situacion4_1.animations.play('anima');          
         }else{
-          //Se ejecuta la animacion          
-          
+          //Se ejecuta la animacion 
+          this.situacion.visible = false;         
+          if(this.situacion4_1!=null){this.situacion4_1.kill();} 
+          if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}      
+          this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
           var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
           anim.onComplete.add(function(){
+            this.situacion.visible = true;
             alert("Vuelve a intentar");
-          }, this);
-          this.situacion4_1.visible = false;
-          this.situacion4_1_Inv.visible = true;
+          }, this);          
           this.situacion4_1_Inv.animations.play('anima');
         }
         this.intentosxsitua++;             
