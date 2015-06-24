@@ -75,6 +75,9 @@ var Situacion =
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
+      //Se agrega imagen de la situacion
+      this.game.add.sprite(10,40,'situacion4_1');
+
       //Se crea marco de la situacion
       this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
       this.pasos.anchor.setTo(0.5,0.5);
@@ -402,23 +405,31 @@ var Situacion =
         //si la condicion es correcta se pasa a la siguiente situacion
         if(condicionCorrecta){          
           this.intSituacion++;
-          if(this.intSituacion<2){
-            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-            this.items.forEach(function(item) {            
-              if(item.texto != null){item.texto.kill();}
-              item.kill();
-            });
-            alert("Correcto");
-            this.score += (50 - (this.intentosxsitua*5));
-            this.scoretext.setText('Puntaje: ' + this.score);
-            this.crearSituacion();
-          }else{
-            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
-            this.siguiente.inputEnabled = true;
-            this.siguiente.events.onInputDown.add(this.clickListener, this);
-            this.siguiente.fixedToCamera = true; 
-          }
+          //Se ejecuta la animacion
+          this.situacion4_1 =  this.game.add.sprite(10,40,'situacion4_1');
+          this.situacion4_1.animations.add('anima');
+          this.situacion4_1.onComplete.add(function() {
+            if(this.intSituacion<2){
+              this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+              this.items.forEach(function(item) {            
+                if(item.texto != null){item.texto.kill();}
+                item.kill();
+              });
+              alert("Correcto");
+              this.score += (50 - (this.intentosxsitua*5));
+              this.scoretext.setText('Puntaje: ' + this.score);
+              this.crearSituacion();
+            }else{
+              this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+              this.siguiente.inputEnabled = true;
+              this.siguiente.events.onInputDown.add(this.clickListener, this);
+              this.siguiente.fixedToCamera = true; 
+            }            
+          }, this);          
         }else{
+          //Se ejecuta la animacion          
+          this.situacion4_1_Inv =  this.game.add.sprite(10,40,'situacion4_1_Inv');
+          this.situacion4_1_Inv.animations.add('anima');
           alert("Vuelve a intentarlo");
         }
         this.intentosxsitua++;             
