@@ -140,10 +140,13 @@ var Situacion =
     },
 
     crearSituacion:function(){
-      //Imagen inicial de la sitacion      
-      this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+      //Imagen inicial de la sitacion 
+      this.situacion4_1.kill(); 
+      this.situacion4_1_Inv.kill();   
       this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
-      this.situacion4_1_Inv.visible = false;
+      this.situacion4_1_Inv.visible = false;  
+      this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+      
       //Se restablece el tiempo
       this.maxtime= 90; 
       this.intentosxsitua = 0;
