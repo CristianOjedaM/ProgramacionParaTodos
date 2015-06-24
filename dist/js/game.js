@@ -430,7 +430,7 @@ var Entidad = function(game, x, y, key,frame) {
   this.posy = 0;//Posicion relativa de y en el tablero
   this.propiedades = [{nombre:"Posicion X",prop:"posx",val:this.posx},
                 {nombre:"Posicion Y",prop:"posy",val:this.posy}];
-  this.consejos = ["consejo 1","consejo 2","consejo 3","consejo 4","consejo 5"];
+  this.consejos = ["Siempre que abras un parentesis ( recuerda darle cierre )","Fijate siempre en lo que escribes, el mas mínimo error genera fallas en el código","consejo 3","consejo 4","consejo 5"];
 };
 
 Entidad.prototype = Object.create(Phaser.Sprite.prototype);
@@ -2765,7 +2765,10 @@ var Situacion =
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
-      //Se crea marco de la situacion
+      //Imagen inicial de la sitacion            
+      this.situacion = this.game.add.sprite(30,60,'situacion1');
+
+      //Se crea marco de los pasos
       this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
       this.pasos.anchor.setTo(0.5,0.5);
       this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
@@ -2826,26 +2829,23 @@ var Situacion =
     },
 
     crearSituacion:function(){      
-      //Imagen inicial de la sitacion      
-      this.situacion = this.game.add.sprite(30,60,'situacion1');
-      
       //Se restablece el tiempo
       this.maxtime= 90; 
       this.intentosxsitua = 0;
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
-      var textif = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textif = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
       textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
 
-      var textelse = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textelse = this.game.add.text((this.slot.x +24),(this.slot.y + 133),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
       textelse.anchor.setTo(0,0.5);
       textelse.fontWeight = 'bold';
 
       //Se establece los pasos de la situacion
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
-      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textCierr = this.game.add.text((this.slot.x +24),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
@@ -2966,10 +2966,10 @@ var Situacion =
           }
           //indicamos que el primer slot se ha ocupado
           this.slotAccion_2 = true;
-        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
+        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 8) && item.body.y <= (this.slot.body.y + 45) && item.body.x >= (this.slot.body.x + 50) && item.body.x <= (this.slot.body.x + 202) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 125),(this.slot.body.y + 25),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3037,16 +3037,20 @@ var Situacion =
         this.intSituacion++;
         if(this.intSituacion<2){
           this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-          this.items.forEach(function(item) {            
-            if(item.texto != null){item.texto.kill();}
-            item.kill();
-          });          
-          this.crearSituacion();
+          this.situacion.visible = true;
+          this.mensaje(true);
         }else{
-          this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+          this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
           this.siguiente.inputEnabled = true;
           this.siguiente.events.onInputDown.add(this.clickListener, this);
           this.siguiente.fixedToCamera = true; 
+          if(this.score>=70){
+            this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
+          }else if(this.score >=50 && this.score <70){
+            this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
+          }else{
+            this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
+          }
         }
 
         //Detener metodo de update
@@ -3103,7 +3107,7 @@ var Situacion =
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
           if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}
           this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
-          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
+          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 5, false);
           anim.onComplete.add(function(){
             this.situacion4_1.visible = false;            
             this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;                     
@@ -3111,13 +3115,22 @@ var Situacion =
             this.scoretext.setText('Puntaje: ' + this.score);            
             this.intSituacion++;
             //Se determina si es la ultima situacion
-            if(this.intSituacion>=2){            
-              this.siguiente = this.game.add.sprite(this.game.width/2 , this.game.height/2 ,'btnContinuar');
+            if(this.intSituacion>=2){ 
+              this.situacion.visible = true;                       
+              this.siguiente = this.game.add.sprite(30, this.pasos.y + 50 ,'btnContinuar');
               this.siguiente.inputEnabled = true;
               this.siguiente.events.onInputDown.add(this.clickListener, this);
-              this.siguiente.fixedToCamera = true; 
-              this.siguiente.anchor.setTo(0.5,0);
+
+              if(this.score>=70){
+                this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
+              }else if(this.score >=50 && this.score <70){
+                this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
+              }else{
+                this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
+              }
+
             } else{
+                this.situacion.visible = true;
                 this.mensaje(true);
             }                    
           }, this);
@@ -3129,7 +3142,7 @@ var Situacion =
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
           if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}      
           this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
-          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
+          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 5, false);             
           anim.onComplete.add(function(){
             this.situacion.visible = true;
             this.situacion4_1_Inv.visible = false;
@@ -3150,38 +3163,29 @@ var Situacion =
         if(item.texto != null){item.texto.kill();}
         item.kill();
       });   
-      this.crearSituacion(); 
-      this.MensajeAyuda.texto.kill();      
-      this.MensajeAyuda.kill();
+      this.crearSituacion();       
       this.siguiente.kill();       
     },
 
-    clickIntentar: function(){      
-      this.MensajeAyuda.texto.kill();      
-      this.MensajeAyuda.kill();
-      this.siguiente.kill();
+    clickIntentar: function(){ 
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
+      this.siguiente.kill(); 
     },
 
     mensaje:function(respuesta){      
-      //Se agrega el panel
-      this.MensajeAyuda = this.game.add.sprite(this.game.width/2, this.game.height/2, 'fondoPausa');      
-      this.MensajeAyuda.anchor.setTo(0.5, 0.5);
+      //Se agrega el panel      
       if(respuesta){
-        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto',18);
-        this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
-      }else{
-        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else',18);
-        this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
+         this.pasos.texto.setText('Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto');         
+      }else{        
+        this.pasos.texto.setText('Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else'); 
       }
-      this.siguiente = this.game.add.sprite(this.game.width/2, this.game.height/2 + 58,'btnContinuar');
+      this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
       this.siguiente.inputEnabled = true;
       if(respuesta){
         this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
       }else{
         this.siguiente.events.onInputDown.add(this.clickIntentar, this);
       }
-      this.siguiente.fixedToCamera = true; 
-      this.siguiente.anchor.setTo(0.5,0);
     },
 
   };
@@ -3198,13 +3202,18 @@ var Situacion =
       "iteraciones" : 20,
       "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'var i = 0; i >= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
-      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
+      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
+      "imgsituacion_1" : 'situacion4_1',
+      "imgsituacion_2" : 'situacion4_1_Inv'
+
     },
     {
       "tipo"  : 'while',
       "instrucciones": ' Holi, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
-      "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
+      "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
+      "imgsituacion_1" : 'situacion4_1',
+      "imgsituacion_2" : 'situacion4_1_Inv'
     }];
 
 
@@ -3266,11 +3275,13 @@ var Situacion =
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
-      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego      
 
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
+
+      //Imagen inicial de la sitacion            
+      this.situacion = this.game.add.sprite(30,60,'situacion1');
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
@@ -3283,6 +3294,9 @@ var Situacion =
       this.pasos.anchor.setTo(0.5,0.5);
       this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
       this.pasos.texto.anchor.setTo(0.5,0.5);
+
+      //Se establece los pasos de la situacion
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
        //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
@@ -3348,10 +3362,17 @@ var Situacion =
           this.btnwhile.visible = true;
           this.btnfor.visible = true;
         }else{
-          this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+          this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
           this.siguiente.inputEnabled = true;
           this.siguiente.events.onInputDown.add(this.clickListener, this);
           this.siguiente.fixedToCamera = true; 
+          if(this.score>=70){
+            this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
+          }else if(this.score >=50 && this.score <70){
+            this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
+          }else{
+            this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
+          } 
         }
 
         //Detener metodo de update
@@ -3389,7 +3410,7 @@ var Situacion =
       //Se establece los pasos de la situacion
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
-      this.slot = this.items.create(479,40,'slotIF');
+      this.slot = this.items.create(479,40,'slotciclo');
       if(this.textciclo != null){this.textciclo.kill();}
       
       if(Situacion[this.intSituacion].tipo == 'for'){
@@ -3411,7 +3432,7 @@ var Situacion =
       var game = this;
 
       Situacion[this.intSituacion].acciones.forEach(function(acciontext) {
-          var item = CItems.create(535,yitem,'accion_small');
+          var item = CItems.create(535,yitem,'accion_small5');
           item.tipo = 0;
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,acciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
@@ -3426,7 +3447,7 @@ var Situacion =
       //creamos las condiciones de la situación
       yitem = 350;
       Situacion[this.intSituacion].ciclo.forEach(function(condiciontext) {
-          var item = CItems.create(690,yitem,'condicion');          
+          var item = CItems.create(690,yitem,'condicion5');          
           item.tipo = 1;
           item.anchor.setTo(0.5,0.5);
           item.texto = game.game.add.text(item.x, item.y,condiciontext.texto , { font: '14px calibri', fill: '#fff', align:'center'});
@@ -3496,30 +3517,53 @@ var Situacion =
         }
         //Se valida la condicion de ciclo
         //si la condicion es correcta se pasa a la siguiente situacion
-        if(condicionCorrecta){          
-          this.intSituacion++;
-          if(this.intSituacion<2){
-            this.slotCiclo = this.slotAccion_1 = false;
-            this.items.forEach(function(item) {            
-              if(item.texto != null){item.texto.kill();}
-              item.kill();
-            });
-            alert("Correcto");
+        if(condicionCorrecta){
+          //Se ejecuta la animacion 
+          this.situacion.visible = false;
+          if(this.situacion4_1!=null){this.situacion4_1.kill();} 
+          if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}
+          this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 5, false);
+          anim.onComplete.add(function(){
+            this.situacion4_1.visible = false;            
+            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;                     
             this.score += (50 - (this.intentosxsitua*5));
-            this.scoretext.setText('Puntaje: ' + this.score);
-            //Se habilitan botones de eleccion de ciclo
-            this.btnwhile.visible = true;
-            this.btnfor.visible = true;
-            //Detener metodo de update
-            this.tiempo.stop();
-          }else{
-            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
-            this.siguiente.inputEnabled = true;
-            this.siguiente.events.onInputDown.add(this.clickListener, this);
-            this.siguiente.fixedToCamera = true; 
-          }
+            this.scoretext.setText('Puntaje: ' + this.score);            
+            this.intSituacion++;
+            //Se determina si es la ultima situacion
+            if(this.intSituacion>=2){ 
+              this.situacion.visible = true;                       
+              this.siguiente = this.game.add.sprite(30, this.pasos.y + 50 ,'btnContinuar');
+              this.siguiente.inputEnabled = true;
+              this.siguiente.events.onInputDown.add(this.clickListener, this);
+
+              if(this.score>=70){
+                this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de ciclos \nPuntaje: '+ this.score);  
+              }else if(this.score >=50 && this.score <70){
+                this.pasos.texto.setText('felicitaciones, has completado el nivel de\nciclos pero puedes mejorar \nPuntaje: '+ this.score); 
+              }else{
+                this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre ciclos\nPuntaje: '+ this.score); 
+              }
+
+            } else{
+                this.situacion.visible = true;
+                this.mensaje(true);
+            }
+          }, this); 
+          this.situacion4_1.animations.play('anima');     
         }else{
-          alert("Vuelve a intentarlo");
+          //Se ejecuta la animacion 
+          this.situacion.visible = false;         
+          if(this.situacion4_1!=null){this.situacion4_1.kill();} 
+          if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}      
+          this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
+          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 5, false);             
+          anim.onComplete.add(function(){
+            this.situacion.visible = true;
+            this.situacion4_1_Inv.visible = false;
+            this.mensaje(false);
+          }, this);          
+          this.situacion4_1_Inv.animations.play('anima');
         }
         this.intentosxsitua++;   
       }
@@ -3558,7 +3602,7 @@ var Situacion =
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 82),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 93),'accion_large5');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3594,7 +3638,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 24),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 128),(this.slot.body.y + 29),'condicion5');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3604,7 +3648,7 @@ var Situacion =
             item.kill();
             //Se crea la caja de texto para ciclo for
             if(Situacion[this.intSituacion].tipo == 'for'){
-              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+155,(this.slot.body.y)+15,16,15,"0");
+              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+149,(this.slot.body.y)+17,16,15,"0");
               this.cajaTexto.texto.fontSize = 16;
               this.items.add(this.cajaTexto);
             }
@@ -3640,7 +3684,44 @@ var Situacion =
       }
     },
 
+    clickListener: function(){
+       this.game.state.clearCurrentState();
+       this.game.state.start("play");
+    },
 
+    clickSiguiente: function(){ 
+      this.items.forEach(function(item) {            
+        if(item.texto != null){item.texto.kill();}
+        item.kill();
+      });   
+      //Se habilitan botones de eleccion de ciclo
+      this.btnwhile.visible = true;
+      this.btnfor.visible = true;
+      //Detener metodo de update
+      this.tiempo.stop();       
+      this.siguiente.kill();       
+    },
+
+    clickIntentar: function(){ 
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
+      this.siguiente.kill(); 
+    },
+
+    mensaje:function(respuesta){      
+      //Se agrega el panel      
+      if(respuesta){
+         this.pasos.texto.setText('Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto');         
+      }else{        
+        this.pasos.texto.setText('Lo siento, pero el ciclo \nesta mal construido vuelve a intentarlo\n y recuerda '); 
+      }
+      this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
+      this.siguiente.inputEnabled = true;
+      if(respuesta){
+        this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
+      }else{
+        this.siguiente.events.onInputDown.add(this.clickIntentar, this);
+      }
+    },
   };
 
   module.exports = Nivel5;
@@ -3794,6 +3875,9 @@ var Situacion =
         case 15:
           this.txtIns.setText('Deberias tener algo parecido a\nfunction mover(){\nno te alarmes si genera error, aun falta\nmucho por hacer');
           break;
+        case 16:
+          this.txtIns.setText('Debes pensar una manera en la cual el\npersonaje sea capaz de repetir el\nunico movimiento que tiene');
+          break;
       }
       this.codigoActivo = true;
     },
@@ -3820,6 +3904,7 @@ var Situacion =
         /*Pasos de instruccion durante codificacion*/
           case 13:
           case 14:
+          case 15:
             this.pasoActual++;
             this.instrucciones(this.pasoActual);
             break;
@@ -4130,10 +4215,14 @@ Preload.prototype = {
     this.load.spritesheet('situacion4_1','assets/images/Nivel 4/anim_caminar.png',401,273);
     this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_estampida.png',401,273);
     this.load.spritesheet('situacion4_2','assets/images/Nivel 4/anim_salto.png',401,273)
+
      /*Imagenes nivel 5*/
     this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
-    this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');    
-
+    this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');
+    this.load.image('slotciclo','assets/images/Nivel 5/slot.png');    
+    this.load.image('accion_large5','assets/images/Nivel 5/accion_large.png');
+    this.load.image('accion_small5','assets/images/Nivel 5/accion_small.png');
+    this.load.image('condicion5','assets/images/Nivel 5/condicion.png');
 
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');

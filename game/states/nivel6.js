@@ -147,6 +147,9 @@
         case 15:
           this.txtIns.setText('Deberias tener algo parecido a\nfunction mover(){\nno te alarmes si genera error, aun falta\nmucho por hacer');
           break;
+        case 16:
+          this.txtIns.setText('Debes pensar una manera en la cual el\npersonaje sea capaz de repetir el\nunico movimiento que tiene');
+          break;
       }
       this.codigoActivo = true;
     },
@@ -173,6 +176,7 @@
         /*Pasos de instruccion durante codificacion*/
           case 13:
           case 14:
+          case 15:
             this.pasoActual++;
             this.instrucciones(this.pasoActual);
             break;
