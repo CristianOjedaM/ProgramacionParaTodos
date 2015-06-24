@@ -5,7 +5,7 @@
   var Situacion = 
     [{
       "tipo"  : 'for',
-      "ciclo": [{'texto':'var i = 0; i >= []; i++','respuesta':true},{'texto':'var i = 0; i >= []; i--','respuesta':false},{'texto':'var i = []; i <= 0; i--','respuesta':false}],
+      "ciclo": [{'texto':'var i = 0; i >= [  ]; i++','respuesta':true},{'texto':'var i = 0; i >= [  ]; i--','respuesta':false},{'texto':'var i = 100; i <= [  ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
     },
     {
@@ -121,17 +121,17 @@
       this.slot = this.items.create(470,40,'slotIF');
       var textciclo;
       if(Situacion[this.intSituacion].tipo == 'for'){
-        textciclo = this.game.add.text((this.slot.x +26),(this.slot.y + 22),'for (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+        textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
         textciclo.anchor.setTo(0,0.5);
         textciclo.fontWeight = 'bold';
       }else{
-        textciclo = this.game.add.text((this.slot.x +26),(this.slot.y + 20),'while(                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+        textciclo = this.game.add.text((this.slot.x +22),(this.slot.y + 23),'while(                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
         textciclo.anchor.setTo(0,0.5);
         textciclo.fontWeight = 'bold';
 
       }
 
-      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '22px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
@@ -263,7 +263,7 @@
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 24),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -271,9 +271,12 @@
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slotC = true;          
             item.kill();
-            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,20,15,"0");
-            this.cajaTexto.texto.fontSize = 16;
-            this.items.add(this.cajaTexto);
+            //Se crea la caja de texto para ciclo for
+            if(Situacion[this.intSituacion].tipo == 'for'){}
+              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,16,15,"0");
+              this.cajaTexto.texto.fontSize = 16;
+              this.items.add(this.cajaTexto);
+            }
           }else{
 
             this.items.forEach(function(itemslot1) {
