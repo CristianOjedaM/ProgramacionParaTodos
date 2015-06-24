@@ -24,7 +24,7 @@ var Situacion =
     flagpause:false,
     intro:true,
     score:0,
-    intentosxsitua:0;
+    intentosxsitua:0,
 
     init:function(){
       this.maxtime= 90; 
