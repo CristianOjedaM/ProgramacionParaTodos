@@ -455,15 +455,15 @@ var Situacion =
        this.game.state.start("play");
     },
 
-    clickSiguiente: function(){  
-      this.crearSituacion(); 
-      this.MensajeAyuda.texto.kill();      
-      this.MensajeAyuda.kill();
-      this.siguiente.kill();
+    clickSiguiente: function(){ 
       this.items.forEach(function(item) {            
         if(item.texto != null){item.texto.kill();}
         item.kill();
       });   
+      this.crearSituacion(); 
+      this.MensajeAyuda.texto.kill();      
+      this.MensajeAyuda.kill();
+      this.siguiente.kill();       
     },
 
     clickIntentar: function(){      
