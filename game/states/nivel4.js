@@ -459,15 +459,18 @@ var Situacion =
        this.game.state.start("play");
     },
 
-    clickContinuar: function(respuesta){  
-      if(respuesta){
-        this.crearSituacion(); 
-      }
+    clickSiguiente: function(){  
+      this.crearSituacion();       
       this.MensajeAyuda.kill();
       this.siguiente.kill();
     },
 
-    mensaje:function(respuesta){
+    clickIntentar: function(){      
+      this.MensajeAyuda.kill();
+      this.siguiente.kill();
+    },
+
+    mensaje:function(respuesta){      
       //Se agrega el panel
       this.MensajeAyuda = this.game.add.sprite(this.game.width/2, this.game.height/2, 'fondoPausa');      
       this.MensajeAyuda.anchor.setTo(0.5, 0.5);
@@ -480,7 +483,11 @@ var Situacion =
       }
       this.siguiente = this.game.add.sprite(this.game.width/2, this.game.height/2 + 58,'btnContinuar');
       this.siguiente.inputEnabled = true;
-      this.siguiente.events.onInputDown.add(this.clickContinuar(respuesta), this);
+      if(respuesta){
+        this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
+      }else{
+        this.siguiente.events.onInputDown.add(this.clickIntentar, this);
+      }
       this.siguiente.fixedToCamera = true; 
       this.siguiente.anchor.setTo(0.5,0);
     },
