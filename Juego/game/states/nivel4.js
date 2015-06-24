@@ -73,8 +73,11 @@ var Situacion =
       //Se crea marco de la situacion
       this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
       this.pasos.anchor.setTo(0.5,0.5);
-      this.pasos.texto = this.game.add.text(this.pasos.x,this.pasos.y,'', { font: '20px calibri', fill: '#000', align:'center'});
+      this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
       this.pasos.texto.anchor.setTo(0.5,0.5);
+      this.pasos.texto.wordWrap = true;      
+      this.pasos.texto.wordWrapWidth = 250;
+      this.pasos.texto.tint = 0xFFFFFF;
 
       //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
@@ -134,13 +137,13 @@ var Situacion =
       textif.fontWeight = 'bold';
 
       //Se establece los pasos de la situacion
-      this.pasos.texto.text = Situacion[this.intSituacion].instrucciones;
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
       var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
-      var yitem = 350;
+      var yitem = 340;
       var CItems = this.items;
       var game = this;
 
@@ -158,7 +161,7 @@ var Situacion =
       });
 
       //creamos las condiciones de la situación
-      yitem = 350;
+      yitem = 340;
       Situacion[this.intSituacion].condiciones.forEach(function(condiciontext) {
           var item = CItems.create(690,yitem,'condicion');          
           item.tipo = 1;
