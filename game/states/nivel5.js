@@ -5,6 +5,7 @@
   var Situacion = 
     [{
       "tipo"  : 'for',
+      "iteraciones" : 20,
       "ciclo": [{'texto':'var i = 0; i >= [  ]; i++','respuesta':true},{'texto':'var i = 0; i >= [  ]; i--','respuesta':false},{'texto':'var i = 100; i <= [  ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
     },
@@ -25,6 +26,8 @@
     itemY: 0,
     slotCiclo:false,
     slotAccion_1:false,
+    score:0,
+    intentosxsitua:0,    
 
     init:function(){
       this.maxtime= 90; 
@@ -35,6 +38,8 @@
       this.intSituacion=0;
       this.slotCiclo=false;
       this.slotAccion_1=false;
+      this.intentosxsitua  = 0;
+      this.intentosxsitua = 0;
     },
 
   	create: function() {
@@ -68,6 +73,11 @@
       this.items.enableBody = true;
       this.items.inputEnabled = true;
 
+      //Se define el contador de controlde nivel
+      this.tiempo = this.game.time.create(false);
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
+      this.tiempo.start();
+
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
@@ -76,6 +86,17 @@
       this.run.anchor.setTo(0.5,0.5);
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
+
+       //Imagen de fondo para el tiempo
+      this.cuadroTime = this.game.add.sprite(230, 40,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0.5);
+      //Se setea el texto para el cronometro
+      this.timer = this.game.add.bitmapText(230, 40 ,'font', '00:00', 32);
+      this.timer.anchor.setTo(0.5,0.5);
+
+      //Se crear text para el score
+      this.scoretext = this.game.add.bitmapText(20, 25 ,'font', 'Puntaje: 0', 24);
+      this.scoretext.anchor.setTo(0,0.5);
 
       //boton ciclo while
       this.btnwhile = this.game.add.sprite(546, 100,'btnwhile');
@@ -116,9 +137,56 @@
       }
     },
 
+    updateTimer: function() {
+      //Se comprueba que el tiempo de juego haya terminado
+      if(this.maxtime == 0){
+        this.intSituacion++;
+        if(this.intSituacion<2){
+          this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+          this.items.forEach(function(item) {            
+            if(item.texto != null){item.texto.kill();}
+            item.kill();
+          });          
+           //Se habilitan botones de eleccion de ciclo
+          this.btnwhile.visible = true;
+          this.btnfor.visible = true;
+        }else{
+          this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+          this.siguiente.inputEnabled = true;
+          this.siguiente.events.onInputDown.add(this.clickListener, this);
+          this.siguiente.fixedToCamera = true; 
+        }
+
+        //Detener metodo de update
+        this.tiempo.stop();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.maxtime/60 > 0){
+        minutos = Math.floor(this.maxtime/60);
+        segundos = this.maxtime%60;
+      }else{
+        minutos = 0;
+        segundos = this.maxtime; 
+      }
+      
+      this.maxtime--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.timer.setText(minutos + ':' +segundos);
+    },
+
     crearSituacion:function(){
       //Se crea slot de estructura if
-      this.slot = this.items.create(470,40,'slotIF');
+      this.slot = this.items.create(479,40,'slotIF');
       var textciclo;
       if(Situacion[this.intSituacion].tipo == 'for'){
         textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
@@ -191,9 +259,63 @@
     },
 
     correrCondicion: function(){
-      if(Situacion[this.intSituacion].tipo == 'while'){
+      var condicionCorrecta = true;
+      if(this.slotCiclo && this.slotAccion_1){
+        if(Situacion[this.intSituacion].tipo == 'while'){
+          this.items.forEach(function(item) {
+            if(item.slotC){ //slot Ciclo
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }
+            }else if(item.slot1){ //slot accion
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }
+            }
+          }
+        }else if(Situacion[this.intSituacion].tipo == 'for'){
+          this.items.forEach(function(item) {
+            if(item.slotC){ //slot Ciclo
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }else{
+                if(Situacion[this.intSituacion].iteraciones != this.cajaTexto.texto.text){
+                  condicionCorrecta = false;
+                }
+              }
+            }else if(item.slot1){ //slot accion
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }
+            }
+          }
+        }
+        //Se valida la condicion de ciclo
+        //si la condicion es correcta se pasa a la siguiente situacion
+        if(condicionCorrecta){          
+          this.intSituacion++;
+          if(this.intSituacion<2){
+            this.slotCiclo = this.slotAccion_1 = false;
+            this.items.forEach(function(item) {            
+              if(item.texto != null){item.texto.kill();}
+              item.kill();
+            });
+            alert("Correcto");
+            this.score += (50 - (this.intentosxsitua*5));
+            this.scoretext.setText('Puntaje: ' + this.score);
+            //Se habilitan botones de eleccion de ciclo
+            this.btnwhile.visible = true;
+            this.btnfor.visible = true;
+          }else{
+            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+            this.siguiente.inputEnabled = true;
+            this.siguiente.events.onInputDown.add(this.clickListener, this);
+            this.siguiente.fixedToCamera = true; 
+          }
+        }else{
+          alert("Vuelve a intentarlo");
+        }
 
-      }else if(Situacion[this.intSituacion].tipo == 'for'){
 
       }
     },
@@ -231,7 +353,7 @@
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 82),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -277,7 +399,7 @@
             item.kill();
             //Se crea la caja de texto para ciclo for
             if(Situacion[this.intSituacion].tipo == 'for'){
-              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,16,15,"0");
+              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+155,(this.slot.body.y)+15,16,15,"0");
               this.cajaTexto.texto.fontSize = 16;
               this.items.add(this.cajaTexto);
             }
