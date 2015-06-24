@@ -2,12 +2,12 @@
 var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
-    "instrucciones": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed justo arcu, tempor non tristique aliquam, congue eget sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 
+    "instrucciones": 'Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
     "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
     "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
-    "instrucciones": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed justo arcu, tempor non tristique aliquam, congue eget sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
+    "instrucciones": 'Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
   }];
@@ -75,9 +75,6 @@ var Situacion =
       this.pasos.anchor.setTo(0.5,0.5);
       this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
       this.pasos.texto.anchor.setTo(0.5,0.5);
-      this.pasos.texto.wordWrap = true;      
-      this.pasos.texto.wordWrapWidth = 250;
-      this.pasos.texto.tint = 0xFFFFFF;
 
       //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
@@ -130,6 +127,8 @@ var Situacion =
   	},
 
     crearSituacion:function(){
+      //Se restablece el tiempo
+      this.maxtime= 90; 
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
       var textif = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
