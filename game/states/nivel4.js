@@ -412,10 +412,11 @@ var Situacion =
           //Se ejecuta la animacion 
           this.situacion.visible = false;
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
-          if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}
+          if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}
           this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
+            this.situacion4_1.visible = false;
             if(this.intSituacion<2){
               this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
               this.items.forEach(function(item) {            
@@ -438,11 +439,12 @@ var Situacion =
           //Se ejecuta la animacion 
           this.situacion.visible = false;         
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
-          if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}      
+          if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}      
           this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
           var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
           anim.onComplete.add(function(){
             this.situacion.visible = true;
+            this.situacion4_1_Inv.visible = false;
             alert("Vuelve a intentar");
           }, this);          
           this.situacion4_1_Inv.animations.play('anima');
