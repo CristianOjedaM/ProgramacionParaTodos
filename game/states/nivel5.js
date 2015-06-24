@@ -272,7 +272,7 @@
                 condicionCorrecta = false;
               }
             }
-          }
+          });
         }else if(Situacion[this.intSituacion].tipo == 'for'){
           this.items.forEach(function(item) {
             if(item.slotC){ //slot Ciclo
@@ -288,7 +288,7 @@
                 condicionCorrecta = false;
               }
             }
-          }
+          });
         }
         //Se valida la condicion de ciclo
         //si la condicion es correcta se pasa a la siguiente situacion
