@@ -69,7 +69,7 @@ Preload.prototype = {
     this.load.image('fondosituacion','assets/images/Nivel 4/fondosituacion.png');
     this.load.image('fondoPasos4','assets/images/Nivel 4/fondoPasos.png');
     this.load.spritesheet('situacion4_1','assets/images/Nivel 4/anim_caminar.png',401,273);
-    this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_caminar.png',401,273);
+    this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_estampida.png',401,273);
      /*Imagenes nivel 5*/
     this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
     this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');    

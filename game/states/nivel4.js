@@ -140,8 +140,10 @@ var Situacion =
     },
 
     crearSituacion:function(){
-      //Imagen inicial de la sitacion
-      this.imgSituacion = this.game.add.sprite(24,60,Situacion[this.intSituacion].imgsituacion_1);
+      //Imagen inicial de la sitacion      
+      this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+      this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
+      this.situacion4_1_Inv.visible = false;
       //Se restablece el tiempo
       this.maxtime= 90; 
       this.intentosxsitua = 0;
@@ -388,9 +390,7 @@ var Situacion =
     correrCondicion: function(){
       //se valida que el slot este lleno
       var condicionCorrecta = true;
-      if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){
-        //Eliminamos imagen inicial situacion
-        this.imgSituacion.destroy();
+      if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){       
         //Se recorren los items para obtener los que se encuentran en el slot
         this.items.forEach(function(item) {
           if(item.slotC){ //slot condicion
@@ -410,8 +410,7 @@ var Situacion =
         //si la condicion es correcta se pasa a la siguiente situacion
         if(condicionCorrecta){          
           this.intSituacion++;
-          //Se ejecuta la animacion
-          this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
+          //Se ejecuta la animacion 
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
             if(this.intSituacion<2){
@@ -431,14 +430,18 @@ var Situacion =
               this.siguiente.fixedToCamera = true; 
             }            
           }, this);
+          this.situacion4_1.visible = true;
+          this.situacion4_1_Inv.visible = false;
           this.situacion4_1.animations.play('anima');          
         }else{
           //Se ejecuta la animacion          
-          this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
+          
           var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
           anim.onComplete.add(function(){
             alert("Vuelve a intentar");
           }, this);
+          this.situacion4_1.visible = false;
+          this.situacion4_1_Inv.visible = true;
           this.situacion4_1_Inv.animations.play('anima');
         }
         this.intentosxsitua++;             
