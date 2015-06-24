@@ -4,12 +4,16 @@ var Situacion =
   [{
     "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
     "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
-    "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
+    "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}],
+    "imgsituacion_1" : 'situacion4_1',
+    "imgsituacion_2" : 'situacion4_1_Inv'
   },
   {
     "instrucciones": ' Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
-    "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
+    "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
+    "imgsituacion_1" : 'situacion4_1',
+    "imgsituacion_2" : 'situacion4_1_Inv'
   }];
 
   function Nivel4() {}
@@ -75,9 +79,6 @@ var Situacion =
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
-      //Se agrega imagen de la situacion
-      this.game.add.sprite(24,60,'situacion4_1');
-
       //Se crea marco de la situacion
       this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
       this.pasos.anchor.setTo(0.5,0.5);
@@ -139,6 +140,8 @@ var Situacion =
     },
 
     crearSituacion:function(){
+      //Imagen inicial de la sitacion
+      this.imgSituacion = this.game.add.sprite(24,60,Situacion[this.intSituacion].imgsituacion_1);
       //Se restablece el tiempo
       this.maxtime= 90; 
       this.intentosxsitua = 0;
@@ -386,6 +389,8 @@ var Situacion =
       //se valida que el slot este lleno
       var condicionCorrecta = true;
       if(this.slotCondicion && this.slotAccion_1 && this.slotAccion_2){
+        //Eliminamos imagen inicial situacion
+        this.imgSituacion.destroy();
         //Se recorren los items para obtener los que se encuentran en el slot
         this.items.forEach(function(item) {
           if(item.slotC){ //slot condicion
@@ -406,7 +411,7 @@ var Situacion =
         if(condicionCorrecta){          
           this.intSituacion++;
           //Se ejecuta la animacion
-          this.situacion4_1 =  this.game.add.sprite(24,60,'situacion4_1');
+          this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
             if(this.intSituacion<2){
@@ -429,10 +434,12 @@ var Situacion =
           this.situacion4_1.animations.play('anima');          
         }else{
           //Se ejecuta la animacion          
-          this.situacion4_1_Inv =  this.game.add.sprite(24,60,'situacion4_1_Inv');
-          this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
-          this.situacion4_1_Inv.animations.play('anima');   
-          alert("Vuelve a intentarlo");
+          this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
+          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
+          anim.onComplete.add(function(){
+            alert("Vuelve a intentar");
+          }, this);
+          this.situacion4_1_Inv.animations.play('anima');
         }
         this.intentosxsitua++;             
       }       
