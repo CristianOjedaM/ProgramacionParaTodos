@@ -141,8 +141,8 @@ var Situacion =
 
     crearSituacion:function(){
       //Imagen inicial de la sitacion 
-      this.situacion4_1.kill(); 
-      this.situacion4_1_Inv.kill();   
+      if(this.situacion4_1!=null){this.situacion4_1.kill();} 
+      if(this.situacion4_1_Inv!=null){this.situacion4_1.kill();}       
       this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
       this.situacion4_1_Inv.visible = false;  
       this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
