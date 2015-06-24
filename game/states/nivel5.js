@@ -201,15 +201,15 @@
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
-      var textciclo;
+      
       if(Situacion[this.intSituacion].tipo == 'for'){
-        textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
-        textciclo.anchor.setTo(0,0.5);
-        textciclo.fontWeight = 'bold';
+        this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo.anchor.setTo(0,0.5);
+        this.textciclo.fontWeight = 'bold';
       }else{
-        textciclo = this.game.add.text((this.slot.x +22),(this.slot.y + 23),'while(                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
-        textciclo.anchor.setTo(0,0.5);
-        textciclo.fontWeight = 'bold';
+        this.textciclo = this.game.add.text((this.slot.x +22),(this.slot.y + 23),'while(                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo.anchor.setTo(0,0.5);
+        this.textciclo.fontWeight = 'bold';
 
       }
       var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '22px calibri', fill: '#fff', align:'center'});
@@ -320,6 +320,8 @@
             //Se habilitan botones de eleccion de ciclo
             this.btnwhile.visible = true;
             this.btnfor.visible = true;
+            //Detener metodo de update
+            this.tiempo.stop();
           }else{
             this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
             this.siguiente.inputEnabled = true;
