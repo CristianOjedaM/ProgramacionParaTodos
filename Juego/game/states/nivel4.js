@@ -2,12 +2,12 @@
 var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
-    "instrucciones": 'Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+    "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
     "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
     "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}]
   },
   {
-    "instrucciones": 'Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
+    "instrucciones": ' Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
   }];
@@ -23,6 +23,8 @@ var Situacion =
     slotAccion_2:false,
     flagpause:false,
     intro:true,
+    score:0,
+    intentosxsitua:0;
 
     init:function(){
       this.maxtime= 90; 
@@ -34,6 +36,8 @@ var Situacion =
       this.slotAccion_2=false;
       this.flagpause = false;
       this.intro = true; 
+      this.score = 0;
+      this.intentosxsitua = 0;
     },
 
     create: function(){
@@ -83,6 +87,10 @@ var Situacion =
       this.timer = this.game.add.bitmapText(230, 40 ,'font', '00:00', 32);
       this.timer.anchor.setTo(0.5,0.5);
 
+      //Se crear text para el score
+      this.scoretext = this.game.add.bitmapText(230, 40 ,'font', 'Puntaje: 0', 32);
+      this.scoretext.anchor.setTo(0.5,0.5);
+
       //Grupo de items
       this.items = this.game.add.group();
       this.items.enableBody = true;
@@ -129,6 +137,7 @@ var Situacion =
     crearSituacion:function(){
       //Se restablece el tiempo
       this.maxtime= 90; 
+      this.intentosxsitua = 0;
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
       var textif = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
@@ -399,6 +408,8 @@ var Situacion =
               item.kill();
             });
             alert("Correcto");
+            this.score += (50 - (this.intentosxsitua*5));
+            this.scoretext.setText(this.score);
             this.crearSituacion();
           }else{
             this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
@@ -410,6 +421,7 @@ var Situacion =
           alert("Vuelve a intentarlo");
         }        
       }
+      this.intentosxsitua++;      
     },
     clickListener: function(){
        this.game.state.clearCurrentState();
