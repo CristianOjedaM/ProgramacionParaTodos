@@ -19,7 +19,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
     this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
     this.load.spritesheet('nivel4', 'assets/images/Menu/nivel4.jpg',800,100);
-    this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
+    this.load.spritesheet('nivel5', 'assets/images/Menu/nivel5.jpg',800,100);
     this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
     this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);
 

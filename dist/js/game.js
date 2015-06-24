@@ -2699,7 +2699,7 @@ var Situacion =
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
     "imgsituacion_1" : 'situacion4_2',
-    "imgsituacion_2" : 'situacion4_1_Inv'
+    "imgsituacion_2" : 'situacion4_2_Inv'
   }];
 
   function Nivel4() {}
@@ -3199,12 +3199,12 @@ var Situacion =
   var Situacion = 
     [{
       "tipo"  : 'for',
-      "iteraciones" : 20,
-      "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
-      "ciclo": [{'texto':'var i = 0; i >= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
+      "iteraciones" : 30,
+      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 repeticiones \n ayudame a cudrar el ciclo para saltar 30 veces', 
+      "ciclo": [{'texto':'var i = 0; i <= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
-      "imgsituacion_1" : 'situacion4_1',
-      "imgsituacion_2" : 'situacion4_1_Inv'
+      "imgsituacion_1" : 'situacion5_1',
+      "imgsituacion_2" : 'situacion5_1_Inv'
 
     },
     {
@@ -3239,6 +3239,7 @@ var Situacion =
       this.intSituacion=0;
       this.slotCiclo=false;
       this.slotAccion_1=false;
+      this.score = 0;
       this.intentosxsitua  = 0;
     },
 
@@ -3281,7 +3282,9 @@ var Situacion =
       this.game.add.sprite(10,40,'fondosituacion');
 
       //Imagen inicial de la sitacion            
-      this.situacion = this.game.add.sprite(30,60,'situacion1');
+      this.situacion = this.game.add.sprite(30,60,'situacion5.1');
+      this.situacion.animations.add('jump');
+      this.situacion.animations.play('jump', 10, true);
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
@@ -3362,6 +3365,7 @@ var Situacion =
           this.btnwhile.visible = true;
           this.btnfor.visible = true;
           this.textciclo.visible=false;
+          this.cajaTexto.destruir();
         }else{
           this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
           this.siguiente.inputEnabled = true;
@@ -3415,16 +3419,16 @@ var Situacion =
       if(this.textciclo != null){this.textciclo.kill();}      
       
       if(Situacion[this.intSituacion].tipo == 'for'){
-        this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +20),(this.slot.y + 29),'for (                                           ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
       }else{
-        this.textciclo = this.game.add.text((this.slot.x +22),(this.slot.y + 23),'while(                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +10),(this.slot.y + 29),'while(                                          ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
 
       }
-      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '22px calibri', fill: '#fff', align:'center'});
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 142),'}',{font: '16px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
@@ -3639,7 +3643,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 128),(this.slot.body.y + 29),'condicion5');
+            var itemEncajado = this.items.create( (this.slot.body.x + 126),(this.slot.body.y + 29),'condicion5');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3649,7 +3653,7 @@ var Situacion =
             item.kill();
             //Se crea la caja de texto para ciclo for
             if(Situacion[this.intSituacion].tipo == 'for'){
-              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+149,(this.slot.body.y)+17,16,15,"0");
+              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+149,(this.slot.body.y)+20,16,15,"0");
               this.cajaTexto.texto.fontSize = 16;
               this.items.add(this.cajaTexto);
             }
@@ -3699,6 +3703,7 @@ var Situacion =
       this.btnwhile.visible = true;
       this.btnfor.visible = true;      
       this.textciclo.visible=false;
+      this.cajaTexto.destruir();
       //Detener metodo de update
       this.tiempo.stop();       
       this.siguiente.kill();       
@@ -4163,7 +4168,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel2', 'assets/images/Menu/nivel2.jpg',800,100);
     this.load.spritesheet('nivel3', 'assets/images/Menu/nivel3.jpg',800,100);
     this.load.spritesheet('nivel4', 'assets/images/Menu/nivel4.jpg',800,100);
-    this.load.spritesheet('nivel5', 'assets/images/Menu/nivel2.jpg',800,100);
+    this.load.spritesheet('nivel5', 'assets/images/Menu/nivel5.jpg',800,100);
     this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
     this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);
 
@@ -4217,14 +4222,17 @@ Preload.prototype = {
     this.load.spritesheet('situacion4_1','assets/images/Nivel 4/anim_caminar.png',401,273);
     this.load.spritesheet('situacion4_1_Inv','assets/images/Nivel 4/anim_estampida.png',401,273);
     this.load.spritesheet('situacion4_2','assets/images/Nivel 4/anim_salto.png',401,273)
-
+    this.load.spritesheet('situacion4_2_Inv','assets/images/Nivel 4/anim_saltoMal.png',401,273)
      /*Imagenes nivel 5*/
-    this.load.image('btnfor','assets/images/Nivel 5/btnfor.jpg');
-    this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.jpg');
+    this.load.image('btnfor','assets/images/Nivel 5/btnfor.png');
+    this.load.image('btnwhile','assets/images/Nivel 5/btnwhile.png');
     this.load.image('slotciclo','assets/images/Nivel 5/slot.png');    
     this.load.image('accion_large5','assets/images/Nivel 5/accion_large.png');
     this.load.image('accion_small5','assets/images/Nivel 5/accion_small.png');
     this.load.image('condicion5','assets/images/Nivel 5/condicion.png');
+    this.load.spritesheet('situacion5.1','assets/images/Nivel 5/animSalto.png',401,273);
+    this.load.spritesheet('situacion5_1','assets/images/Nivel 5/animSaltoBien.png',401,273);
+    this.load.spritesheet('situacion5_1_Inv','assets/images/Nivel 5/animSaltoMal.png',401,273);
 
     /*Imagenes nivel 6 - Editor de codigo*/
     this.load.image('tile_nivel6', 'assets/images/Nivel 6/tile.png');
