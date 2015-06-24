@@ -420,9 +420,9 @@ var Situacion =
           }
         }else{
           alert("Vuelve a intentarlo");
-        }        
-      }
-      this.intentosxsitua++;      
+        }
+        this.intentosxsitua++;             
+      }       
     },
     clickListener: function(){
        this.game.state.clearCurrentState();

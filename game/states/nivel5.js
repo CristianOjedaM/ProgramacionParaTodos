@@ -41,7 +41,6 @@
       this.slotCiclo=false;
       this.slotAccion_1=false;
       this.intentosxsitua  = 0;
-      this.intentosxsitua = 0;
     },
 
   	create: function() {
@@ -331,8 +330,7 @@
         }else{
           alert("Vuelve a intentarlo");
         }
-
-
+        this.intentosxsitua++;   
       }
     },
 
