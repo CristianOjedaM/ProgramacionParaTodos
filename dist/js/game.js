@@ -2692,10 +2692,11 @@ var Situacion =
       }
     }, 
 
-  	empezar: function() {
+    empezar: function() {
+      
       //Habilitacion de fisicas
       this.game.physics.startSystem(Phaser.Physics.ARCADE);      
-	    this.game.world.setBounds(0, 0, 800, 600);
+      this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'tile_nivel4');
 
@@ -2721,8 +2722,8 @@ var Situacion =
       this.timer.anchor.setTo(0.5,0.5);
 
       //Se crear text para el score
-      this.scoretext = this.game.add.bitmapText(230, 40 ,'font', 'Puntaje: 0', 32);
-      this.scoretext.anchor.setTo(0.5,0.5);
+      this.scoretext = this.game.add.bitmapText(20, 25 ,'font', 'Puntaje: 0', 24);
+      this.scoretext.anchor.setTo(0,0.5);
 
       //Grupo de items
       this.items = this.game.add.group();
@@ -2749,9 +2750,9 @@ var Situacion =
       //Se indica que sale del intro
       this.intro = false;
 
-  	},
+    },
 
-  	update: function(){
+    update: function(){
       if(!this.intro){
         var mouseX = this.game.input.x;
         var mouseY = this.game.input.y;
@@ -2765,7 +2766,7 @@ var Situacion =
           }       
         });
       }
-  	},
+    },
 
     crearSituacion:function(){
       //Se restablece el tiempo
@@ -3042,7 +3043,7 @@ var Situacion =
             });
             alert("Correcto");
             this.score += (50 - (this.intentosxsitua*5));
-            this.scoretext.setText(this.score);
+            this.scoretext.setText('Puntaje: ' + this.score);
             this.crearSituacion();
           }else{
             this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
@@ -3052,9 +3053,9 @@ var Situacion =
           }
         }else{
           alert("Vuelve a intentarlo");
-        }        
-      }
-      this.intentosxsitua++;      
+        }
+        this.intentosxsitua++;             
+      }       
     },
     clickListener: function(){
        this.game.state.clearCurrentState();
@@ -3072,11 +3073,14 @@ var Situacion =
   var Situacion = 
     [{
       "tipo"  : 'for',
-      "ciclo": [{'texto':'var i = 0; i >= []; i++','respuesta':true},{'texto':'var i = 0; i >= []; i--','respuesta':false},{'texto':'var i = []; i <= 0; i--','respuesta':false}],
+      "iteraciones" : 20,
+      "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+      "ciclo": [{'texto':'var i = 0; i >= [  ]; i++','respuesta':true},{'texto':'var i = 0; i >= [  ]; i--','respuesta':false},{'texto':'var i = 100; i <= [  ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
     },
     {
       "tipo"  : 'while',
+      "instrucciones": ' Holi, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
       "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
     }];
@@ -3092,6 +3096,8 @@ var Situacion =
     itemY: 0,
     slotCiclo:false,
     slotAccion_1:false,
+    score:0,
+    intentosxsitua:0,    
 
     init:function(){
       this.maxtime= 90; 
@@ -3102,6 +3108,7 @@ var Situacion =
       this.intSituacion=0;
       this.slotCiclo=false;
       this.slotAccion_1=false;
+      this.intentosxsitua  = 0;
     },
 
   	create: function() {
@@ -3135,6 +3142,11 @@ var Situacion =
       this.items.enableBody = true;
       this.items.inputEnabled = true;
 
+      //Se define el contador de controlde nivel
+      this.tiempo = this.game.time.create(false);
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
+      
+
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
@@ -3143,6 +3155,23 @@ var Situacion =
       this.run.anchor.setTo(0.5,0.5);
       this.run.inputEnabled = true;
       this.run.events.onInputDown.add(this.correrCondicion, this);
+
+       //Se crea marco de la situacion
+      this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
+      this.pasos.anchor.setTo(0.5,0.5);
+      this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
+      this.pasos.texto.anchor.setTo(0.5,0.5);
+
+       //Imagen de fondo para el tiempo
+      this.cuadroTime = this.game.add.sprite(230, 40,'time');
+      this.cuadroTime.anchor.setTo(0.5, 0.5);
+      //Se setea el texto para el cronometro
+      this.timer = this.game.add.bitmapText(230, 40 ,'font', '00:00', 32);
+      this.timer.anchor.setTo(0.5,0.5);
+
+      //Se crear text para el score
+      this.scoretext = this.game.add.bitmapText(20, 25 ,'font', 'Puntaje: 0', 24);
+      this.scoretext.anchor.setTo(0,0.5);
 
       //boton ciclo while
       this.btnwhile = this.game.add.sprite(546, 100,'btnwhile');
@@ -3183,9 +3212,76 @@ var Situacion =
       }
     },
 
+    updateTimer: function() {
+      //Se comprueba que el tiempo de juego haya terminado
+      if(this.maxtime == 0){
+        this.intSituacion++;
+        if(this.intSituacion<2){
+          this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
+          this.items.forEach(function(item) {            
+            if(item.texto != null){item.texto.kill();}
+            item.kill();
+          });          
+           //Se habilitan botones de eleccion de ciclo
+          this.btnwhile.visible = true;
+          this.btnfor.visible = true;
+        }else{
+          this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+          this.siguiente.inputEnabled = true;
+          this.siguiente.events.onInputDown.add(this.clickListener, this);
+          this.siguiente.fixedToCamera = true; 
+        }
+
+        //Detener metodo de update
+        this.tiempo.stop();
+      }
+
+      var minutos = 0;
+      var segundos = 0;
+        
+      if(this.maxtime/60 > 0){
+        minutos = Math.floor(this.maxtime/60);
+        segundos = this.maxtime%60;
+      }else{
+        minutos = 0;
+        segundos = this.maxtime; 
+      }
+      
+      this.maxtime--;
+        
+      //Se agrega cero a la izquierda en caso de ser de un solo digito   
+      if (segundos < 10)
+        segundos = '0' + segundos;
+   
+      if (minutos < 10)
+        minutos = '0' + minutos;
+   
+      this.timer.setText(minutos + ':' +segundos);
+    },
+
     crearSituacion:function(){
+      //Se restablece el tiempo
+      this.maxtime= 90; 
+      this.intentosxsitua = 0;
+      this.tiempo.start();
+      //Se establece los pasos de la situacion
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
-      this.slot = this.items.create(470,40,'slotIF');
+      this.slot = this.items.create(479,40,'slotIF');
+      
+      if(Situacion[this.intSituacion].tipo == 'for'){
+        this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo.anchor.setTo(0,0.5);
+        this.textciclo.fontWeight = 'bold';
+      }else{
+        this.textciclo = this.game.add.text((this.slot.x +22),(this.slot.y + 23),'while(                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo.anchor.setTo(0,0.5);
+        this.textciclo.fontWeight = 'bold';
+
+      }
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '22px calibri', fill: '#fff', align:'center'});
+      textCierr.anchor.setTo(0,0.5);
+      textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
       var yitem = 350;
       var CItems = this.items;
@@ -3243,7 +3339,67 @@ var Situacion =
     },
 
     correrCondicion: function(){
-
+      var condicionCorrecta = true;
+      var game = this;
+      if(this.slotCiclo && this.slotAccion_1){
+        if(Situacion[this.intSituacion].tipo == 'while'){
+          this.items.forEach(function(item) {
+            if(item.slotC){ //slot Ciclo
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }
+            }else if(item.slot1){ //slot accion
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }
+            }
+          });
+        }else if(Situacion[this.intSituacion].tipo == 'for'){
+          this.items.forEach(function(item) {
+            if(item.slotC){ //slot Ciclo
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }else{
+                if(Situacion[game.intSituacion].iteraciones != game.cajaTexto.texto.text){
+                  condicionCorrecta = false;
+                }
+              }
+            }else if(item.slot1){ //slot accion
+              if(!item.respuesta){
+                condicionCorrecta = false;
+              }
+            }
+          });
+        }
+        //Se valida la condicion de ciclo
+        //si la condicion es correcta se pasa a la siguiente situacion
+        if(condicionCorrecta){          
+          this.intSituacion++;
+          if(this.intSituacion<2){
+            this.slotCiclo = this.slotAccion_1 = false;
+            this.items.forEach(function(item) {            
+              if(item.texto != null){item.texto.kill();}
+              item.kill();
+            });
+            alert("Correcto");
+            this.score += (50 - (this.intentosxsitua*5));
+            this.scoretext.setText('Puntaje: ' + this.score);
+            //Se habilitan botones de eleccion de ciclo
+            this.btnwhile.visible = true;
+            this.btnfor.visible = true;
+            //Detener metodo de update
+            this.tiempo.stop();
+          }else{
+            this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+            this.siguiente.inputEnabled = true;
+            this.siguiente.events.onInputDown.add(this.clickListener, this);
+            this.siguiente.fixedToCamera = true; 
+          }
+        }else{
+          alert("Vuelve a intentarlo");
+        }
+        this.intentosxsitua++;   
+      }
     },
 
     listenerwhile:function(){
@@ -3279,7 +3435,7 @@ var Situacion =
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 154),(this.slot.body.y + 72),'accion_large');
+            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 82),'accion_large');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3315,7 +3471,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 140),(this.slot.body.y + 20),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 24),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -3323,9 +3479,12 @@ var Situacion =
             itemEncajado.texto.y = itemEncajado.y;
             itemEncajado.slotC = true;          
             item.kill();
-            this.cajaTexto = new textBox(this.game,(this.slot.body.x)+160,(this.slot.body.y)+15,20,15,"0");
-            this.cajaTexto.texto.fontSize = 16;
-            this.items.add(this.cajaTexto);
+            //Se crea la caja de texto para ciclo for
+            if(Situacion[this.intSituacion].tipo == 'for'){
+              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+155,(this.slot.body.y)+15,16,15,"0");
+              this.cajaTexto.texto.fontSize = 16;
+              this.items.add(this.cajaTexto);
+            }
           }else{
 
             this.items.forEach(function(itemslot1) {

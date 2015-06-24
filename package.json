@@ -19,5 +19,10 @@
   },
   "engines": {
     "node": ">=0.8.0"
+  },
+  "scripts": {
+	"test": "echo \"Error: no test specified\" && exit 1",
+	"start": "grunt",
+	"postinstall": "bash ./post_install.sh"
   }
 }
