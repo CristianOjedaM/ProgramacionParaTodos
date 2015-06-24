@@ -469,7 +469,7 @@ var Situacion =
 
     mensaje:function(respuesta){
       //Se agrega el panel
-      this.MensajeAyuda = this.create(this.game.width/2, this.game.height/2, 'fondoPausa');      
+      this.MensajeAyuda = this.game.add.sprite(this.game.width/2, this.game.height/2, 'fondoPausa');      
       this.MensajeAyuda.anchor.setTo(0.5, 0.5);
       if(respuesta){
         this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Muy bien felicitaciones,\ngracias por ayudarme ahora vamos por otro reto',18);
