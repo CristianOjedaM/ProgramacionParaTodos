@@ -2838,6 +2838,10 @@ var Situacion =
       textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
 
+      var textelse = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
+      textelse.anchor.setTo(0,0.5);
+      textelse.fontWeight = 'bold';
+
       //Se establece los pasos de la situacion
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
@@ -3102,23 +3106,19 @@ var Situacion =
           var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
           anim.onComplete.add(function(){
             this.situacion4_1.visible = false;            
-            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;
-            this.items.forEach(function(item) {            
-              if(item.texto != null){item.texto.kill();}
-              item.kill();
-            });
-            alert("Correcto");
+            this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;                     
             this.score += (50 - (this.intentosxsitua*5));
             this.scoretext.setText('Puntaje: ' + this.score);            
             this.intSituacion++;
             //Se determina si es la ultima situacion
             if(this.intSituacion>=2){            
-              this.siguiente = this.game.add.sprite(this.game.width/2 - 75, this.game.height/2 - 25,'btnContinuar');
+              this.siguiente = this.game.add.sprite(this.game.width/2 , this.game.height/2 ,'btnContinuar');
               this.siguiente.inputEnabled = true;
               this.siguiente.events.onInputDown.add(this.clickListener, this);
               this.siguiente.fixedToCamera = true; 
+              this.siguiente.anchor.setTo(0.5,0);
             } else{
-              this.crearSituacion();   
+                this.mensaje(true);
             }                    
           }, this);
           this.situacion4_1.animations.play('anima');                             
@@ -3133,7 +3133,7 @@ var Situacion =
           anim.onComplete.add(function(){
             this.situacion.visible = true;
             this.situacion4_1_Inv.visible = false;
-            alert("Vuelve a intentar");
+            this.mensaje(false);
           }, this);          
           this.situacion4_1_Inv.animations.play('anima');
         }
@@ -3142,7 +3142,46 @@ var Situacion =
     },
     clickListener: function(){
        this.game.state.clearCurrentState();
-      this.game.state.start("play");
+       this.game.state.start("play");
+    },
+
+    clickSiguiente: function(){ 
+      this.items.forEach(function(item) {            
+        if(item.texto != null){item.texto.kill();}
+        item.kill();
+      });   
+      this.crearSituacion(); 
+      this.MensajeAyuda.texto.kill();      
+      this.MensajeAyuda.kill();
+      this.siguiente.kill();       
+    },
+
+    clickIntentar: function(){      
+      this.MensajeAyuda.texto.kill();      
+      this.MensajeAyuda.kill();
+      this.siguiente.kill();
+    },
+
+    mensaje:function(respuesta){      
+      //Se agrega el panel
+      this.MensajeAyuda = this.game.add.sprite(this.game.width/2, this.game.height/2, 'fondoPausa');      
+      this.MensajeAyuda.anchor.setTo(0.5, 0.5);
+      if(respuesta){
+        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto',18);
+        this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
+      }else{
+        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else',18);
+        this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
+      }
+      this.siguiente = this.game.add.sprite(this.game.width/2, this.game.height/2 + 58,'btnContinuar');
+      this.siguiente.inputEnabled = true;
+      if(respuesta){
+        this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
+      }else{
+        this.siguiente.events.onInputDown.add(this.clickIntentar, this);
+      }
+      this.siguiente.fixedToCamera = true; 
+      this.siguiente.anchor.setTo(0.5,0);
     },
 
   };
@@ -3893,6 +3932,7 @@ var Situacion =
         }
       }catch(err){
         this.editor.showError(err.name,i_temp);
+        this.codigoActivo = true;
       }
     },
 
@@ -3929,7 +3969,8 @@ var Situacion =
         }
         e.editor.hideError();
       }catch(err){
-        e.editor.showError(err.name,i);        
+        e.editor.showError(err.name,i);    
+        e.codigoActivo = true;    
       }
     },
 
@@ -3967,7 +4008,7 @@ var Situacion =
       this.crearBoton(0,0,'nivel1',195,50,'Hola, aquí aprenderás sobre\nlos tipos de dato básicos de\njavascript. Intentalo!');
       this.crearBoton(0,100,'nivel2',305,150,'Sumérgete en un juego lleno\nde diversión mientras aprendes\na manipular variables. Vamos!');
       this.crearBoton(0,200,'nivel3',205,250,'Prueba tu agilidad y lógica por\nmedio del uso de operadores\nlógicos. Empecemos!');
-      this.crearBoton(0,300,'nivel4',200,350,'');
+      this.crearBoton(0,300,'nivel4',310,350,'Preparado?  Conoce, aprende y\nmanipula las estructuras\ncondicionales. Adelante!');
       this.crearBoton(0,400,'nivel5',305,450,'');
       this.crearBoton(0,500,'nivel6',308,550,'Estas listo para probar todos\ntus conocimientos? Es hora de\nempezar a codificar. Vamos!');
     },

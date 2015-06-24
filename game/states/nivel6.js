@@ -285,6 +285,7 @@
         }
       }catch(err){
         this.editor.showError(err.name,i_temp);
+        this.codigoActivo = true;
       }
     },
 
@@ -321,7 +322,8 @@
         }
         e.editor.hideError();
       }catch(err){
-        e.editor.showError(err.name,i);        
+        e.editor.showError(err.name,i);    
+        e.codigoActivo = true;    
       }
     },
 
