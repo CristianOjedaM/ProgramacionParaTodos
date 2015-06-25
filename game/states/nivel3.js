@@ -19,7 +19,7 @@
     resp_time:20,
     flagpause: false,
     //Definicion temporal de preguntas para mostrar por tipo de dato
-    datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'}),
+    datosItems: new Array({texto:'nombre("Pedro")',variable:'nombre',dato:'"Pedro"'},{texto:'nombre("Maria")',variable:'nombre',dato:'"Maria"'},{texto:'"Maria"',dato:'"Maria"'},{texto:'123',dato:'123'},{texto:'valor(0)',variable:'valor',dato:'0'},{texto:'true',dato:'true'},{texto:'bandera(false)',variable:'false',dato:'false'},{texto:'96584',dato:'96584'}),
     operadorItems: new Array('>','<','>=','<=','==','!='),
     //Define la variable de errores para mensajes de retroalimentacion
     errorCount: 0,
