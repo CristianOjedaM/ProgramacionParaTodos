@@ -6,7 +6,7 @@
     [{
       "tipo"  : 'for',
       "iteraciones" : 30,
-      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 \nveces sin parar ayudame a formar el \nciclo para romper el record.', 
+      "instrucciones": 'Hola, quiero romper el record de saltar\nla cuerda, para esto necesito saltar 30\nveces sin parar, ayudame a formar un\nciclo que me permita romper el record.', 
       "ciclo": [{'texto':'var i = 0; i <= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': false},{'texto':'saltar();','respuesta':true},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
       "imgsituacion_1" : 'situacion5_1',
@@ -15,7 +15,7 @@
     },
     {
       "tipo"  : 'while',
-      "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+      "instrucciones": 'Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
       "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
       "imgsituacion_1" : 'situacion4_1',
@@ -55,7 +55,7 @@
       this.game.add.tileSprite(0, 0,800,600, 'introN5');
       this.game.input.onDown.add(this.iniciarJuego,this);
 
-      this.game.add.bitmapText(55, 170, 'font', 'Estas listo para un\nnuevo juego? En este\nnivel no solo deberás\nprobar tu agilidad,\ntambién deberás\ndemostrar tu capacidad\nde lógica manipulando\nvariables, datos y\noperadores Formando\nsentencias acertadas\nde acuerdoa la\nsolitud propuesta\n\nVeamos como lo haces!', 24);
+      this.game.add.bitmapText(55, 170, 'font', 'Espero que la estes\npasando bien, y estes\npreparado para este\nnivel. En esta ocasión\naprenderemos estructuras\ncíclicas, deberas formar\nciclos que permitan\ndar solución a diversas\nsituaciones. Recuerda\nanalizar cuidadosamente\ncada opción para dar\nla mejor respuesta y\nasí superar cada reto\n\nComencemos!', 24);
   	},
 
     iniciarJuego : function(game){
@@ -180,11 +180,11 @@
           this.siguiente.events.onInputDown.add(this.clickListener, this);
           this.siguiente.fixedToCamera = true; 
           if(this.score>=70){
-            this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
+            this.pasos.texto.setText('Felicidades,\nhas completado el nivel de estructuras\ncíclicas Puntaje: '+ this.score);  
           }else if(this.score >=50 && this.score <70){
-            this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
+            this.pasos.texto.setText('Genial,\nhas completado el nivel de ciclos,\npractica y cada vez lo harás mejor\nPuntaje: '+ this.score); 
           }else{
-            this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
+            this.pasos.texto.setText('No te ha ido muy bien\npero no te desanimes, sigue\njugando, mejora y superate!\nPuntaje: '+ this.score); 
           } 
         }
 
@@ -351,11 +351,11 @@
               this.siguiente.events.onInputDown.add(this.clickListener, this);
 
               if(this.score>=70){
-                this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de ciclos \nPuntaje: '+ this.score);  
+                this.pasos.texto.setText('Felicidades,\nhas completado el nivel de estructuras\ncíclicas Puntaje: '+ this.score);  
               }else if(this.score >=50 && this.score <70){
-                this.pasos.texto.setText('felicitaciones, has completado el nivel de\nciclos pero puedes mejorar \nPuntaje: '+ this.score); 
+                this.pasos.texto.setText('Genial,\nhas completado el nivel de ciclos,\npractica y cada vez lo harás mejor\nPuntaje: '+ this.score); 
               }else{
-                this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre ciclos\nPuntaje: '+ this.score); 
+                this.pasos.texto.setText('No te ha ido muy bien\npero no te desanimes, sigue\njugando, mejora y superate!\nPuntaje: '+ this.score); 
               }
 
             } else{
@@ -390,7 +390,7 @@
       }else{
         var  game = this;
         this.consejo = this.game.add.sprite(500,400,'fondoPausa');
-        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que este ciclo \nno maneja un contador de \nforma facil como el ciclo \nfor y esta sujeto a una \ncondición.',18);
+        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que el ciclo while\nno maneja un contador,\ny esta sujeto a una condición\npuede que el ciclo for te\nsea mas útil.',18);
         this.consejo.texto.anchor.setTo(0.5,0.5); 
         setTimeout(function(){          
           game.consejo.texto.destroy();
@@ -407,7 +407,7 @@
       }else{
         var  game = this;
         this.consejo = this.game.add.sprite(500,400,'fondoPausa');
-        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que este ciclo \nnecesita un número el cual \nlimita la cantidad de \nrepeticiones.',18);
+        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que el ciclo for\nnecesita un número el cual \nlimite la cantidad de \nrepeticiones.',18);
         this.consejo.texto.anchor.setTo(0.5,0.5);  
         
         setTimeout(function(){          
@@ -540,9 +540,9 @@
     mensaje:function(respuesta){      
       //Se agrega el panel      
       if(respuesta){
-         this.pasos.texto.setText('Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto');         
+         this.pasos.texto.setText('Felicidades,\ngracias por ayudarme ahora\nvamos por otro reto');         
       }else{        
-        this.pasos.texto.setText('Lo siento, pero el ciclo \nesta mal construido vuelve a intentarlo\n y recuerda '); 
+        this.pasos.texto.setText('Lo siento, parece que el ciclo\nno esta bien definido vuelve a\nintentarlo, recuerda analizar la situación'); 
       }
       this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
       this.siguiente.inputEnabled = true;

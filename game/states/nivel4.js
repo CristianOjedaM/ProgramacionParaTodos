@@ -2,14 +2,14 @@
 var Pausa = require('../prefabs/pause');
 var Situacion = 
   [{
-    "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+    "instrucciones": 'Hola, necesito pasar al otro lado del camino\npero por aquí ocurren demasiadas estampidas,\nayudame a formar una condiciónn que me permita\npasar cuando no haya  estampida', 
     "condiciones": [{'texto':'estampida() == true','respuesta':true},{'texto':'estampida() >= false','respuesta':false},{'texto':'estampida() <= true','respuesta':false}],
     "acciones" :  [{'texto':'cruzar();','respuesta':'slot2'},{'texto':'saltar();','respuesta':'invalida'},{'texto':'esperar();','respuesta':'slot1'},{'texto':'hablar();','respuesta':'invalida'},{'texto':'disparar();','respuesta':'invalida'}],
     "imgsituacion_1" : 'situacion4_1',
     "imgsituacion_2" : 'situacion4_1_Inv'
   },
   {
-    "instrucciones": ' Hola,estoy en una carrera de obstaculos\n pero solo puedo saltar a menos de 50 mts \n antes que el obstaculo llegue cuadra la\n condicion para poder llegar a la meta',
+    "instrucciones": 'Hola, me enuentro en una carrera de obstaculos,\npero solo puedo saltar cuando el obstaculo\neste a menos de 50 mts  ayudame a formar\nuna condición que me permita llegar a la meta',
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
     "imgsituacion_1" : 'situacion4_2',
@@ -361,11 +361,11 @@ var Situacion =
           this.siguiente.events.onInputDown.add(this.clickListener, this);
           this.siguiente.fixedToCamera = true; 
           if(this.score>=70){
-            this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
+            this.pasos.texto.setText('Felicidades,\nhas completado correctamente el\nnivel de condicionales\nPuntaje: '+ this.score);  
           }else if(this.score >=50 && this.score <70){
-            this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
+            this.pasos.texto.setText('Genial,\nhas completado el nivel de condicionales,\npractica y cada vez lo harás mejor\nPuntaje: '+ this.score); 
           }else{
-            this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
+            this.pasos.texto.setText('No te ha ido muy bien\npero no te desanimes, sigue\njugando, mejora y superate!\nPuntaje: '+ this.score); 
           }
         }
 
@@ -438,11 +438,11 @@ var Situacion =
               this.siguiente.events.onInputDown.add(this.clickListener, this);
 
               if(this.score>=70){
-                this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
+                this.pasos.texto.setText('Felicidades,\nhas completado correctamente el\nnivel de condicionales\nPuntaje: '+ this.score);  
               }else if(this.score >=50 && this.score <70){
-                this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
+                this.pasos.texto.setText('Genial,\nhas completado el nivel de condicionales,\npractica y cada vez lo harás mejor\nPuntaje: '+ this.score); 
               }else{
-                this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
+                this.pasos.texto.setText('No te ha ido muy bien\npero no te desanimes, sigue\njugando, mejora y superate!\nPuntaje: '+ this.score); 
               }
 
             } else{
@@ -491,9 +491,9 @@ var Situacion =
     mensaje:function(respuesta){      
       //Se agrega el panel      
       if(respuesta){
-         this.pasos.texto.setText('Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto');         
+         this.pasos.texto.setText('Muy bien,\ngracias por ayudarme, ahora\nvamos por un nuevo reto');         
       }else{        
-        this.pasos.texto.setText('Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else'); 
+        this.pasos.texto.setText('Lo siento, pero la condicion no corresponde,\nvuelve a intentarlo y recuerda la primera\nacción (if) se ejecutará siempre que se cumpla\nla condición en caso contrario se\nejecutara la segunda acción (else)'); 
       }
       this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
       this.siguiente.inputEnabled = true;
