@@ -167,6 +167,7 @@
            //Se habilitan botones de eleccion de ciclo
           this.btnwhile.visible = true;
           this.btnfor.visible = true;
+          this.textciclo.visible=false;
         }else{
           this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
           this.siguiente.inputEnabled = true;
@@ -217,7 +218,7 @@
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotciclo');
-      if(this.textciclo != null){this.textciclo.kill();}
+      if(this.textciclo != null){this.textciclo.kill();}      
       
       if(Situacion[this.intSituacion].tipo == 'for'){
         this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
@@ -502,7 +503,8 @@
       });   
       //Se habilitan botones de eleccion de ciclo
       this.btnwhile.visible = true;
-      this.btnfor.visible = true;
+      this.btnfor.visible = true;      
+      this.textciclo.visible=false;
       //Detener metodo de update
       this.tiempo.stop();       
       this.siguiente.kill();       
