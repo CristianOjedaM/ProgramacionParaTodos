@@ -390,7 +390,7 @@
       }else{
         var  game = this;
         this.consejo = this.game.add.sprite(500,400,'fondoPausa');
-        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que este ciclo \nno maneja un contador de forma \nfacil como el ciclo for',18);
+        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que este ciclo \nno maneja un contador de \nforma facil como el ciclo \nfor y esta sujeto a una \ncondición.',18);
         this.consejo.texto.anchor.setTo(0.5,0.5); 
         setTimeout(function(){          
           game.consejo.texto.destroy();
@@ -407,7 +407,7 @@
       }else{
         var  game = this;
         this.consejo = this.game.add.sprite(500,400,'fondoPausa');
-        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que este ciclo \nnecesita un número el cual limita \nla cantidad de repeticiones',18);
+        this.consejo.texto = this.game.add.bitmapText(this.consejo.x+134,this.consejo.y+58,'font','Recuerda que este ciclo \nnecesita un número el cual \nlimita la cantidad de \nrepeticiones.',18);
         this.consejo.texto.anchor.setTo(0.5,0.5);  
         
         setTimeout(function(){          
