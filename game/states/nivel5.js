@@ -88,7 +88,9 @@
       this.game.add.sprite(10,40,'fondosituacion');
 
       //Imagen inicial de la sitacion            
-      this.situacion = this.game.add.sprite(30,60,'situacion1');
+      this.situacion = this.game.add.sprite(30,60,'situacion5.1');
+      this.situacion.animations.add('jump');
+      this.situacion.animations.play('jump', 10, true);
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');

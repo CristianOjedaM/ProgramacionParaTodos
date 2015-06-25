@@ -81,7 +81,8 @@ Preload.prototype = {
     this.load.image('accion_large5','assets/images/Nivel 5/accion_large.png');
     this.load.image('accion_small5','assets/images/Nivel 5/accion_small.png');
     this.load.image('condicion5','assets/images/Nivel 5/condicion.png');
-    this.load.spritesheet('situacion5_1','assets/images/Nivel 5/animSalto.png',401,273);
+    this.load.spritesheet('situacion5.1','assets/images/Nivel 5/animSalto.png',401,273);
+    this.load.spritesheet('situacion5_1','assets/images/Nivel 5/animSaltoBien.png',401,273);
     this.load.spritesheet('situacion5_1_Inv','assets/images/Nivel 5/animSaltoMal.png',401,273);
 
     /*Imagenes nivel 6 - Editor de codigo*/
