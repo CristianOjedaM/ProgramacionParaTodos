@@ -148,18 +148,18 @@ var Situacion =
       this.intentosxsitua = 0;
       //Se crea slot de estructura if
       this.slot = this.items.create(479,40,'slotIF');
-      var textif = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textif = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'if (                             ){',{font: '24px calibri', fill: '#fff', align:'center'});
       textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
 
-      var textelse = this.game.add.text((this.slot.x +26),(this.slot.y + 133),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textelse = this.game.add.text((this.slot.x +24),(this.slot.y + 133),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
       textelse.anchor.setTo(0,0.5);
       textelse.fontWeight = 'bold';
 
       //Se establece los pasos de la situacion
       this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
-      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textCierr = this.game.add.text((this.slot.x +24),(this.slot.y + 231),'}',{font: '24px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
@@ -283,7 +283,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 23),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 125),(this.slot.body.y + 24),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -417,7 +417,7 @@ var Situacion =
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
           if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}
           this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
-          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 20, false);
+          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 5, false);
           anim.onComplete.add(function(){
             this.situacion4_1.visible = false;            
             this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;                     
@@ -443,7 +443,7 @@ var Situacion =
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
           if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}      
           this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
-          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 20, false);             
+          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 5, false);             
           anim.onComplete.add(function(){
             this.situacion.visible = true;
             this.situacion4_1_Inv.visible = false;
@@ -464,26 +464,23 @@ var Situacion =
         if(item.texto != null){item.texto.kill();}
         item.kill();
       });   
-      this.crearSituacion(); 
-      this.MensajeAyuda.texto.kill();      
-      this.MensajeAyuda.kill();
+      this.crearSituacion();       
       this.siguiente.kill();       
     },
 
-    clickIntentar: function(){      
-      this.MensajeAyuda.texto.kill();      
-      this.MensajeAyuda.kill();
-      this.siguiente.kill();
+    clickIntentar: function(){ 
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
+      this.siguiente.kill(); 
     },
 
     mensaje:function(respuesta){      
       //Se agrega el panel      
       if(respuesta){
          this.pasos.texto.setText('Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto');         
-      }else{
+      }else{        
         this.pasos.texto.setText('Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else'); 
       }
-      this.siguiente = this.game.add.sprite(this.pasos.x, this.pasos.y + 54,'btnContinuar');
+      this.siguiente = this.game.add.sprite(204, this.pasos.y + 50,'btnContinuar');
       this.siguiente.inputEnabled = true;
       if(respuesta){
         this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
