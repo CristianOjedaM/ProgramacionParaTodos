@@ -8,13 +8,18 @@
       "iteraciones" : 20,
       "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'var i = 0; i >= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
-      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}]
+      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
+      "imgsituacion_1" : 'situacion4_1',
+      "imgsituacion_2" : 'situacion4_1_Inv'
+
     },
     {
       "tipo"  : 'while',
       "instrucciones": ' Holi, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
-      "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}]
+      "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
+      "imgsituacion_1" : 'situacion4_1',
+      "imgsituacion_2" : 'situacion4_1_Inv'
     }];
 
 
@@ -76,11 +81,13 @@
 
       //Se define el contador de controlde nivel
       this.tiempo = this.game.time.create(false);
-      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego
-      
+      this.tiempo.loop(1000, this.updateTimer, this);//Contador de juego      
 
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
+
+      //Imagen inicial de la sitacion            
+      this.situacion = this.game.add.sprite(30,60,'situacion1');
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
@@ -93,6 +100,9 @@
       this.pasos.anchor.setTo(0.5,0.5);
       this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
       this.pasos.texto.anchor.setTo(0.5,0.5);
+
+      //Se establece los pasos de la situacion
+      this.pasos.texto.setText(Situacion[this.intSituacion].instrucciones);
 
        //Imagen de fondo para el tiempo
       this.cuadroTime = this.game.add.sprite(230, 40,'time');
@@ -368,7 +378,7 @@
         if(item.tipo == 0 && item.body.y >= (this.slot.body.y + 40) && item.body.y <= (this.slot.body.y + 104) && item.body.x >= (this.slot.body.x + 38) && item.body.x <= (this.slot.body.x + 270) ){
           if(!this.slotAccion_1){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 82),'accion_large5');
+            var itemEncajado = this.items.create( (this.slot.body.x + 146),(this.slot.body.y + 94),'accion_large5');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -404,7 +414,7 @@
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 132),(this.slot.body.y + 24),'condicion5');
+            var itemEncajado = this.items.create( (this.slot.body.x + 125),(this.slot.body.y + 32),'condicion5');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;

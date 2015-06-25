@@ -425,17 +425,18 @@ var Situacion =
             this.scoretext.setText('Puntaje: ' + this.score);            
             this.intSituacion++;
             //Se determina si es la ultima situacion
-            if(this.intSituacion>=2){                        
+            if(this.intSituacion>=2){ 
+              this.situacion.visible = true;                       
               this.siguiente = this.game.add.sprite(30, this.pasos.y + 50 ,'btnContinuar');
               this.siguiente.inputEnabled = true;
               this.siguiente.events.onInputDown.add(this.clickListener, this);
 
               if(this.score>=70){
-                this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \n Puntaje: '+ this.score);  
+                this.pasos.texto.setText('Muy bien felicitaciones,\nhas completado el nivel de condicionales \nPuntaje: '+ this.score);  
               }else if(this.score >=50 && this.score <70){
-                this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \n Puntaje: '+ this.score); 
+                this.pasos.texto.setText('felicitaciones, has completado el nivel de\ncondicionales pero puedes mejorar \nPuntaje: '+ this.score); 
               }else{
-                this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\n Puntaje: '+ this.score); 
+                this.pasos.texto.setText('No te ha ido muy bien\nnecesitas mejorar más sobre condicionales\nPuntaje: '+ this.score); 
               }
 
             } else{
