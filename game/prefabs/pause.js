@@ -90,7 +90,7 @@
             var yitem = 0;
               switch(game.game.state.current){
                 case 'nivel1':
-                  yitem = this.btnPlay.y-20;
+                  yitem = game.btnPlay.y-20;
                   frame = 0;
                 break;
                 case 'nivel1_1':
