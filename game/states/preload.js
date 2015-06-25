@@ -22,6 +22,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel5.jpg',800,100);
     this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
     this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);
+    this.load.image('btnCerrar', 'assets/images/Menu/btnCerrar.png');
 
     /*Botones y generales*/
     this.load.image('btnContinuar', 'assets/images/Botones/btnContinuar.png');

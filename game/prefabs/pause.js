@@ -103,9 +103,12 @@
               }
               this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',frame);
               this.mensajeGeneral.fixedToCamera = true;
+              this.cerrarMensaje = this.game.add.sprite((this.game.width - 81),10,'btnCerrar');
+              this.cerrarMensaje.fixedToCamera = true;
            }
       }else if( this.game.paused == true && this.mensajeGeneral != null && this.mensajeGeneral.visible == true && game.x > (this.game.width - 81) && game.x < (this.game.width - 36) && game.y > 10 && game.y < 55 ){
           this.mensajeGeneral.destroy();
+          this.cerrarMensaje.destroy();
       }
   }; 
  
