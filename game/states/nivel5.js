@@ -6,16 +6,16 @@
     [{
       "tipo"  : 'for',
       "iteraciones" : 30,
-      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 repeticiones \n ayudame a cudrar el ciclo para saltar 30 veces', 
+      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 \nveces sin parar ayudame a cuadrar el \nciclo para romper el record.', 
       "ciclo": [{'texto':'var i = 0; i <= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
-      "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
+      "acciones" :  [{'texto':'cruzar();','respuesta': false},{'texto':'saltar();','respuesta':true},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
       "imgsituacion_1" : 'situacion5_1',
       "imgsituacion_2" : 'situacion5_1_Inv'
 
     },
     {
       "tipo"  : 'while',
-      "instrucciones": ' Holi, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
+      "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
       "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
       "imgsituacion_1" : 'situacion4_1',
@@ -90,7 +90,7 @@
       //Imagen inicial de la sitacion            
       this.situacion = this.game.add.sprite(30,60,'situacion5.1');
       this.situacion.animations.add('jump');
-      this.situacion.animations.play('jump', 10, true);
+      this.situacion.animations.play('jump', 7, true);
 
       //Se agrega boton de ejecucion
       this.run = this.game.add.sprite(230, 355,'btnEjecutar4');
