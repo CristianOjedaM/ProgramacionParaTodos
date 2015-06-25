@@ -152,7 +152,7 @@ var Situacion =
       textif.anchor.setTo(0,0.5);
       textif.fontWeight = 'bold';
 
-      var textelse = this.game.add.text((this.slot.x +26),(this.slot.y + 23),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
+      var textelse = this.game.add.text((this.slot.x +26),(this.slot.y + 133),'} else{',{font: '24px calibri', fill: '#fff', align:'center'});
       textelse.anchor.setTo(0,0.5);
       textelse.fontWeight = 'bold';
 
@@ -417,7 +417,7 @@ var Situacion =
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
           if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}
           this.situacion4_1 =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_1);
-          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);
+          var anim = this.situacion4_1.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 20, false);
           anim.onComplete.add(function(){
             this.situacion4_1.visible = false;            
             this.slotCondicion = this.slotAccion_1 = this.slotAccion_2 = false;                     
@@ -443,7 +443,7 @@ var Situacion =
           if(this.situacion4_1!=null){this.situacion4_1.kill();} 
           if(this.situacion4_1_Inv!=null){this.situacion4_1_Inv.kill();}      
           this.situacion4_1_Inv =  this.game.add.sprite(30,60,Situacion[this.intSituacion].imgsituacion_2);
-          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 10, false);             
+          var anim =this.situacion4_1_Inv.animations.add('anima',[0,1,2,3,4,5,6,7,8,9], 20, false);             
           anim.onComplete.add(function(){
             this.situacion.visible = true;
             this.situacion4_1_Inv.visible = false;
@@ -477,25 +477,19 @@ var Situacion =
     },
 
     mensaje:function(respuesta){      
-      //Se agrega el panel
-      this.MensajeAyuda = this.game.add.sprite(this.game.width/2, this.game.height/2, 'fondoPausa');      
-      this.MensajeAyuda.anchor.setTo(0.5, 0.5);
+      //Se agrega el panel      
       if(respuesta){
-        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto',18);
-        this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
+         this.pasos.texto.setText('Muy bien felicitaciones,\ngracias por ayudarme ahora \nvamos por otro reto');         
       }else{
-        this.MensajeAyuda.texto = this.game.add.bitmapText(this.MensajeAyuda.x,this.MensajeAyuda.y,'font','Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else',18);
-        this.MensajeAyuda.texto.anchor.setTo(0.5,0.5);
+        this.pasos.texto.setText('Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else'); 
       }
-      this.siguiente = this.game.add.sprite(this.game.width/2, this.game.height/2 + 58,'btnContinuar');
+      this.siguiente = this.game.add.sprite(this.pasos.x, this.pasos.y + 54,'btnContinuar');
       this.siguiente.inputEnabled = true;
       if(respuesta){
         this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
       }else{
         this.siguiente.events.onInputDown.add(this.clickIntentar, this);
       }
-      this.siguiente.fixedToCamera = true; 
-      this.siguiente.anchor.setTo(0.5,0);
     },
 
   };
