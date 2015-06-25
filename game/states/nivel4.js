@@ -79,7 +79,10 @@ var Situacion =
       //Se crea marco de la situacion
       this.game.add.sprite(10,40,'fondosituacion');
 
-      //Se crea marco de la situacion
+      //Imagen inicial de la sitacion            
+      this.situacion = this.game.add.sprite(30,60,'situacion1');
+
+      //Se crea marco de los pasos
       this.pasos  =this.game.add.sprite(230,460,'fondoPasos4');
       this.pasos.anchor.setTo(0.5,0.5);
       this.pasos.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','',18);
@@ -140,9 +143,6 @@ var Situacion =
     },
 
     crearSituacion:function(){      
-      //Imagen inicial de la sitacion      
-      this.situacion = this.game.add.sprite(30,60,'situacion1');
-      
       //Se restablece el tiempo
       this.maxtime= 90; 
       this.intentosxsitua = 0;
@@ -283,7 +283,7 @@ var Situacion =
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 8) && item.body.y <= (this.slot.body.y + 45) && item.body.x >= (this.slot.body.x + 50) && item.body.x <= (this.slot.body.x + 202) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 125),(this.slot.body.y + 24),'condicion');
+            var itemEncajado = this.items.create( (this.slot.body.x + 125),(this.slot.body.y + 25),'condicion');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
