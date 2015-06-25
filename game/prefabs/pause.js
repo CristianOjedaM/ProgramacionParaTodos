@@ -14,6 +14,9 @@
     this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',0);
     this.mensajeGeneral.visible = false;
     this.mensajeGeneral.fixedToCamera = true;
+    this.cerrarMensaje = this.game.add.sprite((this.game.width - 81),20,'btnCerrar');
+    this.cerrarMensaje.fixedToCamera = true;
+    this.cerrarMensaje.visible = false;
 
     //Boton de play o resume
     this.btnPlay = this.game.add.button((this.game.width - 81), -140, 'btnPausa');
@@ -114,12 +117,11 @@
               }              
               this.mensajeGeneral.frame = frame;
               this.mensajeGeneral.visible = true;
-              this.cerrarMensaje = this.game.add.sprite((this.game.width - 81),20,'btnCerrar');
-              this.cerrarMensaje.fixedToCamera = true;
+              this.cerrarMensaje.visible = true;
            }
       }else if( this.game.paused == true && this.mensajeGeneral != null && this.mensajeGeneral.visible == true && game.x > (this.game.width - 81) && game.x < (this.game.width - 36) && game.y > 20 && game.y < 65 ){
-          this.mensajeGeneral.destroy();
-          this.cerrarMensaje.destroy();
+          this.mensajeGeneral.visible=false;
+          this.cerrarMensaje.visible=false;
       }
   }; 
  
