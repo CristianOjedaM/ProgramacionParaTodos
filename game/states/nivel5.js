@@ -222,11 +222,11 @@
       if(this.textciclo != null){this.textciclo.kill();}      
       
       if(Situacion[this.intSituacion].tipo == 'for'){
-        this.textciclo = this.game.add.text((this.slot.x +20),(this.slot.y + 29),'for (                               ){',{font: '16px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +20),(this.slot.y + 29),'for (                                           ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
       }else{
-        this.textciclo = this.game.add.text((this.slot.x +18),(this.slot.y + 23),'while(                               ){',{font: '16px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +10),(this.slot.y + 23),'while(                                                      ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
 
@@ -446,7 +446,7 @@
         }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
           if(!this.slotCiclo){
             //Creamos el item el cual encaja en el slot de la accion          
-            var itemEncajado = this.items.create( (this.slot.body.x + 128),(this.slot.body.y + 29),'condicion5');
+            var itemEncajado = this.items.create( (this.slot.body.x + 126),(this.slot.body.y + 29),'condicion5');
             itemEncajado.anchor.setTo(0.5,0.5);
             itemEncajado.texto = item.texto;
             itemEncajado.respuesta = item.respuesta;
@@ -456,7 +456,7 @@
             item.kill();
             //Se crea la caja de texto para ciclo for
             if(Situacion[this.intSituacion].tipo == 'for'){
-              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+149,(this.slot.body.y)+17,16,15,"0");
+              this.cajaTexto = new textBox(this.game,(this.slot.body.x)+149,(this.slot.body.y)+20,16,15,"0");
               this.cajaTexto.texto.fontSize = 16;
               this.items.add(this.cajaTexto);
             }
@@ -506,7 +506,7 @@
       this.btnwhile.visible = true;
       this.btnfor.visible = true;      
       this.textciclo.visible=false;
-      this.cajaTexto.kill();
+      this.cajaTexto.visible = false;
       //Detener metodo de update
       this.tiempo.stop();       
       this.siguiente.kill();       
