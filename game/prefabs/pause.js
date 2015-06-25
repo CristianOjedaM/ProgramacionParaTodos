@@ -100,6 +100,15 @@
                 case 'nivel3':
                   frame = 3;
                 break;
+                case 'nivel4':
+                  frame = 4;
+                break;
+                case 'nivel5':
+                  frame = 5;
+                break;
+                case 'nivel6':
+                  frame = 6;
+                break;
               }
               this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',frame);
               this.mensajeGeneral.fixedToCamera = true;
