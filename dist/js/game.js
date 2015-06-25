@@ -430,7 +430,7 @@ var Entidad = function(game, x, y, key,frame) {
   this.posy = 0;//Posicion relativa de y en el tablero
   this.propiedades = [{nombre:"Posicion X",prop:"posx",val:this.posx},
                 {nombre:"Posicion Y",prop:"posy",val:this.posy}];
-  this.consejos = ["Siempre que abras un parentesis ( recuerda darle cierre )","Fijate siempre en lo que escribes, el mas mínimo error genera fallas en el código","consejo 3","consejo 4","consejo 5"];
+  this.consejos = ["Siempre que abras un parentésis ( recuerda darle cierre )","Fijate siempre en lo que escribes, el mas mínimo error genera fallas en el código","Un error de sintaxis puede deberse a la falta de un paréntesis","Un error de sintaxis puede deberse a puntos(.) repetidos","Si te sientes bloqueado, detente y relajate","Siempre que llames una función o método asegurate de establecer sus propiedades dentro del paréntesis"];
 };
 
 Entidad.prototype = Object.create(Phaser.Sprite.prototype);
@@ -3947,6 +3947,7 @@ var Situacion =
             this.instrucciones(this.pasoActual);
             break;
           default:
+            this.codigoActivo = true;
             this.editor.glow(true);
             break;
         }
@@ -4201,7 +4202,7 @@ Preload.prototype = {
     this.load.spritesheet('nivel4', 'assets/images/Menu/nivel4.jpg',800,100);
     this.load.spritesheet('nivel5', 'assets/images/Menu/nivel5.jpg',800,100);
     this.load.spritesheet('nivel6', 'assets/images/Menu/nivel6.jpg',800,100);
-    this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,600);
+    this.load.spritesheet('ayudaGeneral', 'assets/images/Menu/ayuda.jpg',800,601);
     this.load.image('btnCerrar', 'assets/images/Menu/btnCerrar.png');
 
     /*Botones y generales*/

@@ -181,6 +181,7 @@
             this.instrucciones(this.pasoActual);
             break;
           default:
+            this.codigoActivo = true;
             this.editor.glow(true);
             break;
         }
