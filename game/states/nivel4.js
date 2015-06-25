@@ -280,7 +280,7 @@ var Situacion =
           }
           //indicamos que el primer slot se ha ocupado
           this.slotAccion_2 = true;
-        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 7) && item.body.y <= (this.slot.body.y + 40) && item.body.x >= (this.slot.body.x + 68) && item.body.x <= (this.slot.body.x + 220) ){
+        }else if(item.tipo == 1 && item.body.y >= (this.slot.body.y + 8) && item.body.y <= (this.slot.body.y + 45) && item.body.x >= (this.slot.body.x + 50) && item.body.x <= (this.slot.body.x + 202) ){
           if(!this.slotCondicion){
             //Creamos el item el cual encaja en el slot de la accion          
             var itemEncajado = this.items.create( (this.slot.body.x + 125),(this.slot.body.y + 24),'condicion');
@@ -432,6 +432,7 @@ var Situacion =
               this.siguiente.fixedToCamera = true; 
               this.siguiente.anchor.setTo(0.5,0);
             } else{
+                this.situacion.visible = true;
                 this.mensaje(true);
             }                    
           }, this);
@@ -480,7 +481,7 @@ var Situacion =
       }else{        
         this.pasos.texto.setText('Lo siento, pero la condicion \nesta mal construida vuelve a intentarlo\n y recuerda lo que esta dentro del if\nse ejecuta si la condicion se cumple \n en caso contrario se ejecuta el else'); 
       }
-      this.siguiente = this.game.add.sprite(204, this.pasos.y + 50,'btnContinuar');
+      this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
       this.siguiente.inputEnabled = true;
       if(respuesta){
         this.siguiente.events.onInputDown.add(this.clickSiguiente, this);
