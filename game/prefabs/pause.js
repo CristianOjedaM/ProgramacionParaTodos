@@ -11,8 +11,10 @@
     this.panel.anchor.setTo(0.5, 0);
 
     //this.game.onPause.add(enPausa, this);
+    this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',0);
+    this.mensajeGeneral.visible = false;
+    this.mensajeGeneral.fixedToCamera = true;
 
-    
     //Boton de play o resume
     this.btnPlay = this.game.add.button((this.game.width - 81), -140, 'btnPausa');
     this.btnPlay.fixedToCamera = true;
@@ -86,11 +88,9 @@
       }else if(game.x > (this.game.width/2) + 60 && game.x < (this.game.width/2) + 105 && game.y > y1 && game.y < y2 ){
           //Opcion ayuda
            if(this.game.paused){
-            var frame  = 0;
-            var yitem = 0;
+            var frame  = 0;            
               switch(game.game.state.current){
-                case 'nivel1':
-                  yitem = game.btnPlay.y-20;
+                case 'nivel1':                 
                   frame = 0;
                 break;
                 case 'nivel1_1':
@@ -111,9 +111,9 @@
                 case 'nivel6':
                   frame = 6;
                 break;
-              }
-              this.mensajeGeneral  = this.game.add.sprite(0, yitem,'ayudaGeneral',frame);
-              this.mensajeGeneral.fixedToCamera = true;
+              }              
+              this.mensajeGeneral.frame = frame;
+              this.mensajeGeneral.visible = true;
               this.cerrarMensaje = this.game.add.sprite((this.game.width - 81),20,'btnCerrar');
               this.cerrarMensaje.fixedToCamera = true;
            }
