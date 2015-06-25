@@ -6,7 +6,7 @@
     [{
       "tipo"  : 'for',
       "iteraciones" : 30,
-      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 \nveces sin parar ayudame a cuadrar el \nciclo para romper el record.', 
+      "instrucciones": ' Hola, quiero romper el record de saltar\n la cuerda para esto necesito saltar 30 \nveces sin parar ayudame a formar el \nciclo para romper el record.', 
       "ciclo": [{'texto':'var i = 0; i <= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': false},{'texto':'saltar();','respuesta':true},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
       "imgsituacion_1" : 'situacion5_1',
