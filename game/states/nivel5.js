@@ -52,7 +52,7 @@
   	create: function() {
       this.game.world.setBounds(0, 0, 800, 600);
       //Fondo de juego
-      this.game.add.tileSprite(0, 0,800,600, 'introN3');
+      this.game.add.tileSprite(0, 0,800,600, 'introN5');
       this.game.input.onDown.add(this.iniciarJuego,this);
   	},
 
