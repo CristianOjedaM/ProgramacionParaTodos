@@ -388,7 +388,7 @@
         this.btnwhile.visible = false;
         this.btnfor.visible = false;
       }else{
-        this.consejo = this.game.sprite.add(546,400,'fondoPausa');
+        this.consejo = this.game.add.sprite(546,400,'fondoPausa');
         this.consejo.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','Recuerda que este ciclo no maneja \nun contador de forma facil como el ciclo for',18);
         this.consejo.texto.anchor.setTo(0.5,0.5); 
         setTimeout(function(){          
@@ -404,7 +404,7 @@
         this.btnwhile.visible = false;
         this.btnfor.visible = false;
       }else{
-        this.consejo = this.game.sprite.add(546,400,'fondoPausa');
+        this.consejo = this.game.add.sprite(546,400,'fondoPausa');
         this.consejo.texto = this.game.add.bitmapText(this.pasos.x,this.pasos.y,'font','Recuerda que este ciclo necesita \nun número el cual limita la cantidad de \nrepeticiones\n',18);
         this.consejo.texto.anchor.setTo(0.5,0.5);  
         setTimeout(function(){          
