@@ -87,8 +87,10 @@
           //Opcion ayuda
            if(this.game.paused){
             var frame  = 0;
+            var yitem = 0;
               switch(game.game.state.current){
                 case 'nivel1':
+                  yitem = this.btnPlay.y-20;
                   frame = 0;
                 break;
                 case 'nivel1_1':
@@ -110,7 +112,7 @@
                   frame = 6;
                 break;
               }
-              this.mensajeGeneral  = this.game.add.sprite(0, 0,'ayudaGeneral',frame);
+              this.mensajeGeneral  = this.game.add.sprite(0, yitem,'ayudaGeneral',frame);
               this.mensajeGeneral.fixedToCamera = true;
               this.cerrarMensaje = this.game.add.sprite((this.game.width - 81),20,'btnCerrar');
               this.cerrarMensaje.fixedToCamera = true;
