@@ -169,6 +169,7 @@
           this.btnwhile.visible = true;
           this.btnfor.visible = true;
           this.textciclo.visible=false;
+          this.cajaTexto.destruir();
         }else{
           this.siguiente = this.game.add.sprite(30, this.pasos.y + 50,'btnContinuar');
           this.siguiente.inputEnabled = true;
@@ -226,7 +227,7 @@
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
       }else{
-        this.textciclo = this.game.add.text((this.slot.x +10),(this.slot.y + 23),'while(                                                      ){',{font: '16px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +10),(this.slot.y + 29),'while(                                          ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
 
@@ -506,7 +507,7 @@
       this.btnwhile.visible = true;
       this.btnfor.visible = true;      
       this.textciclo.visible=false;
-      this.cajaTexto.visible = false;
+      this.cajaTexto.destruir();
       //Detener metodo de update
       this.tiempo.stop();       
       this.siguiente.kill();       
