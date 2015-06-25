@@ -54,6 +54,8 @@
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN5');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(55, 170, 'font', 'Estas listo para un\nnuevo juego? En este\nnivel no solo deberás\nprobar tu agilidad,\ntambién deberás\ndemostrar tu capacidad\nde lógica manipulando\nvariables, datos y\noperadores Formando\nsentencias acertadas\nde acuerdoa la\nsolitud propuesta\n\nVeamos como lo haces!', 24);
   	},
 
     iniciarJuego : function(game){

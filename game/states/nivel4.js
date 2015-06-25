@@ -49,6 +49,8 @@ var Situacion =
       //Fondo de juego
       this.game.add.tileSprite(0, 0,800,600, 'introN4');
       this.game.input.onDown.add(this.iniciarJuego,this);
+
+      this.game.add.bitmapText(475, 150, 'font', 'Recuerdas los operadores\nlógicos? Llego la hora\nusarlos en el contexto\nque corresponde, el\nmanejo de estructuras\ncondicionales. En este\nnivel deberás resolver\nsituaciones utilizando\nvalidaciones formadas\npor operadores lógicos\ny las acciones a tomar\nfrente a cada una.\n\nAdelante!', 24);
     },
 
     iniciarJuego : function(game){
