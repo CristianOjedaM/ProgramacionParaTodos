@@ -13,7 +13,7 @@ var Situacion =
     "condiciones": [{'texto':'obstaculo.distancia != 50','respuesta':false},{'texto':'obstaculo.distancia <= 50','respuesta':true},{'texto':'obstaculo.distancia == 51','respuesta':false}],
     "acciones" :  [{'texto':'saltar();','respuesta':'slot1'},{'texto':'esperar();','respuesta':'invalida'},{'texto':'correr();','respuesta':'slot2'},{'texto':'nadar();','respuesta':'invalida'},{'texto':'arrastrar();','respuesta':'invalida'}],
     "imgsituacion_1" : 'situacion4_2',
-    "imgsituacion_2" : 'situacion4_1_Inv'
+    "imgsituacion_2" : 'situacion4_2_Inv'
   }];
 
   function Nivel4() {}

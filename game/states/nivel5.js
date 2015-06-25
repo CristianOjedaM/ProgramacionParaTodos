@@ -9,8 +9,8 @@
       "instrucciones": ' Hola, necesito pasar al otro lado del camino\n pero por este camino pasan muchas estampidas\n ayuda a cudrar la condicion para poder pasar\n cuando no este pasando una estampida', 
       "ciclo": [{'texto':'var i = 0; i >= [   ]; i++','respuesta':true},{'texto':'var i = 0; i >= [   ]; i--','respuesta':false},{'texto':'var i = 100; i <= [   ]; i--','respuesta':false}],
       "acciones" :  [{'texto':'cruzar();','respuesta': true},{'texto':'saltar();','respuesta':false},{'texto':'esperar();','respuesta':false},{'texto':'hablar();','respuesta':false},{'texto':'disparar();','respuesta':false}],
-      "imgsituacion_1" : 'situacion4_1',
-      "imgsituacion_2" : 'situacion4_1_Inv'
+      "imgsituacion_1" : 'situacion5_1',
+      "imgsituacion_2" : 'situacion5_1_Inv'
 
     },
     {
@@ -45,6 +45,7 @@
       this.intSituacion=0;
       this.slotCiclo=false;
       this.slotAccion_1=false;
+      this.score = 0;
       this.intentosxsitua  = 0;
     },
 
@@ -221,16 +222,16 @@
       if(this.textciclo != null){this.textciclo.kill();}      
       
       if(Situacion[this.intSituacion].tipo == 'for'){
-        this.textciclo = this.game.add.text((this.slot.x +24),(this.slot.y + 23),'for (                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +20),(this.slot.y + 29),'for (                               ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
       }else{
-        this.textciclo = this.game.add.text((this.slot.x +22),(this.slot.y + 23),'while(                             ){',{font: '22px calibri', fill: '#fff', align:'center'});
+        this.textciclo = this.game.add.text((this.slot.x +18),(this.slot.y + 23),'while(                               ){',{font: '16px calibri', fill: '#fff', align:'center'});
         this.textciclo.anchor.setTo(0,0.5);
         this.textciclo.fontWeight = 'bold';
 
       }
-      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 231),'}',{font: '22px calibri', fill: '#fff', align:'center'});
+      var textCierr = this.game.add.text((this.slot.x +26),(this.slot.y + 142),'}',{font: '16px calibri', fill: '#fff', align:'center'});
       textCierr.anchor.setTo(0,0.5);
       textCierr.fontWeight = 'bold';
       //creamos las acciones de la situación
@@ -505,6 +506,7 @@
       this.btnwhile.visible = true;
       this.btnfor.visible = true;      
       this.textciclo.visible=false;
+      this.cajaTexto.kill();
       //Detener metodo de update
       this.tiempo.stop();       
       this.siguiente.kill();       
